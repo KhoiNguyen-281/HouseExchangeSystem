@@ -10,6 +10,8 @@ using std::vector;
 #include "Model/SystemModel.h"
 #include "Model/SystemModel.cpp"
 #include "Model/GuestModel.cpp"
+#include "Model/HouseModel.cpp"
+#include "Model/DateModel.cpp"
 
 
 
@@ -18,7 +20,6 @@ int main() {
     System * system = System::getInstance();
     bool isLoggedIn = system->isUser();
     bool isAdmin = system->isAdmin();
-    Guest::registerNewMember();
-    Guest::registerNewMember();
-    system->saveMember();
+//    system->registerMember(*Guest::registerNewMember());
+    Guest::login();
 }

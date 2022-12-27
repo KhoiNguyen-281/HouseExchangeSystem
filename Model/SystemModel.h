@@ -19,6 +19,22 @@ class Guest;
 class Member;
 class House;
 class Request;
+class Rating;
+
+class Date {
+private:
+    int month;
+    int date;
+    int year;
+
+public:
+    Date();
+
+    ~Date();
+    Date(Date &date);
+
+    Date &operator = (Date&otherDate);
+};
 
 class Guest {
 public:
@@ -78,7 +94,7 @@ public:
     bool updateInfo();
     bool deleteProfile();
 
-    House * registerHouse(vector<House> &houseVector);
+    bool registerHouse();
     int unListHouse(vector<House> &houseVector);
 
     virtual ~Member();
@@ -87,40 +103,57 @@ public:
 
 class House {
 private:
+
+
+
     string id;
     string location;
-    string description;
-    bool available = false;
-    int ptsPerDay = 0;
-    double occupierRating;
-    Member * owner = nullptr;
+    string description = "";
+
+    int creditPointsPerDay = 0;
+
+    Member* owner = nullptr;
     Member* occupier = nullptr;
 
 //    Date listingStart;
 //    Date listingEnd;
 
 public:
-    House(string location, string description, int pricePerDay, double occupierRating,Member * owner);
+    House(Member *owner, string id, string location, string description, int consumptionPts);
+
     House();
     virtual ~House();
 
     void showInfo();
 
-    //Getter
-    const string &getLocation() const;
-    const string &getDescription() const;
-    bool isAvailable() const;
-    int getPtsPerDay() const;
-    double getOccupierRating() const;
+    //setter
+    void setOwner(Member *owner);
+
+    void setOccupier(Member *occupier);
+
+    void setId(const string &id);
+
+    void setLocation(const string &location);
+
+    void setDescription(const string &description);
+
+    void setCreditPointsPerDay(int consumptionPts);
+
+
+
+    //getter
+
     Member *getOwner() const;
 
-    //Setter
-    void setLocation(const string &location);
-    void setDescription(const string &description);
-    void setAvailable(bool available);
-    void setPtsPerDay(int pricePerDay);
-    void setOccupierRating(double occupierRating);
-    void setOwner(Member *owner);
+    Member *getOccupier() const;
+
+    const string &getId() const;
+
+    const string &getLocation() const;
+
+    const string &getDescription() const;
+
+    int getCreditPointsPerDay() const;
 };
 
 class System {
@@ -158,6 +191,8 @@ public:
     bool isUser() const;
     bool isAdmin() const;
 
+    //Function to generate id automatically
+    string generateID();
 
     //Authentication functions
     Member* registerMember(Member member);
@@ -165,14 +200,52 @@ public:
     bool logout();
 
 
-    string generateID();
 
-
+    //Function to add objects to file
     Member* addMemberToSys(Member member);
+    House* addHouseToSys(House house);
+    Rating* addRatingtoSys(Rating rating);
+    Request* addRequest(Request request);
+
+    //Function to add or remove credit points of members
+    bool addCreditPoints(Member * member, int creditP);
+    bool removeCreditPoints(Member * member, int creditP);
+
+
+    //Function to get objects by ID
+    Member *getMember(string ID);
+    House *getHouse(string ID);
+    Rating *getRating(string houseID, string memberID);
+    Request *getRequest(string ID);
 
 
     //Function to save data to file text
     bool saveMember();
+    bool saveHouse();
+    bool saveRating();
+    bool saveRequest();
+
+    //Funciton to load data from file
+    bool loadMember();
+    bool loadHouse();
+    bool loadRating();
+    bool loadRequest();
+
+
+    bool showMember();
+    bool showHouseDetail();
+
+
+    void getAvailableLocation();
+
+    bool checkLocation(string location);
+
+    bool isInteger(string input);
+
+
+    bool systemStart();
+
+    bool systemShutdown();
 
     virtual ~System();
 };
