@@ -322,6 +322,17 @@ bool System::saveMember() {
     return true;
 }
 
+//Function to change pasword
+bool System::changePassword(string newpwd, string oldpwd) {
+    if (this->currentMem->getPassword() == oldpwd) {
+        this->currentMem->setPassword(newpwd);
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 
 
 
