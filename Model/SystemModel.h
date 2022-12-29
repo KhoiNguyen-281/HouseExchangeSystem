@@ -6,6 +6,7 @@
 #define SED_GROUP_SYSTEMMODEL_H
 #include <iostream>
 #include "string"
+#include <ctime>
 
 using std::string;
 using std::cout;
@@ -14,6 +15,13 @@ using std::vector;
 #include <vector>
 
 #define CREDIT_POINT 500;
+
+int thisYear() {
+    std::time_t t = std::time(nullptr);
+    std::tm *const pTInfo = std::localtime(&t);
+    return 1900 + pTInfo->tm_year;
+}
+
 
 class Guest;
 class Member;
@@ -25,7 +33,7 @@ class Date {
 private:
     int month;
     int date;
-    int year;
+    int year = thisYear();
 
 public:
     Date();
@@ -34,6 +42,23 @@ public:
     Date(Date &date);
 
     Date &operator = (Date&otherDate);
+
+    //getter
+    int getMonth() const;
+    int getDate() const;
+    int getYear() const;
+
+    //Setter
+    void setMonth(int month);
+    void setDate(int date);
+    void setYear(int year);
+
+
+    static bool isDateValid(string date);
+
+    static Date parseDate(string date);
+
+    int getDuration(Date start, Date end);
 };
 
 class Guest {
