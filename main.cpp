@@ -4,7 +4,7 @@
 using std::string;
 using std::cout;
 using std::cin;
-using std::vector;
+// using std::vector;
 #include <vector>
 
 #include "Model/SystemModel.h"
@@ -19,6 +19,9 @@ int main() {
     bool isLoggedIn = system->isUser();
     bool isAdmin = system->isAdmin();
     Guest::registerNewMember();
-    Guest::registerNewMember();
-    system->saveMember();
+    // system->saveMember();
+    Guest::login();
+    Member::changePassword();
+    cout << system->getCurrentMem()->getPassword();
+
 }
