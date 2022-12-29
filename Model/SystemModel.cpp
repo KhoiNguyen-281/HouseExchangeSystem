@@ -289,6 +289,17 @@ bool System::saveHouse() {
     return true;
 }
 
+//Function to change pasword
+bool System::changePassword(string newpwd, string oldpwd) {
+    if (this->currentMem->getPassword() == oldpwd) {
+        this->currentMem->setPassword(newpwd);
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 
 //-------------------Load data from file------------------//
 bool System::loadMember() {

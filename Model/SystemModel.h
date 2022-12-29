@@ -5,12 +5,13 @@
 #ifndef SED_GROUP_SYSTEMMODEL_H
 #define SED_GROUP_SYSTEMMODEL_H
 #include <iostream>
-#include "string"
+#include <string>
 
 using std::string;
 using std::cout;
 using std::cin;
 using std::vector;
+using std::to_string;
 #include <vector>
 
 #define CREDIT_POINT 500;
@@ -190,6 +191,8 @@ public:
     Member *getCurrentMem();
     bool isUser() const;
     bool isAdmin() const;
+    bool changePassword(string newpwd, string oldpwd);
+    bool updateInfo();
 
     //Function to generate id automatically
     string generateID();

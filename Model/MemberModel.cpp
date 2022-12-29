@@ -5,6 +5,8 @@
 #include "SystemModel.h"
 #define sysLog(x) cout << x;
 #define inputStr(x) getline(cin, x);
+#define newline "\n"
+#define skipLine() sysLog(newline);
 
 Member::Member(string userName, string fullName, string phoneNum, string passWord)
         : userName(userName), fullName(fullName), phoneNum(phoneNum), password(passWord) {};
@@ -96,6 +98,7 @@ bool Member::logout() {
     return System::getInstance()->logout();
 }
 
+
 bool Member::registerHouse() {
     bool isHouseExisted = this->getHouse() != nullptr;
 
@@ -156,3 +159,87 @@ bool Member::registerHouse() {
 
     return stored != nullptr;
 }
+
+bool Member::verifyPassword(string password){
+     return password == this->getPassword();
+}
+
+bool Member::changePassword(){
+    string newPassword;
+    string oldPassword;
+    
+    sysLog("Current password: ");
+    getline(cin, oldPassword);
+    sysLog("New password: ");
+    getline(cin, newPassword);
+
+    while(System::getInstance()->getCurrentMem()->getPassword() != oldPassword){
+        sysLog("Current password is incorrect ! Please re-type: ")
+        getline(cin, oldPassword);
+    }
+    System::getInstance()->getCurrentMem()->setPassword(newPassword);
+    sysLog("Password changed successfully !");
+    return true;
+}
+
+bool Member::updateInfo(){
+    string option;
+    string newUname;
+    string newFname;
+    string newNum;
+    int phone;
+    sysLog("Your information: ");
+    skipLine();
+
+    sysLog("Username: ")
+    System::getInstance()->getCurrentMem()->getUserName();
+    skipLine();
+
+    sysLog("Fullname: ")
+    System::getInstance()->getCurrentMem()->getFullName();
+    skipLine();
+
+    sysLog("Phone: ");
+    System::getInstance()->getCurrentMem()->getPhoneNum();
+    skipLine();
+
+    sysLog("Enter your option: ");
+    sysLog("1. Change username");
+    skipLine();
+    sysLog("2. Change fullname");
+    skipLine();
+    sysLog("3. Change phone number");
+    skipLine();
+    sysLog("4. Change passwordd");
+    skipLine();
+    getline(cin, option);
+
+    if(option == "1"){
+        sysLog("Enter new username: ");
+        getline(cin, newUname);
+        System::getInstance()->getCurrentMem()->setUserName(newUname);
+        skipLine();
+        sysLog("Change username successfully !")
+    }
+    else if(option == "2"){
+        sysLog("Enter new fullname: ");
+        getline(cin, newFname);
+        System::getInstance()->getCurrentMem()->setFullName(newFname);
+        skipLine();
+        sysLog("Change fullname successfully !")
+    }
+    else if(option == "3"){
+        sysLog("Enter new phone number: ");
+        cin >> phone;
+        newNum = to_string(phone);
+        getline(cin, newNum);
+        System::getInstance()->getCurrentMem()->setPhoneNum(newNum);
+        skipLine();
+        sysLog("Change phone number successfully !")
+    }
+    else if(option == "4"){
+        changePassword();
+    }
+    return true;
+}
+
