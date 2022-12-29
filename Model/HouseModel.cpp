@@ -63,4 +63,3 @@ int House::getCreditPointsPerDay() const {
     return creditPointsPerDay;
 }
 
-

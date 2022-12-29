@@ -15,6 +15,7 @@
 
 const string MEMBERS = "members.dat";
 const string HOUSES = "houses.dat";
+const string REQUESTS = "requests.dat";
 
 
 //Helper functions
@@ -137,10 +138,10 @@ bool System::isAdmin() const{
     return isAdminLoggedin;
 }
 
-string System::generateID() {
+string System::generateID(int &count) {
     string ID;
-    ID  = std::to_string(countMem);
-    countMem += 1;
+    count += 1;
+    ID = std::to_string(count);
     return ID;
 }
 
@@ -203,7 +204,6 @@ bool System::logout() {
 
 //---------------- Add data to system---------------------//
 Member * System::addMemberToSys(Member member) {
-    int count = 1;
     for (auto & i : memberVect) {
         if (i.getUserName() == member.getUserName()) {
             sysLog("This username is already existed");
@@ -213,18 +213,16 @@ Member * System::addMemberToSys(Member member) {
 
     memberVect.push_back(member);
     Member * newMem = &memberVect.back();
-
     if (newMem->getId().empty()) {
-        string id = generateID();
+        string id = generateID(countMem);
         newMem->setId(id);
     }
     return newMem;
 };
 
 House * System::addHouseToSys(House house) {
-//    int count =1;
     if (house.getId().empty()) {
-        string houseID = generateID();
+        string houseID = generateID(countHouse);
 
         houseVect.push_back(house);
         House * newHouse = &houseVect.back();
@@ -239,11 +237,14 @@ House * System::addHouseToSys(House house) {
                 return &houseTmp;
             }
         }
-
         return nullptr;
     }
 }
 
+//Request * System::addRequest(Request request) {
+//}
+//
+//Rating * System::addRatingtoSys(Rating rating) {}
 
 //--------------------Save data to files-------------------//
 bool System::saveMember() {
@@ -289,6 +290,32 @@ bool System::saveHouse() {
     return true;
 }
 
+//bool System::saveRequest() {
+//    std::fstream file;
+//    string filePath = getFilePath(REQUESTS);
+//
+//    file.open(filePath, std::ios::out);
+//    if (!file.is_open()) {
+//        fileErrLog(filePath);
+//        return false;
+//    }
+//
+//    for (Request request : requestVect) {
+//
+//    }
+//}
+
+//Function to change pasword
+bool System::changePassword(string newpwd, string oldpwd) {
+    if (this->currentMem->getPassword() == oldpwd) {
+        this->currentMem->setPassword(newpwd);
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 
 //-------------------Load data from file------------------//
 bool System::loadMember() {
@@ -326,8 +353,11 @@ bool System::loadMember() {
         member.setPhoneNum(tokens[4]);
         member.setCreditP(std::stoi(tokens[5]));
 
+
         memberVect.push_back(member);
     }
+
+    countMem = std::stoi(memberVect.back().getId());
 
     file.close();
     successMess("Load", std::to_string(memberVect.size()), "member(s)");
@@ -371,7 +401,6 @@ bool System::loadHouse() {
         }
 
         house.setOwner(owner);
-
         house.setId(tokens[0]);
         house.setLocation(tokens[1]);
         house.setDescription(tokens[2]);
@@ -382,6 +411,9 @@ bool System::loadHouse() {
 
         owner->setHouse(newHouse);
     }
+
+    countHouse = std::stoi(houseVect.back().getId());
+
     file.close();
     successMess("Load", std::to_string(houseVect.size()), "house(s)");
     return true;
