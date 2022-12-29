@@ -2,7 +2,10 @@
 // Created by Nguyen Hoang Minh Khoi on 12/12/22.
 //
 #define sysLog(x) cout << x;
-
+#define inputStr(x) getline(cin, x);
+#define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
+#define formatErr(x) cout << "Error: Invalid " << x <<" format \n";
+#define successMess(x, y, z) cout << x << " " << y << " " << z << "\n";
 
 #include "SystemModel.h"
 #include <random>
@@ -28,27 +31,7 @@ void Member::showInfo() {
     sysLog("Credit point: " << this->creditP << std::endl);
 }
 
-House * Member::registerHouse(vector<House> &houseVector) {
-    string location;
-    string description;
-    string ptsPerDay;
-    string occupierRating;
-    sysLog("Please enter your house's information: \n");
-    sysLog("Location: ");
-    getline(cin, location);
-    sysLog("Description: ");
-    getline(cin, description);
-    sysLog("Points per day: ");
-    getline(cin, ptsPerDay);
-    sysLog("Occupier rating: ");
-    getline(cin, occupierRating);
 
-    auto * house = new House(location, description, std::stoi(ptsPerDay),
-                             std::stod(occupierRating), this);
-    this->setHouse(house);
-    houseVector.push_back(*house);
-    return house;
-}
 
 //int Member::unListHouse(vector<House> &houseVector) {
 //    if (this == nullptr) {
@@ -89,87 +72,22 @@ House * Member::registerHouse(vector<House> &houseVector) {
 //Setter
 
 
+//void House::showInfo() {
+//
+////    int ptsPerDay = 0;
+////    double occupierRating;
+////    Member * owner = nullptr;
+////    Member* occupier = nullptr;
+//    cout << "House: " << this->id << "\n";
+//    cout << "Location: " << this->location << "\n";
+//    cout << "Description: " << this->description << "\n";
+//    cout << "Points per day: " << this->ptsPerDay << "\n";
+//    cout << "Owner: " << this->owner->getUserName() << "\n \n";
+//}
 
-//House class
-House::House(string location, string description, int ptsPerDay, double occupierRating, Member *owner) {
-    int n = 1;
-    this->id = "00" + std::to_string(n);
-    this->location = location;
-    this->description = description;
-    this->ptsPerDay = ptsPerDay;
-    this->owner = owner;
-    this->occupierRating = occupierRating;
-    this->available = true;
-}
 
-
-void House::showInfo() {
-
-//    int ptsPerDay = 0;
-//    double occupierRating;
-//    Member * owner = nullptr;
-//    Member* occupier = nullptr;
-    cout << "House: " << this->id << "\n";
-    cout << "Location: " << this->location << "\n";
-    cout << "Description: " << this->description << "\n";
-    cout << "Points per day: " << this->ptsPerDay << "\n";
-    cout << "Owner: " << this->owner->getUserName() << "\n \n";
-}
 //Getter and setter
 //Getter
-const string &House::getLocation() const {
-    return location;
-}
-
-const string &House::getDescription() const {
-    return description;
-}
-
-bool House::isAvailable() const {
-    return available;
-}
-
-int House::getPtsPerDay() const {
-    return ptsPerDay;
-}
-
-double House::getOccupierRating() const {
-    return occupierRating;
-}
-
-Member *House::getOwner() const {
-    return owner;
-}
-
-//Setter
-void House::setLocation(const string &location) {
-    House::location = location;
-}
-
-void House::setDescription(const string &description) {
-    House::description = description;
-}
-
-void House::setAvailable(bool available) {
-    House::available = available;
-}
-
-void House::setPtsPerDay(int ptsPerDay) {
-    House::ptsPerDay = ptsPerDay;
-}
-
-void House::setOccupierRating(double occupierRating) {
-    House::occupierRating = occupierRating;
-}
-
-void House::setOwner(Member *owner) {
-    House::owner = owner;
-}
-
-House::~House() {
-
-}
-
 
 
 
@@ -189,6 +107,8 @@ System *System::getInstance() {
     return instancePointer;
 }
 
+
+//Current user functions
 void System::setCurrentMem(Member *currentMem) {
     this->currentMem = currentMem;
 }
@@ -224,6 +144,64 @@ string System::generateID() {
     return ID;
 }
 
+Member * System::registerMember(Member member) {
+    Member * newMem = addMemberToSys(member);
+    if (newMem == nullptr) {
+        sysLog("Sign up failed, please try again!");
+    }
+    setCurrentMem(newMem);
+    setIsLoggedIn(true);
+    string username, password, fullName, phone;
+    sysLog("Sign up successfully! awarded with 500 points. \n\n");
+
+
+    return newMem;
+}
+
+Member *System::login(string username, string password) {
+    if (username == adminUsername) {
+        if (password == adminPassword) {
+            setCurrentMem(nullptr);
+            setIsLoggedIn(true);
+            setIsAdmin(true);
+
+            sysLog("\nLogged in as an admin\n");
+            return nullptr;
+        } else {
+            sysLog("Incorrect password.");
+            return nullptr;
+        }
+    }
+
+    for (auto & i : memberVect) {
+        if (i.getUserName() == username) {
+            if (i.getPassword() == password) {
+                setCurrentMem(&i);
+                setIsLoggedIn(true);
+
+                sysLog("Login successfully");
+                return &i;
+            } else {
+                sysLog("Incorrect password")
+                return nullptr;
+            }
+        }
+    }
+    sysLog("Username not found!");
+    return nullptr;
+}
+
+bool System::logout() {
+    setCurrentMem(nullptr);
+    setIsLoggedIn(false);
+    setIsAdmin(false);
+
+    sysLog("Logout successfully")
+    return true;
+}
+
+
+//---------------- Add data to system---------------------//
 Member * System::addMemberToSys(Member member) {
     int count = 1;
     for (auto & i : memberVect) {
@@ -243,82 +221,71 @@ Member * System::addMemberToSys(Member member) {
     return newMem;
 };
 
-Member * System::registerMember(Member member) {
-    Member * newMem = addMemberToSys(member);
-    if (newMem == nullptr) {
-        sysLog("Sign up failed, please try again!");
+House * System::addHouseToSys(House house) {
+//    int count =1;
+    if (house.getId().empty()) {
+        string houseID = generateID();
+
+        houseVect.push_back(house);
+        House * newHouse = &houseVect.back();
+        newHouse->setId(houseID);
+        return newHouse;
+    } else {
+        for (auto  & houseTmp: houseVect) {
+            if (houseTmp.getId() == house.getId()) {
+                houseTmp = house;
+                houseTmp.setId(house.getId());
+
+                return &houseTmp;
+            }
+        }
+
+        return nullptr;
     }
-    setCurrentMem(newMem);
-    setIsLoggedIn(true);
-    string username, password, fullName, phone;
-    sysLog("Sign up successfully! awarded with 500 points. \n\n");
-
-
-    return newMem;
-}
-
-Member *System::login(string username, string password) {
-   if (username == adminUsername) {
-       if (password == adminPassword) {
-           setCurrentMem(nullptr);
-           setIsLoggedIn(true);
-           setIsAdmin(true);
-
-           sysLog("Logged in as an admin");
-           return nullptr;
-       } else {
-           sysLog("Incorrect password.");
-           return nullptr;
-       }
-   }
-
-   for (auto & i : memberVect) {
-       if (i.getUserName() == username) {
-           if (i.getPassword() == password) {
-               setCurrentMem(&i);
-               setIsLoggedIn(true);
-
-               sysLog("Login successfully");
-               return &i;
-           } else {
-               sysLog("Incorrect password")
-               return nullptr;
-           }
-       }
-   }
-   sysLog("Username not found!");
-   return nullptr;
-}
-
-bool System::logout() {
-    setCurrentMem(nullptr);
-    setIsLoggedIn(false);
-    setIsAdmin(false);
-
-    sysLog("Logout successfully")
-    return true;
 }
 
 
-//Function to save member
+//--------------------Save data to files-------------------//
 bool System::saveMember() {
     std::ofstream file;
     string filePath = getFilePath(MEMBERS);
 
     file.open(filePath, std::ios::out);
     if (!file.is_open()) {
-        sysLog("Error!!! file " + filePath + " not found.");
+        fileErrLog(filePath);
         return false;
     }
 
     for (Member member : memberVect) {
         file << member.getId() << "," << member.getUserName() << ","
-             << member.getPassword() << "," << member.getFullName()
+             << member.getPassword() << "," << member.getFullName() << ","
              << member.getPhoneNum() << "," << member.getCreditP() << "\n";
     }
     file.close();
-    sysLog("Save " + std::to_string(memberVect.size()) + " member(s) \n")
+    successMess("Save", std::to_string(memberVect.size()), "member(s)");
+    return true;
+}
 
+bool System::saveHouse() {
+    std::ofstream  file;
+    string filePath = getFilePath(HOUSES);
+
+    file.open(filePath, std::ios::out);
+    if (!file.is_open()) {
+        fileErrLog(filePath);
+        return false;
+    }
+
+    for (House house : houseVect) {
+        file << house.getId() << ","
+             << house.getLocation() << ","
+             << house.getDescription() << ","
+             << house.getCreditPointsPerDay() << ","
+             << house.getOwner()->getId() << "\n";
+    }
+
+    file.close();
+    successMess("save", std::to_string(houseVect.size()), "house(s)");
     return true;
 }
 
@@ -334,6 +301,208 @@ bool System::changePassword(string newpwd, string oldpwd) {
 }
 
 
+//-------------------Load data from file------------------//
+bool System::loadMember() {
+    std::fstream file;
+    string filePath = getFilePath(MEMBERS);
 
+    file.open(filePath, std::ios::in);
+
+    if (!file.is_open()) {
+        fileErrLog(filePath);
+        return false;
+    }
+
+    string line;
+    while(getline(file, line)) {
+        std::stringstream ss(line);
+        string attribute;
+        vector<string> tokens;
+
+        while(getline(ss, attribute, ',')) {
+            tokens.push_back(attribute);
+        }
+
+        if (tokens.size() != 6) {
+            formatErr("member");
+            continue;
+        }
+
+        Member member;
+
+        member.setId(tokens[0]);
+        member.setUserName(tokens[1]);
+        member.setPassword(tokens[2]);
+        member.setFullName(tokens[3]);
+        member.setPhoneNum(tokens[4]);
+        member.setCreditP(std::stoi(tokens[5]));
+
+        memberVect.push_back(member);
+    }
+
+    file.close();
+    successMess("Load", std::to_string(memberVect.size()), "member(s)");
+    return true;
+}
+
+bool System::loadHouse() {
+    std::fstream file;
+    string filePath = getFilePath(HOUSES);
+
+    file.open(filePath, std::ios::in);
+
+    if (!file.is_open()) {
+        fileErrLog(filePath);
+        return false;
+    }
+
+    string line;
+    while(getline(file, line)) {
+        std::stringstream ss(line);
+        string attribute;
+        vector<string> tokens;
+        while (getline(ss, attribute, ',')) {
+            tokens.push_back(attribute);
+        }
+
+        if (tokens.size() != 5) {
+            formatErr("house");
+            continue;
+        }
+
+        System *system = System::getInstance();
+
+        House house;
+
+        string ownerID = tokens[4];
+        Member * owner = system->getMember(ownerID);
+        if (owner == nullptr) {
+            sysLog("Error: Owner with ID " + ownerID + " not found");
+            continue;
+        }
+
+        house.setOwner(owner);
+
+        house.setId(tokens[0]);
+        house.setLocation(tokens[1]);
+        house.setDescription(tokens[2]);
+        house.setCreditPointsPerDay(std::stoi(tokens[3]));
+
+        houseVect.push_back(house);
+        House * newHouse = &houseVect.back();
+
+        owner->setHouse(newHouse);
+    }
+    file.close();
+    successMess("Load", std::to_string(houseVect.size()), "house(s)");
+    return true;
+}
+
+
+//---------------------Instance getter-------------//
+Member * System::getMember(string ID) {
+    for (Member &member : memberVect) {
+        if (member.getId() ==  ID) {
+            return &member;
+        }
+    }
+    return nullptr;
+}
+
+House * System::getHouse(string ID) {
+    for (House &house : houseVect) {
+        if (house.getId() == ID) {
+            return &house;
+        }
+    }
+    return nullptr;
+}
+
+
+
+void System::getAvailableLocation() {
+    sysLog("Available locations: ");
+    for (string loc : availableLocation) {
+        sysLog(" -- " + loc);
+    }
+
+    sysLog("\n");
+}
+
+bool System::checkLocation(string location) {
+    for (string loc : availableLocation) {
+        if (loc ==  location) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool System::isInteger(string input) {
+    for (int i = 0; i < input.size(); i++) {
+        if (!isdigit(input[i])) {
+            return false;
+        }
+    }
+    return true;
+}
+
+
+//------------------------start and exit---------------//
+
+bool System::systemStart() {
+    sysLog("Loading data....\n");
+
+    if (!loadMember()) {
+        sysLog("Failed to load members!!!");
+        return false;
+    }
+
+    if (!loadHouse()) {
+        sysLog("Failed to load houses!!!");
+        return false;
+    }
+
+//    if (!loadRating()) {
+//        sysLog("Failed to load ratings!!!");
+//        return false;
+//    }
+//
+//    if (!loadRequest()) {
+//        sysLog("Failed to load requests!!!");
+//        return false;
+//    }
+
+    sysLog("Data loaded successfully");
+    return true;
+}
+
+bool System::systemShutdown() {
+    sysLog("Saving data....\n");
+
+    if (!saveMember()) {
+        sysLog("Failed to save members!!!");
+        return false;
+    }
+
+    if (!saveHouse()) {
+        sysLog("Failed to save houses!!!");
+        return false;
+    }
+
+//    if (!saveRating()) {
+//        sysLog("Failed to save ratings!!!");
+//        return false;
+//    }
+//
+//    if (!saveRequest()) {
+//        sysLog("Failed to save requests!!!");
+//        return false;
+//    }
+
+    sysLog("Saved data successfully \n\n");
+    sysLog("Shutting down.......\n\n");
+    return true;
+}
 
 // method

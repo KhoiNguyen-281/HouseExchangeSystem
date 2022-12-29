@@ -4,6 +4,7 @@
 
 #include "SystemModel.h"
 #define sysLog(x) cout << x;
+#define inputStr(x) getline(cin, x);
 #define newline "\n"
 #define skipLine() sysLog(newline);
 
@@ -97,6 +98,68 @@ bool Member::logout() {
     return System::getInstance()->logout();
 }
 
+
+bool Member::registerHouse() {
+    bool isHouseExisted = this->getHouse() != nullptr;
+
+    string location, description;
+    int creditPointsPerDay;
+
+    System *system = System::getInstance();
+    system->getAvailableLocation();
+
+    sysLog("Enter your house location: ");
+
+    if (cin.peek() == '\n') {
+        cin.ignore();
+    }
+
+    inputStr(location);
+    if (!system->checkLocation(location)) {
+        sysLog('\n');
+        sysLog("Location is not available");
+        return false;
+    }
+
+    sysLog("Enter your house description: ");
+    inputStr(description);
+
+
+    sysLog("Credit points per day: ");
+    string temp = "";
+    inputStr(temp);
+    while (!system->isInteger(temp)) {
+        sysLog("Invalid format, please try again");
+        inputStr(temp);
+    }
+
+    creditPointsPerDay = std::stoi(temp);
+
+    House house;
+
+    house.setOwner(this);
+    house.setLocation(location);
+    house.setDescription(description);
+    house.setCreditPointsPerDay(creditPointsPerDay);
+
+    string houseID = isHouseExisted ? this->getHouse()->getId() : "";
+
+    if (isHouseExisted) {
+        house.setId(houseID);
+    }
+
+    House * stored = System::getInstance()->addHouseToSys(house);
+
+    if (stored != nullptr) {
+        setHouse(stored);
+        sysLog("Listed house successfully!");
+    } else {
+        sysLog("Unable to register house");
+    }
+
+    return stored != nullptr;
+}
+
 bool Member::verifyPassword(string password){
      return password == this->getPassword();
 }
@@ -179,5 +242,4 @@ bool Member::updateInfo(){
     }
     return true;
 }
-
 
