@@ -163,18 +163,14 @@ public:
 
 
     //getter
-
     Member *getOwner() const;
-
     Member *getOccupier() const;
-
     const string &getId() const;
-
     const string &getLocation() const;
-
     const string &getDescription() const;
-
     int getCreditPointsPerDay() const;
+
+
 };
 
 class System {
@@ -196,7 +192,7 @@ private:
     //Vector database;
     vector<Member> memberVect;
     vector<House> houseVect;
-    vector<Request> requestVect;
+//    vector<Request> requestVect;
 
     //Current user
     Member* currentMem = nullptr;
@@ -258,16 +254,16 @@ public:
     bool loadRating();
     bool loadRequest();
 
-
+    //View functions
     bool showMember();
-    bool showHouseDetail();
+    void showHouseDetail();
 
+    void showAllHouse();
 
     void getAvailableLocation();
 
     bool checkLocation(string location);
-
-    bool isInteger(string input);
+    bool isInteger(const string& input);
 
 
     bool systemStart();
