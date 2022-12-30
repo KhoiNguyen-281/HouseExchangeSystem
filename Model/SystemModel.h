@@ -76,7 +76,6 @@ public:
 class Member : public Guest{
 private:
 
-
     string id;
     string userName;
     string fullName;
