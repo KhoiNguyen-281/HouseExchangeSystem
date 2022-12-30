@@ -49,6 +49,8 @@ public:
 
 class Member : public Guest{
 private:
+
+
     string id;
     string userName;
     string fullName;
@@ -105,8 +107,6 @@ public:
 class House {
 private:
 
-
-
     string id;
     string location;
     string description = "";
@@ -129,37 +129,30 @@ public:
 
     //setter
     void setOwner(Member *owner);
-
     void setOccupier(Member *occupier);
-
     void setId(const string &id);
-
     void setLocation(const string &location);
-
     void setDescription(const string &description);
-
     void setCreditPointsPerDay(int consumptionPts);
 
 
-
     //getter
-
     Member *getOwner() const;
-
     Member *getOccupier() const;
-
     const string &getId() const;
-
     const string &getLocation() const;
-
     const string &getDescription() const;
-
     int getCreditPointsPerDay() const;
+
+
 };
 
 class System {
 private:
-    int countMem = 1;
+    int countMem = 0;
+    int countHouse = 0;
+    int countRequest = 0;
+    int countRating = 0;
 
     static System * instancePointer;
     System();
@@ -173,6 +166,7 @@ private:
     //Vector database;
     vector<Member> memberVect;
     vector<House> houseVect;
+//    vector<Request> requestVect;
 
     //Current user
     Member* currentMem = nullptr;
@@ -195,7 +189,7 @@ public:
     bool updateInfo();
 
     //Function to generate id automatically
-    string generateID();
+    string generateID(int &count);
 
     //Authentication functions
     Member* registerMember(Member member);
@@ -204,7 +198,7 @@ public:
 
 
 
-    //Function to add objects to file
+    //Function to add objects to vector
     Member* addMemberToSys(Member member);
     House* addHouseToSys(House house);
     Rating* addRatingtoSys(Rating rating);
@@ -234,20 +228,19 @@ public:
     bool loadRating();
     bool loadRequest();
 
-
+    //View functions
     bool showMember();
-    bool showHouseDetail();
+    void showHouseDetail();
 
+    void showAllHouse();
 
     void getAvailableLocation();
 
     bool checkLocation(string location);
-
-    bool isInteger(string input);
+    bool isInteger(const string& input);
 
 
     bool systemStart();
-
     bool systemShutdown();
 
     virtual ~System();

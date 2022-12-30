@@ -22,12 +22,13 @@ int main() {
     bool isAdmin = system->isAdmin();
 
 //    system->registerMember(*Guest::registerNewMember());
-    Guest::login();
+//    Guest::login();
     Guest::registerNewMember();
-    // system->saveMember();
+    Guest::registerNewMember();
+     system->saveMember();
     Guest::login();
-    Member::changePassword();
-    cout << system->getCurrentMem()->getPassword();
+//    Member::changePassword();
+//    cout << system->getCurrentMem()->getPassword();
 
 
 }

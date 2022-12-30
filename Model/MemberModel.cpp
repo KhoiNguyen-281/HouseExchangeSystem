@@ -83,6 +83,7 @@ void Member::setId(const string &id) {
     Member::id = id;
 }
 
+
 //Authentication function
 Member * Member::registerNewMember() {
     sysLog("You are already logged in");
@@ -134,7 +135,6 @@ bool Member::registerHouse() {
     }
 
     creditPointsPerDay = std::stoi(temp);
-
     House house;
 
     house.setOwner(this);
@@ -192,15 +192,15 @@ bool Member::updateInfo(){
     skipLine();
 
     sysLog("Username: ")
-    System::getInstance()->getCurrentMem()->getUserName();
+//    System::getInstance()->getCurrentMem()->getUserName();
     skipLine();
 
     sysLog("Fullname: ")
-    System::getInstance()->getCurrentMem()->getFullName();
+//    System::getInstance()->getCurrentMem()->getFullName();
     skipLine();
 
     sysLog("Phone: ");
-    System::getInstance()->getCurrentMem()->getPhoneNum();
+//    System::getInstance()->getCurrentMem()->getPhoneNum();
     skipLine();
 
     sysLog("Enter your option: ");
