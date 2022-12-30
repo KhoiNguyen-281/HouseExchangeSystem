@@ -135,7 +135,6 @@ bool Member::registerHouse() {
     }
 
     creditPointsPerDay = std::stoi(temp);
-
     House house;
 
     house.setOwner(this);

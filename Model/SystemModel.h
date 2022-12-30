@@ -5,7 +5,9 @@
 #ifndef SED_GROUP_SYSTEMMODEL_H
 #define SED_GROUP_SYSTEMMODEL_H
 #include <iostream>
-#include <string>
+#include "string"
+#include <ctime>
+
 
 using std::string;
 using std::cout;
@@ -15,6 +17,13 @@ using std::to_string;
 #include <vector>
 
 #define CREDIT_POINT 500;
+
+int thisYear() {
+    std::time_t t = std::time(nullptr);
+    std::tm *const pTInfo = std::localtime(&t);
+    return 1900 + pTInfo->tm_year;
+}
+
 
 class Guest;
 class Member;
@@ -26,7 +35,7 @@ class Date {
 private:
     int month;
     int date;
-    int year;
+    int year = thisYear();
 
 public:
     Date();
@@ -35,6 +44,23 @@ public:
     Date(Date &date);
 
     Date &operator = (Date&otherDate);
+
+    //getter
+    int getMonth() const;
+    int getDate() const;
+    int getYear() const;
+
+    //Setter
+    void setMonth(int month);
+    void setDate(int date);
+    void setYear(int year);
+
+
+    static bool isDateValid(string date);
+
+    static Date parseDate(string date);
+
+    int getDuration(Date start, Date end);
 };
 
 class Guest {
@@ -136,18 +162,14 @@ public:
 
 
     //getter
-
     Member *getOwner() const;
-
     Member *getOccupier() const;
-
     const string &getId() const;
-
     const string &getLocation() const;
-
     const string &getDescription() const;
-
     int getCreditPointsPerDay() const;
+
+
 };
 
 class System {
@@ -231,16 +253,16 @@ public:
     bool loadRating();
     bool loadRequest();
 
-
+    //View functions
     bool showMember();
-    bool showHouseDetail();
+    void showHouseDetail();
 
+    void showAllHouse();
 
     void getAvailableLocation();
 
     bool checkLocation(string location);
-
-    bool isInteger(string input);
+    bool isInteger(const string& input);
 
 
     bool systemStart();

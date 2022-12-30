@@ -13,6 +13,7 @@
 #include <sstream>
 
 
+
 const string MEMBERS = "members.dat";
 const string HOUSES = "houses.dat";
 const string REQUESTS = "requests.dat";
@@ -22,6 +23,8 @@ const string REQUESTS = "requests.dat";
 string getFilePath(const string &file) {
     return "../Data/" + file;
 }
+
+
 
 
 void Member::showInfo() {
@@ -439,8 +442,6 @@ House * System::getHouse(string ID) {
     return nullptr;
 }
 
-
-
 void System::getAvailableLocation() {
     sysLog("Available locations: ");
     for (string loc : availableLocation) {
@@ -459,13 +460,48 @@ bool System::checkLocation(string location) {
     return false;
 }
 
-bool System::isInteger(string input) {
-    for (int i = 0; i < input.size(); i++) {
-        if (!isdigit(input[i])) {
+bool System::isInteger(const string& input) {
+    for (char i : input) {
+        if (!isdigit(i)) {
             return false;
         }
     }
     return true;
+}
+
+void System::showHouseDetail() {
+    if (currentMem == nullptr) {
+        sysLog("Please log in to view house details");
+        return;
+    }
+
+    House * house = currentMem->getHouse();
+
+    if (house == nullptr) {
+        sysLog("You have not registered any house yet");
+        string choice;
+        sysLog("Do you want to register your house ? (Y/N)");
+        inputStr(choice);
+        if (choice == "N" || choice == "n") {
+            return;
+        }
+        if (choice != "Y" || choice  != "y") {
+            sysLog(" \n Invalid response \n");
+            return;
+        }
+        currentMem->registerHouse();
+        return;
+    }
+
+    sysLog("House ID: " + house->getId());
+    sysLog("Location: " + house->getLocation());
+    sysLog("Description: " + house->getDescription());
+
+    if (house.get)
+}
+
+void System::showAllHouse() {
+
 }
 
 
@@ -525,5 +561,8 @@ bool System::systemShutdown() {
     sysLog("Shutting down.......\n\n");
     return true;
 }
+
+
+
 
 // method
