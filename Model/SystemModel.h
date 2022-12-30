@@ -50,7 +50,6 @@ public:
 class Member : public Guest{
 private:
 
-
     string id;
     string userName;
     string fullName;
@@ -170,7 +169,7 @@ private:
     //Vector database;
     vector<Member> memberVect;
     vector<House> houseVect;
-    vector<Request> requestVect;
+//    vector<Request> requestVect;
 
     //Current user
     Member* currentMem = nullptr;
