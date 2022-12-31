@@ -63,3 +63,30 @@ int House::getCreditPointsPerDay() const {
     return creditPointsPerDay;
 }
 
+void House::setStartListDate( Date startListDate) {
+    House::startListDate = startListDate;
+}
+
+void House::setEndListDate( Date endListDate) {
+    House::endListDate = endListDate;
+}
+
+Date House::getStartListDate() {
+    return startListDate;
+}
+
+Date House::getEndListDate() {
+    return endListDate;
+}
+
+
+
+
+//void House::setStartListDate1(Date *startListDate) {
+//    House::startListDate = startListDate;
+//}
+//
+//void House::setEndListDate1(Date *endListDate) {
+//    House::endListDate = endListDate;
+//}
+

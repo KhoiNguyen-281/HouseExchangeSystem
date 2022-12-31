@@ -20,24 +20,32 @@ int checkMonth(int month, int year, int duration) {
     return duration;
 }
 
-
 #define sysLog(x) cout << x;
 
 Date::Date() {};
 Date::~Date() {}
 
-Date::Date(Date &otherDate) {
+Date::Date(const Date &otherDate) {
     date = otherDate.date;
     month = otherDate.month;
     year = otherDate.year;
 }
 
-Date &Date::operator=(Date &otherDate) {
+Date &Date::operator=(const Date &otherDate) {
     date = otherDate.date;
     month = otherDate.month;
     year = otherDate.year;
     return * this;
 }
+
+string Date::dateToString() {
+    std::stringstream  ss;
+    ss  << std::setfill('0') << std::setw(2) << date << '/'
+        << std::setfill('0') << std::setw(2) << month << '/'
+        << year;
+    return ss.str();
+}
+
 
 //---------------------------Getter and setter------------------//
 int Date::getMonth() const {
@@ -122,6 +130,7 @@ Date Date::parseDate(string date) {
     dateTemp.setDate(std::stoi(date.substr(0, 2)));
     dateTemp.setMonth(std::stoi(date.substr(3, 2)));
     dateTemp.setYear(std::stoi(date.substr(6, 4)));
+    return dateTemp;
 }
 
 int Date::getDuration(Date start, Date end) {
@@ -146,4 +155,5 @@ int Date::getDuration(Date start, Date end) {
 
     return durations;
 }
+
 

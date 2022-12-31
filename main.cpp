@@ -20,13 +20,20 @@ int main() {
     System * system = System::getInstance();
     bool isLoggedIn = system->isUser();
     bool isAdmin = system->isAdmin();
-
+//    system->systemStart();
+//    system->loadMember();
+//    system->loadHouse();
 //    system->registerMember(*Guest::registerNewMember());
 //    Guest::login();
     Guest::registerNewMember();
-    Guest::registerNewMember();
-     system->saveMember();
-    Guest::login();
+//    Guest::registerNewMember();
+
+    system->getCurrentMem()->registerHouse();
+    system->saveMember();
+    system->saveHouse();
+
+//    system->systemShutdown();
+//    Guest::login();
 //    Member::changePassword();
 //    cout << system->getCurrentMem()->getPassword();
 

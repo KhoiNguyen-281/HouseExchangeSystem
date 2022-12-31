@@ -281,9 +281,12 @@ bool System::saveHouse() {
     }
 
     for (House house : houseVect) {
-        file << house.getId() << ","
+        file
+             << house.getId() << ","
              << house.getLocation() << ","
              << house.getDescription() << ","
+             << house.getStartListDate().dateToString() << ","
+             << house.getEndListDate().dateToString() << ","
              << house.getCreditPointsPerDay() << ","
              << house.getOwner()->getId() << "\n";
     }
@@ -387,7 +390,7 @@ bool System::loadHouse() {
             tokens.push_back(attribute);
         }
 
-        if (tokens.size() != 5) {
+        if (tokens.size() != 7) {
             formatErr("house");
             continue;
         }
@@ -396,7 +399,7 @@ bool System::loadHouse() {
 
         House house;
 
-        string ownerID = tokens[4];
+        string ownerID = tokens[6];
         Member * owner = system->getMember(ownerID);
         if (owner == nullptr) {
             sysLog("Error: Owner with ID " + ownerID + " not found");
@@ -407,7 +410,9 @@ bool System::loadHouse() {
         house.setId(tokens[0]);
         house.setLocation(tokens[1]);
         house.setDescription(tokens[2]);
-        house.setCreditPointsPerDay(std::stoi(tokens[3]));
+        house.setStartListDate(Date::parseDate(tokens[3]));
+        house.setEndListDate(Date::parseDate(tokens[4]));
+        house.setCreditPointsPerDay(std::stoi(tokens[5]));
 
         houseVect.push_back(house);
         House * newHouse = &houseVect.back();
@@ -444,8 +449,10 @@ House * System::getHouse(string ID) {
 
 void System::getAvailableLocation() {
     sysLog("Available locations: ");
+    int count = 1;
     for (string loc : availableLocation) {
-        sysLog(" -- " + loc);
+        sysLog(" -"+ to_string(count) +"- " + loc);
+        count += 1;
     }
 
     sysLog("\n");
@@ -497,7 +504,7 @@ void System::showHouseDetail() {
     sysLog("Location: " + house->getLocation());
     sysLog("Description: " + house->getDescription());
 
-    if (house.get)
+//    if (house.get)
 }
 
 void System::showAllHouse() {

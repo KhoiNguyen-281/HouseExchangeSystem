@@ -41,9 +41,9 @@ public:
     Date();
 
     ~Date();
-    Date(Date &date);
+    Date(const Date &date);
 
-    Date &operator = (Date&otherDate);
+    Date &operator = (const Date&otherDate);
 
     //getter
     int getMonth() const;
@@ -58,9 +58,11 @@ public:
 
     static bool isDateValid(string date);
 
-    static Date parseDate(string date);
+    static Date parseDate( string date);
 
     int getDuration(Date start, Date end);
+
+    string dateToString();
 };
 
 class Guest {
@@ -140,9 +142,9 @@ private:
 
     Member* owner = nullptr;
     Member* occupier = nullptr;
-
-//    Date listingStart;
-//    Date listingEnd;
+//
+    Date startListDate;
+    Date endListDate;
 
 public:
     House(Member *owner, string id, string location, string description, int consumptionPts);
@@ -160,6 +162,9 @@ public:
     void setDescription(const string &description);
     void setCreditPointsPerDay(int consumptionPts);
 
+    void setStartListDate( Date startListDate);
+
+    void setEndListDate( Date endListDate);
 
     //getter
     Member *getOwner() const;
@@ -169,7 +174,9 @@ public:
     const string &getDescription() const;
     int getCreditPointsPerDay() const;
 
+    Date getStartListDate();
 
+    Date getEndListDate();
 };
 
 class System {
