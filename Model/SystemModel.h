@@ -62,6 +62,8 @@ public:
 
     int getDuration(Date start, Date end);
 
+    static int compareDate(Date dateInSys, Date inputDate);
+
     string dateToString();
 };
 
@@ -73,6 +75,8 @@ public:
     static Member* registerNewMember();
 
     static Member* login();
+
+    void showAllHouse();
 };
 
 class Member : public Guest{
@@ -127,6 +131,8 @@ public:
     bool registerHouse();
     int unListHouse(vector<House> &houseVector);
 
+    bool isHouseAvailable(House * house, Date startDate, Date endDate);
+
     virtual ~Member();
 
 };
@@ -139,6 +145,7 @@ private:
     string description = "";
 
     int creditPointsPerDay = 0;
+    float minimumOccupierRating = 0.0;
 
     Member* owner = nullptr;
     Member* occupier = nullptr;
@@ -161,6 +168,7 @@ public:
     void setLocation(const string &location);
     void setDescription(const string &description);
     void setCreditPointsPerDay(int consumptionPts);
+    void setMinimumOccupierRating(float minimumOccupierRating);
 
     void setStartListDate( Date startListDate);
 
@@ -174,9 +182,40 @@ public:
     const string &getDescription() const;
     int getCreditPointsPerDay() const;
 
+    float getMinimumOccupierRating() const;
+
     Date getStartListDate();
 
     Date getEndListDate();
+};
+
+class Rating {
+private:
+    // Attributes
+    Member* rater = nullptr;
+    double score;
+    string comment;
+
+public:
+    // Constructor
+    Rating(Member * rater, double score, string comment);
+    ~Rating();
+
+    // Setter Methods
+    void setRating(Member* rater, double score, string comment);
+    void setRater(Member *rater);
+    void setScore(double score);
+    void setComment(const string &comment);
+
+    // Getter Methods
+    Member *getRater() const;
+    double getScore() const;
+    string getComment() const;
+
+
+    // Friend class
+//    friend class Member;
+//    friend class House;
 };
 
 class System {
@@ -263,11 +302,11 @@ public:
     //View functions
     bool showMember();
     void showHouseDetail();
-
     void showAllHouse();
 
     void getAvailableLocation();
 
+    //Verify input function
     bool checkLocation(string location);
     bool isInteger(const string& input);
 

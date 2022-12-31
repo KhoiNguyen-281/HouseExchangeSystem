@@ -12,6 +12,7 @@ using std::cin;
 #include "Model/GuestModel.cpp"
 #include "Model/HouseModel.cpp"
 #include "Model/DateModel.cpp"
+#include "Model/RatingModel.cpp"
 
 
 
@@ -21,8 +22,8 @@ int main() {
     bool isLoggedIn = system->isUser();
     bool isAdmin = system->isAdmin();
 //    system->systemStart();
-//    system->loadMember();
-//    system->loadHouse();
+    system->loadMember();
+    system->loadHouse();
 //    system->registerMember(*Guest::registerNewMember());
 //    Guest::login();
     Guest::registerNewMember();

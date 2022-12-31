@@ -107,6 +107,7 @@ bool Member::registerHouse() {
     int creditPointsPerDay;
     Date endDate;
     Date startDate;
+    float minimumRequiredScore;
 
     System *system = System::getInstance();
     system->getAvailableLocation();
@@ -157,6 +158,16 @@ bool Member::registerHouse() {
     }
 
     creditPointsPerDay = std::stoi(temp);
+
+    sysLog("Minimum required score (0.0): ");
+    cin >> minimumRequiredScore;
+    while (!cin) {
+        sysLog("Invalid format, please try again\n");
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cin >> minimumRequiredScore;
+    }
+
     House house;
 
     house.setOwner(this);
@@ -165,6 +176,7 @@ bool Member::registerHouse() {
     house.setStartListDate(startDate);
     house.setEndListDate(endDate);
     house.setCreditPointsPerDay(creditPointsPerDay);
+    house.setMinimumOccupierRating(minimumRequiredScore);
 
     string houseID = isHouseExisted ? this->getHouse()->getId() : "";
 
@@ -176,9 +188,9 @@ bool Member::registerHouse() {
 
     if (stored != nullptr) {
         setHouse(stored);
-        sysLog("Listed house successfully!");
+        sysLog("Registered house successfully! \n\n");
     } else {
-        sysLog("Unable to register house");
+        sysLog("Unable to register house \n\n");
     }
 
     return stored != nullptr;

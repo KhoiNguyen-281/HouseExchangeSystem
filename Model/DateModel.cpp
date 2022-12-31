@@ -46,6 +46,32 @@ string Date::dateToString() {
     return ss.str();
 }
 
+int Date::compareDate(Date dateInSys, Date inputDate) {
+    //Check if year is conflict
+    if (dateInSys.getYear() > inputDate.getYear()) {
+        return -1;
+    } else if (dateInSys.getYear() < inputDate.getYear()) {
+        return 1;
+    } else {
+        //Check if month is conflict
+        if (dateInSys.getMonth() > inputDate.getMonth()) {
+            return -1;
+        } else if (dateInSys.getMonth() < inputDate.getMonth()) {
+            return 1;
+        } else {
+            //Check if day is conflict
+            if (dateInSys.getDate() > inputDate.getDate()) {
+                return -1;
+            } else if (dateInSys.getDate() < inputDate.getDate()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+}
+
+
 
 //---------------------------Getter and setter------------------//
 int Date::getMonth() const {
@@ -155,5 +181,6 @@ int Date::getDuration(Date start, Date end) {
 
     return durations;
 }
+
 
 
