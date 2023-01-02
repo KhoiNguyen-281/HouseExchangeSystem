@@ -1,19 +1,5 @@
-//
-// Created by Macbook Pro Silver on 29/12/2022.
-//
-//
-// Created by Macbook Pro Silver on 27/12/2022.
-//
-
 #include "HomepageController.h"
 #include "../Model/SystemModel.h"
-//#include "../Model/"
-
-//
-// Created by Macbook Pro Silver on 27/12/2022.
-//
-
-
 #include <iostream>
 #include "string"
 
@@ -21,9 +7,7 @@ using std::string;
 using std::cout;
 using std::cin;
 
-
 using namespace HomepageComponent;
-
 
 namespace HomepageComponent{
     int optionInput() {
@@ -56,7 +40,6 @@ namespace HomepageComponent{
                 system->loadHouse();
 
                 system->viewAllHouse();
-//                displayMemberHomepage();
                 break;
             }
             case 2: {
