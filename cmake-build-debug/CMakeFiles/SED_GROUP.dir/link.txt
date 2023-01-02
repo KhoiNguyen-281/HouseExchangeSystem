@@ -1,3 +1,0 @@
-C:\Users\ad\Downloads\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\SED_GROUP.dir/objects.a
-C:\Users\ad\Downloads\bin\mingw\bin\ar.exe qc CMakeFiles\SED_GROUP.dir/objects.a @CMakeFiles\SED_GROUP.dir\objects1.rsp
-C:\Users\ad\Downloads\bin\mingw\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\SED_GROUP.dir/objects.a -Wl,--no-whole-archive -o SED_GROUP.exe -Wl,--out-implib,libSED_GROUP.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\SED_GROUP.dir\linklibs.rsp
