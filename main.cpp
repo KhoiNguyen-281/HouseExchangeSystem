@@ -13,7 +13,10 @@ using std::cin;
 #include "Model/HouseModel.cpp"
 #include "Model/DateModel.cpp"
 #include "Model/RatingModel.cpp"
+#include "Controllers/HomepageController.h"
+#include "Controllers/HomepageController.cpp"
 
+using namespace HomepageComponent;
 
 
 int main() {
@@ -22,8 +25,8 @@ int main() {
     bool isLoggedIn = system->isUser();
     bool isAdmin = system->isAdmin();
 //    system->systemStart();
-    system->loadMember();
-    system->loadHouse();
+//    system->loadMember();
+//    system->loadHouse();
 //    system->registerMember(*Guest::registerNewMember());
 //    Guest::login();
 //    Guest::registerNewMember();
@@ -33,12 +36,12 @@ int main() {
 //    system->saveMember();
 //    system->saveHouse();
 
-    system->viewAllHouse();
+//    system->viewAllHouse();
 
 //    system->systemShutdown();
 //    Guest::login();
 //    Member::changePassword();
 //    cout << system->getCurrentMem()->getPassword();
 
-
+    displayAppHomepage();
 }

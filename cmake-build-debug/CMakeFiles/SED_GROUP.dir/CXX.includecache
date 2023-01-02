@@ -6,6 +6,18 @@
 
 #IncludeRegexTransform: 
 
+/Users/macbookpro/Desktop/C++/SED_GROUP/Controllers/HomepageController.cpp
+HomepageController.h
+/Users/macbookpro/Desktop/C++/SED_GROUP/Controllers/HomepageController.h
+../Model/SystemModel.h
+/Users/macbookpro/Desktop/C++/SED_GROUP/Model/SystemModel.h
+iostream
+-
+string
+/Users/macbookpro/Desktop/C++/SED_GROUP/Controllers/string
+
+/Users/macbookpro/Desktop/C++/SED_GROUP/Controllers/HomepageController.h
+
 /Users/macbookpro/Desktop/C++/SED_GROUP/Model/DateModel.cpp
 SystemModel.h
 /Users/macbookpro/Desktop/C++/SED_GROUP/Model/SystemModel.h
@@ -71,4 +83,8 @@ Model/DateModel.cpp
 /Users/macbookpro/Desktop/C++/SED_GROUP/Model/DateModel.cpp
 Model/RatingModel.cpp
 /Users/macbookpro/Desktop/C++/SED_GROUP/Model/RatingModel.cpp
+Controllers/HomepageController.h
+/Users/macbookpro/Desktop/C++/SED_GROUP/Controllers/HomepageController.h
+Controllers/HomepageController.cpp
+/Users/macbookpro/Desktop/C++/SED_GROUP/Controllers/HomepageController.cpp
 
