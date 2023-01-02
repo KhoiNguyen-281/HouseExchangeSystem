@@ -37,6 +37,10 @@ void House::setCreditPointsPerDay(int creditPointsPerDay) {
     House::creditPointsPerDay = creditPointsPerDay;
 }
 
+void House::setMinimumOccupierRating(float minimumOccupierRating) {
+    House::minimumOccupierRating = minimumOccupierRating;
+}
+
 
 //-----------------------------Getter-----------------------//
 Member *House::getOwner() const {
@@ -62,4 +66,36 @@ const string &House::getDescription() const {
 int House::getCreditPointsPerDay() const {
     return creditPointsPerDay;
 }
+
+float House::getMinimumOccupierRating() const {
+    return minimumOccupierRating;
+}
+
+void House::setStartListDate( Date startListDate) {
+    House::startListDate = startListDate;
+}
+
+void House::setEndListDate( Date endListDate) {
+    House::endListDate = endListDate;
+}
+
+Date House::getStartListDate() {
+    return startListDate;
+}
+
+Date House::getEndListDate() {
+    return endListDate;
+}
+
+
+
+//Show info function
+void House::showInfo() {
+    sysLog("House ID: " + this->id + "\n");
+    sysLog("Location: " + this->location + "\n");
+    sysLog("Description: " + this->description + "\n");
+    sysLog("Credit points per day: " + to_string(this->creditPointsPerDay) + "\n");
+}
+
+
 

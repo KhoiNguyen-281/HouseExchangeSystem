@@ -105,42 +105,78 @@ bool Member::registerHouse() {
 
     string location, description;
     int creditPointsPerDay;
+    Date endDate;
+    Date startDate;
+    float minimumRequiredScore;
 
     System *system = System::getInstance();
     system->getAvailableLocation();
 
-    sysLog("Enter your house location: ");
+    sysLog("Enter your house information to register \n");
 
-    if (cin.peek() == '\n') {
-        cin.ignore();
-    }
-
+    sysLog("Location: ");
     inputStr(location);
-    if (!system->checkLocation(location)) {
+
+    while (!system->checkLocation(location)) {
         sysLog('\n');
-        sysLog("Location is not available");
-        return false;
+        sysLog("Location is not available, please try again \n");
+        sysLog("Location: ");
+        inputStr(location);
     }
 
-    sysLog("Enter your house description: ");
+    sysLog("House description: ");
     inputStr(description);
 
-
-    sysLog("Credit points per day: ");
     string temp = "";
+    sysLog("Enter house listing start date and end date \n")
+    sysLog("Start date: ");
+    inputStr(temp);
+    while (!Date::isDateValid(temp)) {
+        sysLog("Invalid date format, please try again! \n")
+        sysLog("Start date: ");
+        inputStr(temp);
+    }
+
+    startDate = Date::parseDate(temp);
+
+    temp = "";
+    sysLog("End date: ");
+    inputStr(temp);
+    while (!Date::isDateValid(temp)) {
+        sysLog("End date: ");
+        inputStr(temp);
+    }
+
+    endDate = Date::parseDate(temp);
+
+    temp = "";
+    sysLog("Credit points per day: ");
     inputStr(temp);
     while (!system->isInteger(temp)) {
-        sysLog("Invalid format, please try again");
+        sysLog("Invalid format, please try again \n");
         inputStr(temp);
     }
 
     creditPointsPerDay = std::stoi(temp);
+
+    sysLog("Minimum required score (0.0): ");
+    cin >> minimumRequiredScore;
+    while (!cin) {
+        sysLog("Invalid format, please try again\n");
+        cin.clear();
+        cin.ignore(1000, '\n');
+        cin >> minimumRequiredScore;
+    }
+
     House house;
 
     house.setOwner(this);
     house.setLocation(location);
     house.setDescription(description);
+    house.setStartListDate(startDate);
+    house.setEndListDate(endDate);
     house.setCreditPointsPerDay(creditPointsPerDay);
+    house.setMinimumOccupierRating(minimumRequiredScore);
 
     string houseID = isHouseExisted ? this->getHouse()->getId() : "";
 
@@ -152,9 +188,9 @@ bool Member::registerHouse() {
 
     if (stored != nullptr) {
         setHouse(stored);
-        sysLog("Listed house successfully!");
+        sysLog("Registered house successfully! \n\n");
     } else {
-        sysLog("Unable to register house");
+        sysLog("Unable to register house \n\n");
     }
 
     return stored != nullptr;
@@ -242,4 +278,6 @@ bool Member::updateInfo(){
     }
     return true;
 }
+
+
 

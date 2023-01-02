@@ -41,9 +41,9 @@ public:
     Date();
 
     ~Date();
-    Date(Date &date);
+    Date(const Date &date);
 
-    Date &operator = (Date&otherDate);
+    Date &operator = (const Date&otherDate);
 
     //getter
     int getMonth() const;
@@ -58,9 +58,13 @@ public:
 
     static bool isDateValid(string date);
 
-    static Date parseDate(string date);
+    static Date parseDate( string date);
 
     int getDuration(Date start, Date end);
+
+    static int compareDate(Date dateInSys, Date inputDate);
+
+    string dateToString();
 };
 
 class Guest {
@@ -71,6 +75,8 @@ public:
     static Member* registerNewMember();
 
     static Member* login();
+
+    void showAllHouse();
 };
 
 class Member : public Guest{
@@ -123,7 +129,8 @@ public:
     bool deleteProfile();
 
     bool registerHouse();
-    int unListHouse(vector<House> &houseVector);
+    bool isHouseAvailable(House * house, Date startDate, Date endDate);
+
 
     virtual ~Member();
 
@@ -137,12 +144,13 @@ private:
     string description = "";
 
     int creditPointsPerDay = 0;
+    float minimumOccupierRating = 0.0;
 
     Member* owner = nullptr;
     Member* occupier = nullptr;
-
-//    Date listingStart;
-//    Date listingEnd;
+//
+    Date startListDate;
+    Date endListDate;
 
 public:
     House(Member *owner, string id, string location, string description, int consumptionPts);
@@ -159,7 +167,9 @@ public:
     void setLocation(const string &location);
     void setDescription(const string &description);
     void setCreditPointsPerDay(int consumptionPts);
-
+    void setMinimumOccupierRating(float minimumOccupierRating);
+    void setStartListDate( Date startListDate);
+    void setEndListDate( Date endListDate);
 
     //getter
     Member *getOwner() const;
@@ -168,8 +178,38 @@ public:
     const string &getLocation() const;
     const string &getDescription() const;
     int getCreditPointsPerDay() const;
+    float getMinimumOccupierRating() const;
+    Date getStartListDate();
+    Date getEndListDate();
+};
+
+class Rating {
+private:
+    // Attributes
+    Member* rater = nullptr;
+    double score;
+    string comment;
+
+public:
+    // Constructor
+    Rating(Member * rater, double score, string comment);
+    ~Rating();
+
+    // Setter Methods
+    void setRating(Member* rater, double score, string comment);
+    void setRater(Member *rater);
+    void setScore(double score);
+    void setComment(const string &comment);
+
+    // Getter Methods
+    Member *getRater() const;
+    double getScore() const;
+    string getComment() const;
 
 
+    // Friend class
+//    friend class Member;
+//    friend class House;
 };
 
 class System {
@@ -195,7 +235,7 @@ private:
 
     //Current user
     Member* currentMem = nullptr;
-    bool isUserLoggedIn = false;
+    bool isLoggedIn = false;
     bool isAdminLoggedin = false;
 
     //setter
@@ -254,15 +294,18 @@ public:
     bool loadRequest();
 
     //View functions
-    bool showMember();
-    void showHouseDetail();
-
-    void showAllHouse();
+    bool viewMember();
+    void viewHouseDetail();
+    void viewAllHouse();
 
     void getAvailableLocation();
 
+    //Verify input function
     bool checkLocation(string location);
     bool isInteger(const string& input);
+
+
+    bool removeHouse();
 
 
     bool systemStart();
