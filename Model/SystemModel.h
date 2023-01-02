@@ -129,9 +129,8 @@ public:
     bool deleteProfile();
 
     bool registerHouse();
-    int unListHouse(vector<House> &houseVector);
-
     bool isHouseAvailable(House * house, Date startDate, Date endDate);
+
 
     virtual ~Member();
 
@@ -169,9 +168,7 @@ public:
     void setDescription(const string &description);
     void setCreditPointsPerDay(int consumptionPts);
     void setMinimumOccupierRating(float minimumOccupierRating);
-
     void setStartListDate( Date startListDate);
-
     void setEndListDate( Date endListDate);
 
     //getter
@@ -181,11 +178,8 @@ public:
     const string &getLocation() const;
     const string &getDescription() const;
     int getCreditPointsPerDay() const;
-
     float getMinimumOccupierRating() const;
-
     Date getStartListDate();
-
     Date getEndListDate();
 };
 
@@ -241,7 +235,7 @@ private:
 
     //Current user
     Member* currentMem = nullptr;
-    bool isUserLoggedIn = false;
+    bool isLoggedIn = false;
     bool isAdminLoggedin = false;
 
     //setter
@@ -300,15 +294,18 @@ public:
     bool loadRequest();
 
     //View functions
-    bool showMember();
-    void showHouseDetail();
-    void showAllHouse();
+    bool viewMember();
+    void viewHouseDetail();
+    void viewAllHouse();
 
     void getAvailableLocation();
 
     //Verify input function
     bool checkLocation(string location);
     bool isInteger(const string& input);
+
+
+    bool removeHouse();
 
 
     bool systemStart();

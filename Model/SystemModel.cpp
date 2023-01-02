@@ -6,6 +6,7 @@
 #define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
 #define formatErr(x) cout << "Error: Invalid " << x <<" format \n";
 #define successMess(x, y, z) cout << x << " " << y << " " << z << "\n";
+#define skip() cout << "\n\n";
 
 #include "SystemModel.h"
 #include <random>
@@ -33,6 +34,7 @@ void Member::showInfo() {
     sysLog("Full name: " << this->fullName <<"\n");
     sysLog("Phone number: " << this->phoneNum <<"\n");
     sysLog("Credit point: " << this->creditP << std::endl);
+
 }
 
 
@@ -118,7 +120,7 @@ void System::setCurrentMem(Member *currentMem) {
 }
 
 void System::setIsLoggedIn(bool isLoggedIn) {
-    this->isUserLoggedIn = isLoggedIn;
+    this->isLoggedIn = isLoggedIn;
 }
 
 void System::setIsAdmin(bool isAdmin) {
@@ -134,7 +136,7 @@ Member *System::getCurrentMem() {
 }
 
 bool System::isUser() const{
-    return isUserLoggedIn;
+    return isLoggedIn;
 }
 
 bool System::isAdmin() const{
@@ -157,7 +159,8 @@ Member * System::registerMember(Member member) {
     setCurrentMem(newMem);
     setIsLoggedIn(true);
     string username, password, fullName, phone;
-    sysLog("Sign up successfully! awarded with 500 points. \n\n");
+    sysLog("Sign up successfully! awarded with 500 points.");
+    skip();
 
 
     return newMem;
@@ -169,7 +172,6 @@ Member *System::login(string username, string password) {
             setCurrentMem(nullptr);
             setIsLoggedIn(true);
             setIsAdmin(true);
-
             sysLog("\nLogged in as an admin\n");
             return nullptr;
         } else {
@@ -480,7 +482,7 @@ bool System::isInteger(const string& input) {
 }
 
 
-void System::showHouseDetail() {
+void System::viewHouseDetail() {
     if (currentMem == nullptr) {
         sysLog("Please log in to view house details");
         return;
@@ -514,12 +516,64 @@ void System::showHouseDetail() {
     }
 }
 
-void System::showAllHouse() {
-    for (House & house : houseVect) {
-        house.showInfo();
+void System::viewAllHouse() {
+
+    if (!isLoggedIn) {
+        for (House & house : houseVect) {
+            house.showInfo();
+        }
+    } else {
+        for (House & house : houseVect) {
+            house.showInfo();
+            sysLog("Listing start from: " + house.getStartListDate().dateToString());
+            sysLog("Listing end at: " + house.getEndListDate().dateToString());
+        }
     }
 }
 
+
+bool System::removeHouse() {
+    if (currentMem == nullptr) {
+        sysLog("You must login first !\n \n");
+        return false;
+    }
+
+    House * houseTmp = currentMem->getHouse();
+
+    if (houseTmp == nullptr) {
+        sysLog("You have not register any house yet");
+        skip();
+        return false;
+    }
+    string res = "";
+    sysLog("Are you sure you want to remove your house from system ? (Y/N) \n");
+    inputStr(res);
+
+    if (res == "N" || res == "n") {
+        skip();
+        return false;
+    }
+
+    if (res == "Y" || res == "y") {
+        for (House & house  : houseVect) {
+            if (house.getId() == houseTmp->getId()) {
+                currentMem->setHouse(nullptr);
+
+                houseVect.erase(houseVect.begin() + (std::stoi(house.getId()) - 1));
+                skip();
+                sysLog("Remove house successfully!!");
+                return true;
+            } else {
+                skip();
+                sysLog("Cannot find your house in the system");
+                return false;
+            }
+        }
+    }
+
+    sysLog("Invalid response");
+    return false;
+}
 
 //------------------------start and exit---------------//
 
@@ -573,8 +627,10 @@ bool System::systemShutdown() {
 //        return false;
 //    }
 
-    sysLog("Saved data successfully \n\n");
-    sysLog("Shutting down.......\n\n");
+    sysLog("Saved data successfully ");
+    skip();
+    sysLog("Shutting down.......");
+    skip();
     return true;
 }
 
