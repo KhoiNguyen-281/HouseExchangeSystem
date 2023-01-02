@@ -13,6 +13,7 @@ using std::cin;
 #include "Model/HouseModel.cpp"
 #include "Model/DateModel.cpp"
 #include "Model/RatingModel.cpp"
+#include "Controllers/HomepageController.cpp"
 
 
 
