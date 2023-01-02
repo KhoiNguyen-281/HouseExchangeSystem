@@ -1,3 +1,1 @@
-C:\Users\ad\Downloads\bin\cmake\win\bin\cmake.exe -E rm -f CMakeFiles\SED_GROUP.dir/objects.a
-C:\Users\ad\Downloads\bin\mingw\bin\ar.exe qc CMakeFiles\SED_GROUP.dir/objects.a @CMakeFiles\SED_GROUP.dir\objects1.rsp
-C:\Users\ad\Downloads\bin\mingw\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\SED_GROUP.dir/objects.a -Wl,--no-whole-archive -o SED_GROUP.exe -Wl,--out-implib,libSED_GROUP.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\SED_GROUP.dir\linklibs.rsp
+/Library/Developer/CommandLineTools/usr/bin/c++ -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.0.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/SED_GROUP.dir/main.cpp.o -o SED_GROUP 

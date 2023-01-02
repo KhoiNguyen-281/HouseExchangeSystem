@@ -1,4 +1,4 @@
-# Install script for directory: /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP
+# Install script for directory: /Users/macbookpro/Desktop/C++/SED_GROUP
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -45,5 +45,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/macbookpro/Desktop/C++/SED_GROUP/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
