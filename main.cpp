@@ -26,12 +26,14 @@ int main() {
     system->loadHouse();
 //    system->registerMember(*Guest::registerNewMember());
 //    Guest::login();
-    Guest::registerNewMember();
+//    Guest::registerNewMember();
 //    Guest::registerNewMember();
 
-    system->getCurrentMem()->registerHouse();
-    system->saveMember();
-    system->saveHouse();
+//    system->getCurrentMem()->registerHouse();
+//    system->saveMember();
+//    system->saveHouse();
+
+    system->viewAllHouse();
 
 //    system->systemShutdown();
 //    Guest::login();
