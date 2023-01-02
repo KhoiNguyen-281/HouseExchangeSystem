@@ -11,12 +11,16 @@ HomepageController.h
 /Users/macbookpro/Desktop/C++/SED_GROUP/Controllers/HomepageController.h
 ../Model/SystemModel.h
 /Users/macbookpro/Desktop/C++/SED_GROUP/Model/SystemModel.h
+../Libs/Config.h
+/Users/macbookpro/Desktop/C++/SED_GROUP/Libs/Config.h
 iostream
 -
 string
 /Users/macbookpro/Desktop/C++/SED_GROUP/Controllers/string
 
 /Users/macbookpro/Desktop/C++/SED_GROUP/Controllers/HomepageController.h
+
+/Users/macbookpro/Desktop/C++/SED_GROUP/Libs/Config.h
 
 /Users/macbookpro/Desktop/C++/SED_GROUP/Model/DateModel.cpp
 SystemModel.h

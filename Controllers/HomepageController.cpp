@@ -1,5 +1,6 @@
 #include "HomepageController.h"
 #include "../Model/SystemModel.h"
+#include "../Libs/Config.h"
 #include <iostream>
 #include "string"
 
@@ -28,7 +29,7 @@ namespace HomepageComponent{
 
     void displayHousesOption(){
         System *system = System::getInstance();
-        cout << "\n—----------------- Accommodations options —-----------------\n"
+        cout << LIGHT_CYAN_CLS << "\n—----------------- Accommodations options —-----------------\n"
                 "\t0.  Exit\n"
                 "\t1.  Display all available houses\n"
                 "\t2.  Display the affordable houses by searching available locations.\n";
@@ -52,25 +53,38 @@ namespace HomepageComponent{
     void displayLocationOption(){
         cout << "\n—----------------- Available Locations —-----------------\n"
                 "\t0.  Exit\n"
-                "\t1.  Hanoi\n"
+                "\t1.  Ha Noi\n"
                 "\t2.  Hue.\n"
-                "\t3.  Saigon\n";
-
+                "\t3.  Ho Chi Minh\n";
+        System* system = System::getInstance();
+        
         int option = optionInput();
 
         switch(option){
             case 0: exit(1);
             case 1: {
-                cout << "Houses in hanoi";
+                cout << "Houses in hanoi\n";
+                vector<House* > availableHouses;
+                Date start_date = Date::parseDate(fieldInput("starting date"));
+                Date end_date = Date::parseDate(fieldInput("ending date"));
+                
 
+                system->loadMember();
+                system->loadHouse();
+
+                system->getAvailableHouse(availableHouses, true, "Ha Noi", start_date, end_date);
+
+                for(int i = 0; i < availableHouses.size(); i++){
+                    availableHouses[i]->showInfo();
+                }
                 break;
             }
             case 2: {
-                cout << "Houses in Hue";
+                cout << "Houses in Hue\n";
                 break;
             }
             case 3: {
-                cout << "Houses in Saigon";
+                cout << "Houses in Saigon\n";
                 break;
             }
             default: {

@@ -43,5 +43,5 @@ int main() {
 //    Member::changePassword();
 //    cout << system->getCurrentMem()->getPassword();
 
-    displayAppHomepage();
+    displayHousesOption();
 }

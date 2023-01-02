@@ -80,6 +80,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/macbookpro/Desktop/C++/SED_GROUP/Libs/Config.h">
+			<Option target="SED_GROUP"/>
+		</Unit>
 		<Unit filename="/Users/macbookpro/Desktop/C++/SED_GROUP/main.cpp">
 			<Option target="SED_GROUP"/>
 		</Unit>

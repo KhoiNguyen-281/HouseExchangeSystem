@@ -13,20 +13,14 @@
 #include "fstream"
 #include <sstream>
 
-
-
 const string MEMBERS = "members.dat";
 const string HOUSES = "houses.dat";
 const string REQUESTS = "requests.dat";
-
 
 //Helper functions
 string getFilePath(const string &file) {
     return "../Data/" + file;
 }
-
-
-
 
 void Member::showInfo() {
     sysLog("ID: " << this->id << "\n");
@@ -36,8 +30,6 @@ void Member::showInfo() {
     sysLog("Credit point: " << this->creditP << std::endl);
 
 }
-
-
 
 //int Member::unListHouse(vector<House> &houseVector) {
 //    if (this == nullptr) {
@@ -91,11 +83,72 @@ void Member::showInfo() {
 //    cout << "Owner: " << this->owner->getUserName() << "\n \n";
 //}
 
+Request::Request() {}
 
-//Getter and setter
-//Getter
+// Destructor
+Request::~Request() {}
 
+// Setters
+void Request::setId(string id)
+{
+    this->id = id;
+}
 
+void Request::setHouse(House *house)
+{
+    this->house = house;
+}
+
+void Request::setRequester(Member *requester)
+{
+    this->requester = requester;
+}
+
+void Request::setStartingDate(Date startingDate)
+{
+    this->start_date = startingDate;
+}
+
+void Request::setEndingDate(Date endingDate)
+{
+    this->end_date = endingDate;
+}
+
+void Request::setStatus(int status)
+{
+    this->status = status;
+}
+
+// Getters
+string Request::getId()
+{
+    return this->id;
+}
+
+House *Request::getHouse()
+{
+    return this->house;
+}
+
+Member *Request::getRequester()
+{
+    return this->requester;
+}
+
+Date Request::getStartingDate()
+{
+    return this->start_date;
+}
+
+Date Request::getEndingDate()
+{
+    return this->end_date;
+}
+
+int Request::getStatus()
+{
+    return this->status;
+}
 
 System::System() {
 
@@ -452,6 +505,25 @@ House * System::getHouse(string ID) {
     return nullptr;
 }
 
+void System::getAvailableHouse(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date)
+{
+    for (int i = 0; i < houseVect.size(); i++)
+    {
+        if (isQualified && houseVect[i].getLocation().compare(location) != 0)
+            continue;
+
+        if (isQualified &&
+            (Date::compareDate(start_date, houseVect[i].getStartListDate()) < 0 ||
+             Date::compareDate(end_date, houseVect[i].getEndListDate()) > 0))
+            continue;
+
+        if (isQualified && houseVect[i].getOwner() == currentMem)
+            continue;
+
+        list_of_houses.push_back(&houseVect[i]);
+    }
+}
+
 void System::getAvailableLocation() {
     sysLog("Available locations: ");
     int count = 1;
@@ -633,10 +705,3 @@ bool System::systemShutdown() {
     skip();
     return true;
 }
-
-
-
-
-
-
-// method
