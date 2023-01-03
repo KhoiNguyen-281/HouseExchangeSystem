@@ -101,7 +101,7 @@ bool Member::logout() {
 
 
 bool Member::registerHouse() {
-    bool isHouseExisted = this->getHouse() != nullptr;
+    bool isHouseExisted = System::getInstance()->getCurrentMem()->getHouse() != nullptr;
 
     string location, description;
     int creditPointsPerDay;
@@ -178,7 +178,7 @@ bool Member::registerHouse() {
     house.setCreditPointsPerDay(creditPointsPerDay);
     house.setMinimumOccupierRating(minimumRequiredScore);
 
-    string houseID = isHouseExisted ? this->getHouse()->getId() : "";
+    string houseID = isHouseExisted ? System::getInstance()->getCurrentMem()->getId() : "";
 
     if (isHouseExisted) {
         house.setId(houseID);
@@ -278,6 +278,44 @@ bool Member::updateInfo(){
     }
     return true;
 }
+
+
+bool Member::deleteProfile(){
+    string password;
+    string confirm;
+
+    sysLog("Enter your password to continue: ");
+    getline(cin,password);
+    //delete a profile through a system
+    System::getInstance()->System::deleteProfile(password);
+
+    return true;
+}
+
+bool Member::isHouseAvailable(House * house, Date startDate, Date endDate){
+     if(house->getOccupier() != nullptr) {
+        sysLog("House is already occupied.");
+        return false;
+    }
+
+    if(!house->isAvailable(startDate,endDate)){
+        sysLog("House is not available");
+        return false;
+    }
+
+
+    //Method to check if member has enough credit points
+    if(System::getInstance()->getCurrentMem()->getCreditP() < house->getCreditPointsPerDay()){
+        sysLog("You don't have enough credit points !");
+        return false;
+    }
+    sysLog("House is available");
+    return true;
+}
+
+
+
+    
 
 
 

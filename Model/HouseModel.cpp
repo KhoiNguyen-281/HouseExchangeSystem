@@ -97,5 +97,13 @@ void House::showInfo() {
     sysLog("Credit points per day: " + to_string(this->creditPointsPerDay) + "\n");
 }
 
+bool House::isAvailable(Date startingDate, Date endingDate) {
+    if (Date::compareDate(startingDate, startListDate) < 0 ||
+        Date::compareDate(endingDate, endListDate) > 0)
+        return false;
+
+    return true;
+}
+
 
 

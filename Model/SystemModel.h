@@ -181,6 +181,11 @@ public:
     float getMinimumOccupierRating() const;
     Date getStartListDate();
     Date getEndListDate();
+
+    //check for occupier
+    bool House::isOccupied();
+    //check if house is available
+    bool House::isAvailable(Date startingDate, Date endingDate);
 };
 
 class Rating {
@@ -306,6 +311,7 @@ public:
 
 
     bool removeHouse();
+    bool deleteProfile(string password);
 
 
     bool systemStart();

@@ -3,6 +3,9 @@
 //
 #define sysLog(x) cout << x;
 #define inputStr(x) getline(cin, x);
+#define inputStr(x) getline(cin, x);
+#define newline "\n"
+#define skipLine() sysLog(newline);
 #define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
 #define formatErr(x) cout << "Error: Invalid " << x <<" format \n";
 #define successMess(x, y, z) cout << x << " " << y << " " << z << "\n";
@@ -634,8 +637,36 @@ bool System::systemShutdown() {
     return true;
 }
 
+//method to delete profile through the system to access the vector of members
+bool System::deleteProfile(string password){
+    string confirm;
 
+    while(System::getInstance()->getCurrentMem()->getPassword() != password){
+        sysLog("Current password is incorrect ! Please re-type: ")
+        getline(cin, password);
+    }
 
+    sysLog("Once you delete your account, there's no getting it back.");
+    skipLine();
+    sysLog("Make sure you want to do this, we will miss you :(");
+    skipLine();
+    sysLog("Enter DELETE to confirm: ");
+    cin >> confirm;
+    while(confirm != "DELETE"){
+        sysLog("Please re-type 'DELETE' to continue (check for uppercase)");
+        cin >> confirm;
+    }
+
+    memberVect.erase(memberVect.begin() + 1);
+
+    sysLog("Delete successfully, logging out...")
+    //log out the current account 
+    setCurrentMem(nullptr);
+    setIsLoggedIn(false);
+    setIsAdmin(false);
+
+    return true;    
+}
 
 
 
