@@ -1,11 +1,13 @@
 #include <iostream>
-
+#include <iomanip> 
+#include <fstream>
 #include "string"
 using std::string;
 using std::cout;
 using std::cin;
 // using std::vector;
 #include <vector>
+using namespace std;
 
 #include "Model/SystemModel.h"
 #include "Model/SystemModel.cpp"
@@ -24,15 +26,15 @@ int main() {
     bool isAdmin = system->isAdmin();
 //    system->systemStart();
     system->loadMember();
-    system->loadHouse();
+    // system->loadHouse();
 //    system->registerMember(*Guest::registerNewMember());
 //    Guest::login();
     Guest::registerNewMember();
 //    Guest::registerNewMember();
 
-    system->getCurrentMem()->registerHouse();
+    // system->getCurrentMem()->registerHouse()
     system->saveMember();
-    system->saveHouse();
+    // system->saveHouse();
 
 //    system->systemShutdown();
 //    Guest::login();

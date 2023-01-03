@@ -22,7 +22,7 @@ const string REQUESTS = "requests.dat";
 
 //Helper functions
 string getFilePath(const string &file) {
-    return "../Data/" + file;
+    return "./Data/" + file;
 }
 
 
