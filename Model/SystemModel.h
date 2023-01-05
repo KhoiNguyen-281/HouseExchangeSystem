@@ -18,6 +18,13 @@ using std::to_string;
 
 #define CREDIT_POINT 500;
 
+enum Status {
+    PENDING,
+    APPROVED,
+    DENIED,
+    FINISHED
+};
+
 int thisYear() {
     std::time_t t = std::time(nullptr);
     std::tm *const pTInfo = std::localtime(&t);
@@ -132,6 +139,9 @@ public:
     bool isHouseAvailable(House * house, Date startDate, Date endDate);
 
 
+    Rating* rateHouse();
+    Rating* rateOccupier();
+
     virtual ~Member();
 
 };
@@ -183,16 +193,54 @@ public:
     Date getEndListDate();
 };
 
+class Request {
+private:
+    string id;
+
+    House* house = nullptr;
+    Member* occupier = nullptr;
+
+    Date startingDate = Date();
+    Date endingDate = Date();
+
+    int status = PENDING;
+
+public:
+    Request();
+    virtual ~Request();
+
+    //Getter
+    const string &getId() const;
+    House *getHouse() const;
+    Member *getOccupier() const;
+    const Date &getStartingDate() const;
+    const Date &getEndingDate() const;
+    int getStatus() const;
+
+    //Setter
+    void setId(const string &id);
+    void setHouse(House *house);
+    void setOccupier(Member *occupier);
+    void setStartingDate(const Date &startingDate);
+    void setEndingDate(const Date &endingDate);
+    void setStatus(int status);
+
+
+};
+
 class Rating {
 private:
     // Attributes
     Member* rater = nullptr;
     double score;
+    House* house = nullptr;
+    Member* occupier = nullptr;
     string comment;
 
 public:
     // Constructor
     Rating(Member * rater, double score, string comment);
+    Rating();
     ~Rating();
 
     // Setter Methods
@@ -200,15 +248,18 @@ public:
     void setRater(Member *rater);
     void setScore(double score);
     void setComment(const string &comment);
+    void setHouse(House *house);
+    void setOccupier(Member *occupier);
 
     // Getter Methods
     Member *getRater() const;
     double getScore() const;
     string getComment() const;
+    House *getHouse() const;
+    Member *getOccupier() const;
 
 
-    // Friend class
-//    friend class Member;
+    // Friend class]
 //    friend class House;
 };
 
@@ -231,6 +282,7 @@ private:
     //Vector database;
     vector<Member> memberVect;
     vector<House> houseVect;
+    vector<Rating> ratingVect;
 //    vector<Request> requestVect;
 
     //Current user
@@ -252,6 +304,7 @@ public:
     bool isAdmin() const;
     bool changePassword(string newpwd, string oldpwd);
     bool updateInfo();
+
 
     //Function to generate id automatically
     string generateID(int &count);
@@ -294,7 +347,7 @@ public:
     bool loadRequest();
 
     //View functions
-    bool viewMember();
+    void viewMember();
     void viewHouseDetail();
     void viewAllHouse();
 
@@ -310,6 +363,9 @@ public:
 
     bool systemStart();
     bool systemShutdown();
+
+
+    //Current member funciotn
 
     virtual ~System();
 };

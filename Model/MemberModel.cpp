@@ -15,7 +15,13 @@ Member::~Member() {
 
 }
 
-
+void Member::showInfo() {
+    sysLog("ID: " << this->id << "\n");
+    sysLog("Username: " << this->userName <<"\n");
+    sysLog("Full name: " << this->fullName <<"\n");
+    sysLog("Phone number: " << this->phoneNum <<"\n");
+    sysLog("Credit point: " << this->creditP << std::endl);
+}
 
 //Getter
 const string &Member::getId() const {
@@ -279,5 +285,53 @@ bool Member::updateInfo(){
     return true;
 }
 
+//-------------------------------Rating function--------------------------//
+Rating * Member::rateHouse() {
+    string comment;
+    double score;
 
+
+    sysLog("How was your experience from -10 to 10 : ");
+    cin >> score;
+    while(score < -10 || score > 10) {
+        sysLog("Invalid score, score must be in range from -10 to 10: ");
+        cin >> score;
+    }
+
+    sysLog("You can leave a comment for more details: ");
+    inputStr(comment);
+
+    Rating rating;
+    rating.setRater(this);
+    rating.setHouse(this->getRequest()->getHouse());
+    rating.setScore(score);
+    rating.setComment(comment);
+
+    System::getInstance()->addRatingtoSys(rating);
+    return &rating;
+}
+
+Rating * Member::rateOccupier() {
+    string comment;
+    double score;
+
+    sysLog("How do you rate your occupier from -10 to 10 : ");
+    cin >> score;
+    while (score < -10 || score > 10) {
+        sysLog("Invalid score, score must be in range from -10 to 10: ");
+        cin >> score;
+    }
+
+    sysLog("Leave a comment for more details: ");
+    inputStr(comment);
+
+    Rating rating;
+    rating.setRater(this);
+    rating.setOccupier(this->getRequest()->getOccupier());
+    rating.setScore(score);
+    rating.setComment(comment);
+
+    System::getInstance()->addRatingtoSys(rating);
+    return &rating;
+}
 
