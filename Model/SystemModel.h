@@ -18,6 +18,13 @@ using std::to_string;
 
 #define CREDIT_POINT 500;
 
+enum Status {
+    PENDING,
+    APPROVED,
+    DENIED,
+    FINISHED
+};
+
 int thisYear() {
     std::time_t t = std::time(nullptr);
     std::tm *const pTInfo = std::localtime(&t);
@@ -134,6 +141,7 @@ public:
     bool isHouseAvailable(House * house, Date startDate, Date endDate);
 
 
+
     Rating * rateHouse();
     Rating * rateOccupier();
 
@@ -216,32 +224,46 @@ public:
     ~Request();
 
     // Setters
-    void setId(string id);
+    void setId(const string &id);
+
     void setHouse(House *house);
+
     void setRequester(Member *requester);
-    void setStartingDate(Date start_date);
-    void setEndingDate(Date end_date);
+
+    void setStartDate(const Date &startDate);
+
+    void setEndDate(const Date &endDate);
+
     void setStatus(int status);
 
     // Getters
-    string getId();
-    House *getHouse();
-    Member *getRequester();
-    Date getStartingDate();
-    Date getEndingDate();
-    int getStatus();
+    const string &getId() const;
+
+    House *getHouse() const;
+
+    Member *getRequester() const;
+
+    const Date &getStartDate() const;
+
+    const Date &getEndDate() const;
+
+    int getStatus() const;
 };
+
 
 class Rating {
 private:
     // Attributes
     Member* rater = nullptr;
     double score;
+    House* house = nullptr;
+    Member* occupier = nullptr;
     string comment;
 
 public:
     // Constructor
     Rating(Member * rater, double score, string comment);
+    Rating();
     ~Rating();
 
     // Setter Methods
@@ -249,15 +271,18 @@ public:
     void setRater(Member *rater);
     void setScore(double score);
     void setComment(const string &comment);
+    void setHouse(House *house);
+    void setOccupier(Member *occupier);
 
     // Getter Methods
     Member *getRater() const;
     double getScore() const;
     string getComment() const;
+    House *getHouse() const;
+    Member *getOccupier() const;
 
 
-    // Friend class
-//    friend class Member;
+    // Friend class]
 //    friend class House;
 };
 
@@ -280,8 +305,6 @@ private:
     //Vector database;
     vector<Member> memberVect;
     vector<House> houseVect;
-
-
     vector<Rating> ratingVect;
     vector<Request> requestVect;
 
@@ -305,6 +328,7 @@ public:
     bool changePassword(string newpwd, string oldpwd);
     bool updateInfo();
 
+
     //Function to generate id automatically
     string generateID(int &count);
 
@@ -318,7 +342,7 @@ public:
     //Function to add objects to vector
     Member* addMemberToSys(Member member);
     House* addHouseToSys(House house);
-    Rating* addRatingtoSys(Rating rating);
+    Rating* addRatingtoSys(const Rating& rating);
     Request* addRequest(Request request);
 
     //Function to add or remove credit points of members
@@ -346,7 +370,7 @@ public:
     bool loadRequest();
 
     //View functions
-    bool viewMember();
+    void viewMember();
     void viewHouseDetail();
     void viewAllHouse();
 
@@ -367,6 +391,9 @@ public:
 
     bool systemStart();
     bool systemShutdown();
+
+
+    //Current member funciotn
 
     virtual ~System();
 };

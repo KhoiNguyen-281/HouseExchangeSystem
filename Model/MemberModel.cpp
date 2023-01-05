@@ -33,6 +33,7 @@ void Member::showInfo() {
 //    sysLog("Full name: " << this->fullName <<"\n");
 //    sysLog("Phone number: " << this->phoneNum <<"\n");
 //    sysLog("Credit point: " << this->creditP << std::endl);
+
 }
 
 //Getter
@@ -322,6 +323,7 @@ Rating * Member::rateHouse() {
     rating.setComment(comment);
 
     system->addRatingtoSys(rating);
+
     return &rating;
 }
 
@@ -330,7 +332,8 @@ Rating * Member::rateOccupier() {
     string comment;
     double score;
 
-    sysLog("How would you rate your occupier from -10 to 10 : ");
+
+    sysLog("How do you rate your occupier from -10 to 10 : ");
     cin >> score;
     while (score < -10 || score > 10) {
         sysLog("Invalid score, score must be in range from -10 to 10: ");
@@ -372,3 +375,4 @@ float Member::sumRating() {
     }
     return 0;
 }
+

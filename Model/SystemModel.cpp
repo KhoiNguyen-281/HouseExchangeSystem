@@ -27,12 +27,14 @@
 const string MEMBERS = "members.dat";
 const string HOUSES = "houses.dat";
 const string REQUESTS = "requests.dat";
+const string RATINGS = "ratings.dat";
 
 
 //Helper functions
 string getFilePath(const string &file) {
     return "../Data/" + file;
 }
+
 
 
 
@@ -91,6 +93,7 @@ string getFilePath(const string &file) {
 
 //Getter and setter
 //Getter
+
 
 
 
@@ -244,7 +247,7 @@ House * System::addHouseToSys(House house) {
     }
 }
 
-Rating * System::addRatingtoSys(Rating rating) {
+Rating * System::addRatingtoSys(const Rating& rating) {
     //Check if rating already exist in system
     for (Rating & temp : ratingVect) {
         if (temp.getHouse()->getId() == rating.getHouse()->getId()
@@ -285,7 +288,7 @@ Request * System::addRequest(Request request) {
     return nullptr;
 }
 //
-//Rating * System::addRatingtoSys(Rating rating) {}
+
 
 //--------------------Save data to files-------------------//
 bool System::saveMember() {
@@ -350,8 +353,6 @@ bool System::saveHouse() {
 //    }
 //}
 
-<<<<<<< HEAD
-=======
 bool System::saveRating() {
     std::fstream file;
     string filePath = getFilePath(RATINGS);
@@ -375,7 +376,6 @@ bool System::saveRating() {
     return true;
 }
 
->>>>>>> 5867145 (finish functions save and load ratings to file, rate house and rate member)
 //Function to change pasword
 bool System::changePassword(string newpwd, string oldpwd) {
     if (this->currentMem->getPassword() == oldpwd) {
@@ -454,18 +454,15 @@ bool System::loadHouse() {
         while (getline(ss, attribute, ',')) {
             tokens.push_back(attribute);
         }
-
         if (tokens.size() != 8) {
             formatErr(Colors::BOLD_RED_CLS  + "house");
             continue;
         }
 
-        System *system = System::getInstance();
-
         House house;
 
         string ownerID = tokens[7];
-        Member * owner = system->getMember(ownerID);
+        Member * owner = getMember(ownerID);
         if (owner == nullptr) {
             sysErrLog("Error: Owner with ID " + ownerID + " not found");
             continue;
@@ -489,10 +486,9 @@ bool System::loadHouse() {
     countHouse = std::stoi(houseVect.back().getId());
 
     file.close();
-<<<<<<< HEAD
-    successMess("Load", std::to_string(houseVect.size()), "house(s)");
-=======
+
     sysLogSuccess("Loaded " + std::to_string(houseVect.size()) + " house(s)");
+
     return true;
 }
 
@@ -503,7 +499,9 @@ bool System::loadRating() {
     file.open(filePath, std::ios::in);
 
     if (!file.is_open()) {
+
         fileErrLog(Colors::BOLD_RED_CLS + filePath);
+
         return false;
     }
 
@@ -547,6 +545,7 @@ bool System::loadRating() {
 
         if (rater == nullptr) {
             sysErrLog("Author with ID: " + rater->getId() + " not found!!!");
+
             continue;
         }
 
@@ -563,7 +562,6 @@ bool System::loadRating() {
 
     sysLogSuccess("Loaded " + std::to_string(ratingVect.size()) + " rating(s)");
 
->>>>>>> 5867145 (finish functions save and load ratings to file, rate house and rate member)
     return true;
 }
 
@@ -616,14 +614,8 @@ bool System::isInteger(const string& input) {
     return true;
 }
 
-<<<<<<< HEAD
-=======
 //-----------------------------Function to view information--------------------------//
 void System::viewMember() {
-    if (currentMem == nullptr && !isAdminLoggedin) {
-        sysErrLog("\n Please login first");
-        return;
-    }
     if (isAdminLoggedin) {
         for (Member & member: memberVect) {
             member.showInfo();
@@ -645,7 +637,6 @@ void System::viewMember() {
         return;
     }
 }
->>>>>>> 5867145 (finish functions save and load ratings to file, rate house and rate member)
 
 void System::viewHouseDetail() {
     if (currentMem == nullptr) {
@@ -690,17 +681,11 @@ void System::viewHouseDetail() {
 }
 
 void System::viewAllHouse() {
-
     if (!isLoggedIn) {
         for (House & house : houseVect) {
             house.showInfo();
         }
-<<<<<<< HEAD
-    } else {
-=======
-        return;
     } else if(isAdminLoggedin) {
->>>>>>> 5867145 (finish functions save and load ratings to file, rate house and rate member)
         for (House & house : houseVect) {
             house.showInfo();
             sysLogSuccess("Listing start date: " + house.getStartListDate().dateToString());
@@ -796,17 +781,11 @@ bool System::systemStart() {
         return false;
     }
 
-<<<<<<< HEAD
-//    if (!loadRating()) {
-//        sysLog("Failed to load ratings!!!");
-//        return false;
-//    }
-=======
     if (!loadRating()) {
         sysErrLog("Failed to load ratings!!!");
         return false;
     }
->>>>>>> 5867145 (finish functions save and load ratings to file, rate house and rate member)
+
 //
 //    if (!loadRequest()) {
 //        sysLog("Failed to load requests!!!");
@@ -830,17 +809,10 @@ bool System::systemShutdown() {
         return false;
     }
 
-<<<<<<< HEAD
-//    if (!saveRating()) {
-//        sysLog("Failed to save ratings!!!");
-//        return false;
-//    }
-=======
     if (!saveRating()) {
         sysErrLog("Failed to save ratings!!!");
         return false;
     }
->>>>>>> 5867145 (finish functions save and load ratings to file, rate house and rate member)
 //
 //    if (!saveRequest()) {
 //        sysLog("Failed to save requests!!!");

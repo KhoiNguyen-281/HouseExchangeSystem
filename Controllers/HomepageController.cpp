@@ -33,8 +33,6 @@ namespace HomepageComponent{
         return std::stoi(option);
     }
 
-<<<<<<< HEAD
-=======
     string fieldInput(string field){
         string result;
         cout << "Enter your " << field << ": ";
@@ -88,7 +86,7 @@ namespace HomepageComponent{
                 system->loadMember();
                 system->loadHouse();
 
-                system->getAvailableHouse(availableHouses, true, "Ha Noi", start_date, end_date);
+//                system->getAvailableHouse(availableHouses, true, "Ha Noi", start_date, end_date);
 
                 for(int i = 0; i < availableHouses.size(); i++){
                     availableHouses[i]->showInfo();
@@ -147,7 +145,6 @@ namespace HomepageComponent{
         }
     }
 
->>>>>>> 5867145 (finish functions save and load ratings to file, rate house and rate member)
     void displayGuestHomepage(){
         cout << "\n—----------------- Guest Homepage —-----------------\n"
                 "This is your menu:\n"
@@ -177,60 +174,6 @@ namespace HomepageComponent{
             default:
                 cout << "Invalid option, please try again....\n";
                 displayGuestHomepage();
-        }
-    }
-
-    void displayHousesOption(){
-//        System *system = System::getInstance();
-
-        cout << "\n—----------------- Accommodations options —-----------------\n"
-                "\t0.  Exit\n"
-                "\t1.  Display all available houses\n"
-                "\t2.  Display the affordable houses by searching available locations.\n";
-        int option = optionInput();
-
-        switch (option){
-            case 0: exit(1);
-            case 1: {
-//                system->loadHouse();
-//                system->showAllHouse();
-                break;
-            }
-            case 2: {
-                displayLocationOption();
-                break;
-            }
-        }
-    }
-
-    void displayLocationOption(){
-        cout << "\n—----------------- Available Locations —-----------------\n"
-                "\t0.  Exit\n"
-                "\t1.  Hanoi\n"
-                "\t2.  Hue.\n"
-                "\t3.  Saigon\n";
-
-        int option = optionInput();
-
-        switch(option){
-            case 0: exit(1);
-            case 1: {
-                cout << "Houses in hanoi";
-
-                break;
-            }
-            case 2: {
-                cout << "Houses in Hue";
-                break;
-            }
-            case 3: {
-                cout << "Houses in Saigon";
-                break;
-            }
-            default: {
-                cout << "Invalid location";
-                break;
-            }
         }
     }
 

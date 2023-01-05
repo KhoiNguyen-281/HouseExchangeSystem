@@ -10,12 +10,15 @@ using namespace std;
 /* -------------------- * Rating Function Implementation * -------------------- */
 
 // Constructor
-
-Rating::~Rating() {}
-
 Rating::Rating(Member *rater, double score, string comment) {
 
 }
+
+Rating::Rating() {};
+
+Rating::~Rating() {}
+
+
 
 void Rating::setRating(Member * rater, double score, string comment) {
     this->rater = rater;
@@ -45,6 +48,22 @@ double Rating::getScore() const {
 
 string Rating::getComment() const {
     return comment;
+}
+
+void Rating::setHouse(House *house) {
+    Rating::house = house;
+}
+
+void Rating::setOccupier(Member *occupier) {
+    Rating::occupier = occupier;
+}
+
+House *Rating::getHouse() const {
+    return house;
+}
+
+Member *Rating::getOccupier() const {
+    return occupier;
 }
 
 
