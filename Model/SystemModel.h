@@ -132,6 +132,7 @@ public:
 
 
     bool verifyPassword(string password);
+
     bool changePassword();
 
     bool updateInfo();
@@ -380,7 +381,6 @@ public:
     bool checkLocation(string location);
 
     bool isInteger(const string &input);
-
 
     bool removeHouse();
 
