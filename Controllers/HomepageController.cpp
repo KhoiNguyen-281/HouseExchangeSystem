@@ -33,6 +33,121 @@ namespace HomepageComponent{
         return std::stoi(option);
     }
 
+<<<<<<< HEAD
+=======
+    string fieldInput(string field){
+        string result;
+        cout << "Enter your " << field << ": ";
+        getline(cin, result);
+
+        return result;
+    }
+
+    void displayHousesOption(){
+        System *system = System::getInstance();
+        cout << Colors::LIGHT_CYAN_CLS << "\n—----------------- Accommodations options —-----------------\n"
+                "\t0.  Exit\n"
+                "\t1.  Display all available houses\n"
+                "\t2.  Display the affordable houses by searching available locations.\n";
+        int option = optionInput();
+        switch (option){
+            case 0: exit(1);
+            case 1: {
+                system->loadMember();
+                system->loadHouse();
+
+                system->viewAllHouse();
+                break;
+            }
+            case 2: {
+                displayLocationOption();
+                break;
+            }
+        }
+    }
+
+    void displayLocationOption(){
+        cout << "\n—----------------- Available Locations —-----------------\n"
+                "\t0.  Exit\n"
+                "\t1.  Ha Noi\n"
+                "\t2.  Hue.\n"
+                "\t3.  Ho Chi Minh\n";
+        System* system = System::getInstance();
+        
+        int option = optionInput();
+
+        switch(option){
+            case 0: exit(1);
+            case 1: {
+                cout << "Houses in hanoi\n";
+                vector<House* > availableHouses;
+                Date start_date = Date::parseDate(fieldInput("starting date"));
+                Date end_date = Date::parseDate(fieldInput("ending date"));
+                
+
+                system->loadMember();
+                system->loadHouse();
+
+                system->getAvailableHouse(availableHouses, true, "Ha Noi", start_date, end_date);
+
+                for(int i = 0; i < availableHouses.size(); i++){
+                    availableHouses[i]->showInfo();
+                }
+                break;
+            }
+            case 2: {
+                cout << "Houses in Hue\n";
+                break;
+            }
+            case 3: {
+                cout << "Houses in Saigon\n";
+                break;
+            }
+            default: {
+                cout << "Invalid location";
+                break;
+            }
+        }
+    }
+
+    void displayMemberHomepage(string user_name){
+        cout << "\n—----------------- Homepage —-----------------\n"
+                "This is your menu:\n"
+                "\t0.  Exit\n"
+                "\t1.  View Information\n"
+                "\t2.  List available houses.\n"
+                "\t3.  Unlist current house\n"
+                "\t4.  Search available house.\n";
+        int option = optionInput();
+
+        switch (option){
+            case 0:
+                exit(1);
+                break;
+            case 1:
+                /// view Information
+                cout << "View information\n";
+                cout << user_name << "\n";
+                break;
+            case 2:
+                /// List available house
+                displayHousesOption();
+                break;
+            case 3:
+                /// Unlist current house
+                cout << "Unlist current house \n";
+                break;
+            case 4:
+                /// Search available house
+                cout << "Search available house\n";
+                break;
+            default:
+                cout << "Invalid option, please try again....\n";
+//                displayMemberHomepage();
+        }
+    }
+
+>>>>>>> 5867145 (finish functions save and load ratings to file, rate house and rate member)
     void displayGuestHomepage(){
         cout << "\n—----------------- Guest Homepage —-----------------\n"
                 "This is your menu:\n"

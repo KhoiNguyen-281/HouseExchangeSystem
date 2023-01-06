@@ -3,10 +3,16 @@
 //
 
 #include "SystemModel.h"
-#define sysLog(x) cout << x;
+#include "../Libs/Config.h"
+
+
 #define inputStr(x) getline(cin, x);
 #define newline "\n"
 #define skipLine() sysLog(newline);
+;
+
+// define log message with color;
+#define sysLogInfo(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n";
 
 Member::Member(string userName, string fullName, string phoneNum, string passWord)
         : userName(userName), fullName(fullName), phoneNum(phoneNum), password(passWord) {};
@@ -15,7 +21,19 @@ Member::~Member() {
 
 }
 
+void Member::showInfo() {
 
+    sysLogInfo("ID: " + this->id);
+    sysLogInfo("Username: " + this->userName);
+    sysLogInfo("Full name: " + this->fullName);
+    sysLogInfo("Phone number: " + this->phoneNum);
+    sysLogInfo("Credit points: " + to_string(this->creditP));
+//    sysLog("ID: " << this->id << "\n");
+//    sysLog("Username: " << this->userName <<"\n");
+//    sysLog("Full name: " << this->fullName <<"\n");
+//    sysLog("Phone number: " << this->phoneNum <<"\n");
+//    sysLog("Credit point: " << this->creditP << std::endl);
+}
 
 //Getter
 const string &Member::getId() const {
@@ -279,5 +297,78 @@ bool Member::updateInfo(){
     return true;
 }
 
+//-------------------------------Rating function--------------------------//
+Rating * Member::rateHouse() {
+
+    System * system = System::getInstance();
+    string comment;
+    double score;
 
 
+    sysLog("How was your experience from -10 to 10 : ");
+    cin >> score;
+    while(score < -10 || score > 10) {
+        sysLog("Invalid score, score must be in range from -10 to 10: ");
+        cin >> score;
+    }
+
+    sysLog("You can leave a comment for more details: ");
+    inputStr(comment);
+
+    Rating rating;
+    rating.setRater(this);
+    rating.setHouse(this->getRequest()->getHouse());
+    rating.setScore(score);
+    rating.setComment(comment);
+
+    system->addRatingtoSys(rating);
+    return &rating;
+}
+
+Rating * Member::rateOccupier() {
+    System * system = System::getInstance();
+    string comment;
+    double score;
+
+    sysLog("How would you rate your occupier from -10 to 10 : ");
+    cin >> score;
+    while (score < -10 || score > 10) {
+        sysLog("Invalid score, score must be in range from -10 to 10: ");
+        cin >> score;
+    }
+
+    sysLog("Leave a comment for more details: ");
+    inputStr(comment);
+
+    Rating  rating;
+    rating.setRater(this);
+    rating.setOccupier(this->getRequest()->getRequester());
+    rating.setScore(score);
+    rating.setComment(comment);
+
+    system->addRatingtoSys(rating);
+    return &rating;
+}
+
+bool Member::hasRatings() {
+    System * system = System::getInstance();
+    vector<Rating*> ratingVal;
+    system->getRatingFromSys(ratingVal, this);
+
+    return ratingVal.size() > 0;
+}
+
+
+float Member::sumRating() {
+    System * system = System::getInstance();
+    if (hasRatings()) {
+        vector<Rating*> ratingVal;
+        system->getRatingFromSys(ratingVal, this);
+        float totalScore = 0.0;
+        for (Rating * rating : ratingVal) {
+            totalScore += rating->getScore();
+        }
+        return totalScore / ratingVal.size();
+    }
+    return 0;
+}

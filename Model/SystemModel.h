@@ -105,6 +105,7 @@ public:
     [[nodiscard]] int getCreditP() const;
     [[nodiscard]] House *getHouse() const;
     [[nodiscard]] Request *getRequest() const;
+    float sumRating();
 
     //Setter
     void setId(const string &id);
@@ -122,6 +123,7 @@ public:
 
     static bool logout();
 
+
     bool verifyPassword(string password);
     bool changePassword();
 
@@ -131,6 +133,11 @@ public:
     bool registerHouse();
     bool isHouseAvailable(House * house, Date startDate, Date endDate);
 
+
+    Rating * rateHouse();
+    Rating * rateOccupier();
+
+    bool hasRatings();
 
     virtual ~Member();
 
@@ -181,6 +188,48 @@ public:
     float getMinimumOccupierRating() const;
     Date getStartListDate();
     Date getEndListDate();
+
+
+    bool hasRatings();
+    float sumRating();
+};
+
+
+class Request
+{
+private:
+    string id = "";
+
+    House *house = nullptr;
+    Member *requester = nullptr;
+
+    Date start_date = Date();
+    Date end_date = Date();
+
+    int status = 0;
+
+public:
+    // Default constructor
+    Request();
+
+    // Destructor
+    ~Request();
+
+    // Setters
+    void setId(string id);
+    void setHouse(House *house);
+    void setRequester(Member *requester);
+    void setStartingDate(Date start_date);
+    void setEndingDate(Date end_date);
+    void setStatus(int status);
+
+    // Getters
+    string getId();
+    House *getHouse();
+    Member *getRequester();
+    Date getStartingDate();
+    Date getEndingDate();
+    int getStatus();
 };
 
 class Rating {
@@ -231,7 +280,10 @@ private:
     //Vector database;
     vector<Member> memberVect;
     vector<House> houseVect;
-//    vector<Request> requestVect;
+
+
+    vector<Rating> ratingVect;
+    vector<Request> requestVect;
 
     //Current user
     Member* currentMem = nullptr;
@@ -302,11 +354,16 @@ public:
 
     //Verify input function
     bool checkLocation(string location);
-    bool isInteger(const string& input);
+
+    bool isInteger(const string &input);
 
 
     bool removeHouse();
 
+
+    //Function to get rating from system
+    void getRatingFromSys(vector<Rating*>& ratingVal, Member * requester);
+    void getRatingFromSys(vector<Rating*>& ratingVal, House * house);
 
     bool systemStart();
     bool systemShutdown();
