@@ -374,7 +374,7 @@ Rating * Member::rateOccupier() {
 
     Rating rating;
     rating.setRater(this);
-    rating.setOccupier(this->getRequest()->getOccupier());
+    rating.setOccupier(this->getRequest()->getRequester());
     rating.setScore(score);
     rating.setComment(comment);
 

@@ -13,19 +13,18 @@
 #include "fstream"
 #include <sstream>
 
-
-
 const string MEMBERS = "members.dat";
 const string HOUSES = "houses.dat";
 const string REQUESTS = "requests.dat";
 const string RATINGS = "ratings.dat";
-
 
 //Helper functions
 string getFilePath(const string &file) {
     return "../Data/" + file;
 }
 
+
+// Setters
 
 System::System() {
 
@@ -480,6 +479,25 @@ House * System::getHouse(string ID) {
     return nullptr;
 }
 
+void System::getAvailableHouse(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date)
+{
+    for (int i = 0; i < houseVect.size(); i++)
+    {
+        if (isQualified && houseVect[i].getLocation().compare(location) != 0)
+            continue;
+
+        if (isQualified &&
+            (Date::compareDate(start_date, houseVect[i].getStartListDate()) < 0 ||
+             Date::compareDate(end_date, houseVect[i].getEndListDate()) > 0))
+            continue;
+
+        if (isQualified && houseVect[i].getOwner() == currentMem)
+            continue;
+
+        list_of_houses.push_back(&houseVect[i]);
+    }
+}
+
 void System::getAvailableLocation() {
     sysLog("Available locations: ");
     int count = 1;
@@ -673,5 +691,3 @@ bool System::systemShutdown() {
 
 
 
-
-// method
