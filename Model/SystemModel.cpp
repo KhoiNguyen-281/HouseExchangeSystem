@@ -22,8 +22,6 @@
 
 
 
-
-
 const string MEMBERS = "members.dat";
 const string HOUSES = "houses.dat";
 const string REQUESTS = "requests.dat";
@@ -486,9 +484,7 @@ bool System::loadHouse() {
     countHouse = std::stoi(houseVect.back().getId());
 
     file.close();
-
     sysLogSuccess("Loaded " + std::to_string(houseVect.size()) + " house(s)");
-
     return true;
 }
 
@@ -545,7 +541,6 @@ bool System::loadRating() {
 
         if (rater == nullptr) {
             sysErrLog("Author with ID: " + rater->getId() + " not found!!!");
-
             continue;
         }
 
@@ -616,6 +611,10 @@ bool System::isInteger(const string& input) {
 
 //-----------------------------Function to view information--------------------------//
 void System::viewMember() {
+    if (currentMem == nullptr && !isAdminLoggedin) {
+        sysErrLog("\n Please login first");
+        return;
+    }
     if (isAdminLoggedin) {
         for (Member & member: memberVect) {
             member.showInfo();
@@ -685,6 +684,7 @@ void System::viewAllHouse() {
         for (House & house : houseVect) {
             house.showInfo();
         }
+        return;
     } else if(isAdminLoggedin) {
         for (House & house : houseVect) {
             house.showInfo();

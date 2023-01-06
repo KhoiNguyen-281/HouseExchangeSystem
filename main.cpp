@@ -23,12 +23,15 @@ int main() {
     System * system = System::getInstance();
     bool isLoggedIn = system->isUser();
     bool isAdmin = system->isAdmin();
-//    system->systemStart();
-    system->loadMember();
-    system->loadHouse();
+    system->systemStart();
+//    system->loadMember();
+//    system->loadHouse();
 //    system->registerMember(*Guest::registerNewMember());
-//    Guest::login();
-    Guest::registerNewMember();
+
+    Guest::login();
+    system->viewHouseDetail();
+//    system->getCurrentMem()->rateHouse();
+//    Guest::registerNewMember();
 //    Guest::registerNewMember();
 
     system->getCurrentMem()->registerHouse();
