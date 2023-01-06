@@ -2,7 +2,11 @@
 // Created by Nguyen Hoang Minh Khoi on 12/27/22.
 //
 #include "SystemModel.h"
+#include "../Libs/Config.h"
 #define sysLog(x) cout << x;
+
+#define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n"; //log error and new line
+#define sysLogInfo(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n";
 
 House::House(Member *owner, string id, string location, string description, int consumptionPts)
         : owner(owner), id(id), location(location), description(description), creditPointsPerDay(consumptionPts) {}
@@ -91,11 +95,32 @@ Date House::getEndListDate() {
 
 //Show info function
 void House::showInfo() {
-    sysLog("\n\tHouse ID: " + this->id + "\n");
-    sysLog("Location: " + this->location + "\n");
-    sysLog("Description: " + this->description + "\n");
-    sysLog("Credit points per day: " + to_string(this->creditPointsPerDay) + "\n");
+    sysLogInfo("House ID: " + this->id);
+    sysLogInfo("Location: " + this->location);
+    sysLogInfo("Description: " + this->description);
+    sysLogInfo("Credit points perday: " + to_string(this->creditPointsPerDay));
+    sysLogInfo("Minimum rating required: " << std::fixed << std::setprecision(2) << this->getMinimumOccupierRating())
 }
 
+//---------------------------Rating function---------------//
+bool House::hasRatings() {
+    System * system = System::getInstance();
+    vector<Rating*> ratingVal;
+    system->getRatingFromSys(ratingVal, this);
 
+    return ratingVal.size() > 0;
+}
 
+float House::sumRating() {
+    System * system = System::getInstance();
+    if (hasRatings()) {
+        vector<Rating*> ratingVal;
+        system->getRatingFromSys(ratingVal, this);
+        float totalScore = 0.0;
+        for (Rating * rating : ratingVal) {
+            totalScore += rating->getScore();
+        }
+        return totalScore / ratingVal.size();
+    }
+    return 0;
+}

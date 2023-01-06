@@ -1,17 +1,26 @@
 //
 // Created by Nguyen Hoang Minh Khoi on 12/12/22.
 //
-#define sysLog(x) cout << x;
-#define inputStr(x) getline(cin, x);
-#define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
-#define formatErr(x) cout << "Error: Invalid " << x <<" format \n";
-#define successMess(x, y, z) cout << x << " " << y << " " << z << "\n";
-#define skip() cout << "\n\n";
 
 #include "SystemModel.h"
 #include <random>
 #include "fstream"
 #include <sstream>
+#include "../Libs/Config.h"
+
+#define sysLog(x) cout << x << Colors::RESET;
+#define inputStr(x) getline(cin, x);
+#define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
+#define formatErr(x) cout << "Error: Invalid " << x <<" format \n";
+
+#define skip() cout << "\n\n";
+
+
+// define log message with color;
+#define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n" ; //log error and new line
+#define sysLogSuccess(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n"; //Log data information with green color
+
+
 
 const string MEMBERS = "members.dat";
 const string HOUSES = "houses.dat";
@@ -115,15 +124,15 @@ Member *System::login(string username, string password) {
                 setCurrentMem(&i);
                 setIsLoggedIn(true);
 
-                sysLog("Login successfully");
+                sysLogSuccess("\nLogin successfully \n ");
                 return &i;
             } else {
-                sysLog("Incorrect password")
+                sysErrLog("Incorrect password")
                 return nullptr;
             }
         }
     }
-    sysLog("Username not found!");
+    sysErrLog("Username not found!");
     return nullptr;
 }
 
@@ -132,7 +141,7 @@ bool System::logout() {
     setIsLoggedIn(false);
     setIsAdmin(false);
 
-    sysLog("Logout successfully")
+    sysLogSuccess("\nLogout successfully \n ")
     return true;
 }
 
@@ -141,7 +150,7 @@ bool System::logout() {
 Member * System::addMemberToSys(Member member) {
     for (auto & i : memberVect) {
         if (i.getUserName() == member.getUserName()) {
-            sysLog("This username is already existed \n");
+            sysErrLog(" \n This username is already existed \n");
             return nullptr;
         }
     }
@@ -190,8 +199,32 @@ Rating * System::addRatingtoSys(Rating rating) {
     return newRating;
 }
 
-//Request * System::addRequest(Request request) {
-//}
+Request * System::addRequest(Request request) {
+    //When the request ID is empty
+    if (request.getId().empty()) {
+        //When request is already exist but cannot find ID
+        if (currentMem->getRequest() != nullptr && currentMem->getRequest()->getStatus() ==  PENDING) {
+            sysLog("\nYou have already request a house \n\n");
+            return nullptr;
+        }
+        string ID = generateID(countRequest);
+
+        requestVect.push_back(request);
+        Request * newRequest = &requestVect.back();
+
+        newRequest->setId(ID);
+        return newRequest;
+    } else {
+        for (Request & temp : requestVect) {
+            if (temp.getId() ==  request.getId()) {
+                temp = request;
+                temp.setId(request.getId());
+                return &temp;
+            }
+        }
+    }
+    return nullptr;
+}
 //
 
 
@@ -212,7 +245,7 @@ bool System::saveMember() {
              << member.getPhoneNum() << "," << member.getCreditP() << "\n";
     }
     file.close();
-    successMess("Saved", std::to_string(memberVect.size()), "member(s)");
+    sysLogSuccess("Saved " +  std::to_string(memberVect.size()) + " member(s)");
     return true;
 }
 
@@ -239,7 +272,7 @@ bool System::saveHouse() {
     }
 
     file.close();
-    successMess("Saved", std::to_string(houseVect.size()), "house(s)");
+    sysLogSuccess("Saved " + std::to_string(houseVect.size()) + " house(s)");
     return true;
 }
 
@@ -268,7 +301,7 @@ bool System::saveRating() {
         return false;
     }
 
-    for (Rating rating : ratingVect) {
+    for (const Rating& rating : ratingVect) {
         file << rating.getRater()->getId() << ","
              << rating.getHouse()->getId() << ","
              << (rating.getOccupier() != nullptr ? rating.getOccupier()->getId() : "NONE") << ","
@@ -277,7 +310,8 @@ bool System::saveRating() {
     }
 
     file.close();
-    successMess("Saved", to_string(ratingVect.size()), "rating(s)");
+    sysLogSuccess("Saved " + to_string(ratingVect.size()) + " rating(s)");
+    return true;
 }
 
 //Function to change pasword
@@ -335,7 +369,7 @@ bool System::loadMember() {
     countMem = std::stoi(memberVect.back().getId());
 
     file.close();
-    successMess("Load", std::to_string(memberVect.size()), "member(s)");
+    sysLogSuccess("Loaded " + std::to_string(memberVect.size()) + " member(s)");
     return true;
 }
 
@@ -359,7 +393,7 @@ bool System::loadHouse() {
             tokens.push_back(attribute);
         }
         if (tokens.size() != 8) {
-            formatErr("house");
+            formatErr(Colors::BOLD_RED_CLS  + "house");
             continue;
         }
 
@@ -368,7 +402,7 @@ bool System::loadHouse() {
         string ownerID = tokens[7];
         Member * owner = getMember(ownerID);
         if (owner == nullptr) {
-            sysLog("Error: Owner with ID " + ownerID + " not found");
+            sysErrLog("Error: Owner with ID " + ownerID + " not found");
             continue;
         }
 
@@ -390,7 +424,7 @@ bool System::loadHouse() {
     countHouse = std::stoi(houseVect.back().getId());
 
     file.close();
-    successMess("Loaded", std::to_string(houseVect.size()), "house(s)");
+    sysLogSuccess("Loaded " + std::to_string(houseVect.size()) + " house(s)");
     return true;
 }
 
@@ -401,7 +435,7 @@ bool System::loadRating() {
     file.open(filePath, std::ios::in);
 
     if (!file.is_open()) {
-        fileErrLog(filePath);
+        fileErrLog(Colors::BOLD_RED_CLS + filePath);
         return false;
     }
 
@@ -417,36 +451,41 @@ bool System::loadRating() {
         }
 
         if (tokens.size() != 5) {
-            formatErr("rating")
+            formatErr(Colors::BOLD_RED_CLS + "rating")
             continue;
         }
 
         Rating rating;
 
-        string houseId = tokens[0];
-        string raterID = tokens[1];
+        string raterID = tokens[0];
+        string houseId = tokens[1];
         string occupierID = tokens[2];
         string scoreStr = tokens[3];
         string comment = tokens[4];
 
         House* house = getHouse(houseId);
         Member* rater = getMember(raterID);
-        Member* occupier = occupierID == "NONE" ? nullptr : getMember(occupierID);
+        Member* occupier;
+        if (occupierID == "NONE") {
+            occupier = nullptr;
+        } else {
+            occupier = getMember(occupierID);
+        }
 
         if (house == nullptr) {
-            sysLog("House with ID: " + house->getId() + " not found!!! \n");
+            sysErrLog("House with ID: " + house->getId() + " not found!!!");
             continue;
         }
 
         if (rater == nullptr) {
-            sysLog("Author with ID: " + rater->getId() + " not found!!! \n");
+            sysErrLog("Author with ID: " + rater->getId() + " not found!!!");
             continue;
         }
 
         rating.setHouse(house);
         rating.setRater(rater);
         rating.setOccupier(occupier);
-        rating.setScore(std::stoi(scoreStr));
+        rating.setScore(std::stof(scoreStr));
         rating.setComment(comment);
 
         ratingVect.push_back(rating);
@@ -454,7 +493,7 @@ bool System::loadRating() {
 
     file.close();
 
-    successMess("Loaded", std::to_string(ratingVect.size()), "rating(s)");
+    sysLogSuccess("Loaded " + std::to_string(ratingVect.size()) + " rating(s)");
 
     return true;
 }
@@ -529,21 +568,39 @@ bool System::isInteger(const string& input) {
 
 //-----------------------------Function to view information--------------------------//
 void System::viewMember() {
+    if (currentMem == nullptr && !isAdminLoggedin) {
+        sysErrLog("\n Please login first");
+        return;
+    }
     if (isAdminLoggedin) {
         for (Member & member: memberVect) {
             member.showInfo();
         }
+        return;
+    }
+    if (currentMem != nullptr) {
+        currentMem->showInfo();
+
+        bool hasRatings = currentMem->hasRatings();
+        if (hasRatings) {
+            float ratingScore = currentMem->sumRating();
+            sysLogSuccess("Rating: " << std::fixed << std::setprecision(2) << to_string(ratingScore));
+            skip();
+        } else {
+            skip();
+            sysLog("You have not been rated yet. \n\n ");
+        }
+        return;
     }
 }
 
 void System::viewHouseDetail() {
     if (currentMem == nullptr) {
-        sysLog("Please log in to view house details");
+        sysErrLog("\n Please login to view house details");
         return;
     }
 
     House * house = currentMem->getHouse();
-
     if (house == nullptr) {
         sysLog("You have not registered any house yet");
         string choice;
@@ -561,13 +618,22 @@ void System::viewHouseDetail() {
     }
 
     house->showInfo();
-    sysLog("Listing start date: " + house->getStartListDate().dateToString() + "\n");
-    sysLog("Listing end date: " + house->getEndListDate().dateToString() + "\n");
+    sysLogSuccess("Listing start date: " + house->getStartListDate().dateToString());
+    sysLogSuccess("Listing end date: " + house->getEndListDate().dateToString());
+    bool hasRatings = house->hasRatings();
+
+    if (hasRatings) {
+        float ratingScore = house->sumRating();
+        sysLogSuccess("Rating: " << std::fixed << std::setprecision(2) << ratingScore);
+    } else {
+        sysErrLog("Your house has not been rated yet");
+    }
 
     if (house->getOccupier() != nullptr) {
-        sysLog("Occupier name: " + house->getOccupier()->getFullName() + "\n");
-        sysLog("Occupier phone: " + house->getOccupier()->getPhoneNum() + "\n");
+        sysLogSuccess("Occupier name: " + house->getOccupier()->getFullName());
+        sysLogSuccess("Occupier phone: " + house->getOccupier()->getPhoneNum());
     }
+
 }
 
 void System::viewAllHouse() {
@@ -575,12 +641,23 @@ void System::viewAllHouse() {
         for (House & house : houseVect) {
             house.showInfo();
         }
+        return;
     } else if(isAdminLoggedin) {
         for (House & house : houseVect) {
             house.showInfo();
-            sysLog("Listing start from: " + house.getStartListDate().dateToString());
-            sysLog("Listing end at: " + house.getEndListDate().dateToString());
+            sysLogSuccess("Listing start date: " + house.getStartListDate().dateToString());
+            sysLogSuccess("Listing end date: " + house.getEndListDate().dateToString());
+
+            if (house.getOccupier() != nullptr) {
+                sysLogSuccess("Occupier name: " + house.getOccupier()->getFullName());
+                sysLogSuccess("Occupier phone: " + house.getOccupier()->getPhoneNum());
+            }
+            if (house.hasRatings()) {
+                float ratingScore = house.sumRating();
+                sysLogSuccess("Rating: " << std::fixed << std::setprecision(2) << ratingScore);
+            }
         }
+        return;
     }
 }
 
@@ -614,19 +691,37 @@ bool System::removeHouse() {
 
                 houseVect.erase(houseVect.begin() + (std::stoi(house.getId()) - 1));
                 skip();
-                sysLog("Remove house successfully!!");
+                sysLogSuccess("Remove house successfully!!");
                 return true;
             } else {
                 skip();
-                sysLog("Cannot find your house in the system");
+                sysLogSuccess("Cannot find your house in the system");
                 return false;
             }
         }
     }
 
-    sysLog("Invalid response");
+    sysErrLog("Invalid response");
     return false;
 }
+
+//------------------------Get rating function----------------//
+void System::getRatingFromSys(vector<Rating*>& ratingVal, Member * requester) {
+    for (Rating & rating : ratingVect) {
+        if (rating.getOccupier() != nullptr && rating.getOccupier()->getId() == requester->getId()) {
+            ratingVal.push_back(&rating);
+        }
+    }
+}
+
+void System::getRatingFromSys(vector<Rating *>& ratingVal, House *house) {
+    for (Rating & rating : ratingVect) {
+        if (rating.getOccupier() == nullptr && rating.getHouse()->getId() == house->getId()) {
+            ratingVal.push_back(&rating);
+        }
+    }
+}
+
 
 //------------------------start and exit---------------//
 
@@ -634,17 +729,17 @@ bool System::systemStart() {
     sysLog("Loading data....\n");
 
     if (!loadMember()) {
-        sysLog("Failed to load members!!!");
+        sysErrLog("Failed to load members!!!");
         return false;
     }
 
     if (!loadHouse()) {
-        sysLog("Failed to load houses!!!");
+        sysErrLog("Failed to load houses!!!");
         return false;
     }
 
     if (!loadRating()) {
-        sysLog("Failed to load ratings!!!");
+        sysErrLog("Failed to load ratings!!!");
         return false;
     }
 //
@@ -653,7 +748,7 @@ bool System::systemStart() {
 //        return false;
 //    }
 
-    sysLog("Data loaded successfully");
+    sysLogSuccess("Data loaded successfully");
     return true;
 }
 
@@ -661,17 +756,17 @@ bool System::systemShutdown() {
     sysLog("Saving data....\n");
 
     if (!saveMember()) {
-        sysLog("Failed to save members!!!");
+        sysErrLog("Failed to save members!!!");
         return false;
     }
 
     if (!saveHouse()) {
-        sysLog("Failed to save houses!!!");
+        sysErrLog("Failed to save houses!!!");
         return false;
     }
 
     if (!saveRating()) {
-        sysLog("Failed to save ratings!!!");
+        sysErrLog("Failed to save ratings!!!");
         return false;
     }
 //
@@ -680,7 +775,7 @@ bool System::systemShutdown() {
 //        return false;
 //    }
 
-    sysLog("Saved data successfully ");
+    sysLogSuccess("Saved data successfully ");
     skip();
     sysLog("Shutting down.......");
     skip();

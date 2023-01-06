@@ -114,6 +114,7 @@ public:
     [[nodiscard]] int getCreditP() const;
     [[nodiscard]] House *getHouse() const;
     [[nodiscard]] Request *getRequest() const;
+    float sumRating();
 
     // Setter
     void setId(const string &id);
@@ -131,7 +132,6 @@ public:
 
     static bool logout();
 
-
     bool changePassword();
 
     bool updateInfo();
@@ -140,8 +140,14 @@ public:
     bool registerHouse();
     bool isHouseAvailable(House *house, Date startDate, Date endDate);
 
-    Rating* rateHouse();
-    Rating* rateOccupier();
+
+
+    Rating * rateHouse();
+    Rating * rateOccupier();
+
+    bool hasRatings();
+
+
 
     virtual ~Member();
 };
@@ -191,6 +197,10 @@ public:
     float getMinimumOccupierRating() const;
     Date getStartListDate();
     Date getEndListDate();
+
+
+    bool hasRatings();
+    float sumRating();
 };
 
 
@@ -233,8 +243,7 @@ public:
     int getStatus();
 };
 
-class Rating
-{
+class Rating {
 private:
     // Attributes
     Member *rater = nullptr;
@@ -288,7 +297,7 @@ private:
     vector<House> houseVect;
 
     vector<Rating> ratingVect;
-//    vector<Request> requestVect;
+    vector<Request> requestVect;
 
 
     // Current user
@@ -358,10 +367,14 @@ public:
 
     // Verify input function
     bool checkLocation(string location);
-
     bool isInteger(const string &input);
 
     bool removeHouse();
+
+
+    //Function to get rating from system
+    void getRatingFromSys(vector<Rating*>& ratingVal, Member * requester);
+    void getRatingFromSys(vector<Rating*>& ratingVal, House * house);
 
     bool systemStart();
     bool systemShutdown();

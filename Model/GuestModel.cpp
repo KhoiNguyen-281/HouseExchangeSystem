@@ -1,13 +1,15 @@
 //
 // Created by Nguyen Hoang Minh Khoi on 12/24/22.
 //
-#define sysLog(x) cout << x;
+
 
 
 #include "SystemModel.h"
 #include "MemberModel.cpp"
 #include <random>
 #include <sstream>
+
+
 
 Guest::Guest() = default;
 
