@@ -65,22 +65,20 @@ namespace HomepageComponent{
             case 1: {
                 cout << "Houses in hanoi\n";
                 vector<House* > availableHouses;
-                Date start_date = Date::parseDate(fieldInput("starting date"));
-                Date end_date = Date::parseDate(fieldInput("ending date"));
+                Date startingDate = Date::parseDate(fieldInput("starting date"));
+                Date endingDate = Date::parseDate(fieldInput("ending date"));
                 
 
                 system->loadMember();
                 system->loadHouse();
 
-                system->getAvailableHouse(availableHouses, true, "Ha Noi", start_date, end_date);
+                system->getAvailableHouses(availableHouses, true, "Ha Noi", startingDate, endingDate);
 
-                for(int i = 0; i < availableHouses.size(); i++){
-                    availableHouses[i]->showInfo();
-                }
+                system->viewAllHouseBySearchingLocation(true, "Ha Noi", startingDate, endingDate);
                 break;
             }
             case 2: {
-                cout << "Houses in Hue\n";
+//                system->viewAllHouseBySearchingLocation(true, "Ha Noi", )
                 break;
             }
             case 3: {

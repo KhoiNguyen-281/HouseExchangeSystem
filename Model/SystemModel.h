@@ -7,7 +7,6 @@
 #include <iostream>
 #include "string"
 #include <ctime>
-#include "./Libs/Config.h"
 
 using std::cin;
 using std::cout;
@@ -35,7 +34,7 @@ class Date
 {
 private:
     int month;
-    int date;
+    int day;
     int year = thisYear();
 
 public:
@@ -48,19 +47,19 @@ public:
 
     // getter
     int getMonth() const;
-    int getDate() const;
+    int getDay() const;
     int getYear() const;
 
     // Setter
     void setMonth(int month);
-    void setDate(int date);
+    void setDay(int date);
     void setYear(int year);
 
     static bool isDateValid(string date);
 
     static Date parseDate(string date);
 
-    int getDuration(Date start, Date end);
+    static int getDuration(Date start, Date end);
 
     static int compareDate(Date dateInSys, Date inputDate);
 
@@ -331,6 +330,7 @@ public:
     void viewHouseDetail();
     void viewAllHouse();
 
+    int getTotalConsumptionPoint(int duration, int startingDay, int endingDay);
     void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
     void getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
     void getAvailableLocation();

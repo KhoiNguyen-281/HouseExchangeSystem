@@ -42,6 +42,5 @@ int main() {
 //    Guest::login();
 //    Member::changePassword();
 //    cout << system->getCurrentMem()->getPassword();
-
     displayHousesOption();
 }

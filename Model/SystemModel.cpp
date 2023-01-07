@@ -9,7 +9,6 @@
 #define skip() cout << "\n\n";
 
 #include "SystemModel.h"
-#include "./Libs/Config.h"
 #include <random>
 #include "fstream"
 #include <sstream>
@@ -18,6 +17,7 @@ const string MEMBERS = "members.dat";
 const string HOUSES = "houses.dat";
 const string REQUESTS = "requests.dat";
 
+#include "../Libs/Config.h"
 //Helper functions
 string getFilePath(const string &file) {
     return "../Data/" + file;
@@ -506,16 +506,16 @@ House * System::getHouse(string ID) {
     return nullptr;
 }
 
-void System::getAvailableHouse(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date)
-{
+void System::getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date startingDate,
+                                Date endingDate) {
     for (int i = 0; i < houseVect.size(); i++)
     {
         if (isQualified && houseVect[i].getLocation().compare(location) != 0)
             continue;
 
         if (isQualified &&
-            (Date::compareDate(start_date, houseVect[i].getStartListDate()) < 0 ||
-             Date::compareDate(end_date, houseVect[i].getEndListDate()) > 0))
+            (Date::compareDate(startingDate, houseVect[i].getStartListDate()) < 0 ||
+             Date::compareDate(endingDate, houseVect[i].getEndListDate()) > 0))
             continue;
 
         if (isQualified && houseVect[i].getOwner() == currentMem)
@@ -524,6 +524,11 @@ void System::getAvailableHouse(vector<House *> &list_of_houses, bool isQualified
         list_of_houses.push_back(&houseVect[i]);
     }
 }
+
+int System::getTotalConsumptionPoint(int currentCreditPoint, int startingDate, int endingDate){
+    return ((endingDate - startingDate) * currentCreditPoint);
+}
+
 
 void System::viewAllHouseBySearchingLocation(bool isQualified, string location, Date startingDate, Date endingDate)
 {
@@ -539,47 +544,43 @@ void System::viewAllHouseBySearchingLocation(bool isQualified, string location, 
     {
         vector<House *> fetchAvailableHouses;
 
-        getAvailableHouses(true, location, startingDate, endingDate);
+        getAvailableHouses(fetchAvailableHouses,true, location, startingDate, endingDate);
 
-        if (fetchAvailableHouses.size() == 0)
+        if (fetchAvailableHouses.empty())
         {
             cout << "There are no qualified houses.\n";
             return;
         }
 
-        int days = Date::getDuration(startingDate, endingDate);
+        int duration = Date::getDuration(startingDate, endingDate);
 
-        for (int i = 0; i < availableHouses.size(); i++)
+        for (int i = 0; i < fetchAvailableHouses.size(); i++)
         {
-            log(DIVIDER);
-            log(Colors::BLUE << Colors::BOLD
-                             << "\t\tHouse #" + std::to_string(i + 1)
-                             << Colors::RESET << newl);
+            cout << LIGHT_CYAN_CLS << "\n\t\tHouse " << LIGHT_GREEN_CLS << std::to_string(i + 1) << "\n";
 
-            logInfo("Location: " << Colors::GREEN << availableHouses[i]->getLocation());
-            logInfo("Description: " << Colors::GREEN << availableHouses[i]->getDescription());
-            logInfo("Available from: " << Colors::GREEN << availableHouses[i]->getListingStart().toDateString());
-            logInfo("Available until: " << Colors::GREEN << availableHouses[i]->getListingEnd().toDateString());
-            logInfo("Consumption points (per day): " << Colors::GREEN << std::to_string(availableHouses[i]->getConsumptionPts()));
-            logInfo("Expected consumption points: " << Colors::GREEN
-                                                    << days * availableHouses[i]->getConsumptionPts());
+            cout << "\nLocation: " << fetchAvailableHouses[i]->getLocation() << "\n";
+            cout << "Description: " <<  fetchAvailableHouses[i]->getDescription() << "\n";
+            cout << "Available from: " <<  fetchAvailableHouses[i]->getStartListDate().dateToString() << "\n";
+            cout << "Available until: " <<  fetchAvailableHouses[i]->getEndListDate().dateToString() << "\n";
+            cout << "Consumption points (per day): " << std::to_string(fetchAvailableHouses[i]->getCreditPointsPerDay()) << "\n";
+            cout << "Expected consumption points: " << System::getTotalConsumptionPoint(duration, startingDate.getDay(), endingDate.getDay()) << "\n";
         }
     }
     else
     {
-        for (int i = 0; i < houses.size(); i++)
+        for (int i = 0; i < houseVect.size(); i++)
         {
-            cout << "\t\tHouse " + std::to_string(i + 1) << "\n";
+            cout << "\n\t\tHouse " << std::to_string(i + 1) << "\n";
 
-            cout << "Location: " << houses[i].getLocation());
-            cout << "Description: " << houses[i].getDescription());
+            cout << "Location: " << houseVect[i].getLocation() << "\n";
+            cout << "Description: " << houseVect[i].getDescription() << "\n";
 
-            cout << "Listing start: " << houses[i].getListingStart().toDateString() << "\n";
-            cout << "Listing end: " << houses[i].getListingEnd().toDateString() << "\n";
-            cout << "Consumption points (per day): " << std::to_string(houses[i].getConsumptionPts()) << "\n";
-            cout << "Owner ID: " << houses[i].getOwner()->getId() << "\n";
-            cout << "Owner Username: " << houses[i].getOwner()->getUsername() << "\n";
-            cout << "Owner Name: " << houses[i].getOwner()->getFullName() << "\n";
+            cout << "Listing start: " << houseVect[i].getStartListDate().dateToString() << "\n";
+            cout << "Listing end: " << houseVect[i].getEndListDate().dateToString() << "\n";
+            cout << "Consumption points (per day): " << std::to_string(houseVect[i].getCreditPointsPerDay()) << "\n";
+            cout << "Owner ID: " << houseVect[i].getOwner()->getId() << "\n";
+            cout << "Owner Username: " << houseVect[i].getOwner()->getUserName() << "\n";
+            cout << "Owner Name: " << houseVect[i].getOwner()->getFullName() << "\n";
         }
     }
 }

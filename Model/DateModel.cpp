@@ -26,13 +26,13 @@ Date::Date() {};
 Date::~Date() {}
 
 Date::Date(const Date &otherDate) {
-    date = otherDate.date;
+    day = otherDate.day;
     month = otherDate.month;
     year = otherDate.year;
 }
 
 Date &Date::operator=(const Date &otherDate) {
-    date = otherDate.date;
+    day = otherDate.day;
     month = otherDate.month;
     year = otherDate.year;
     return * this;
@@ -40,7 +40,7 @@ Date &Date::operator=(const Date &otherDate) {
 
 string Date::dateToString() {
     std::stringstream  ss;
-    ss  << std::setfill('0') << std::setw(2) << date << '/'
+    ss  << std::setfill('0') << std::setw(2) << day << '/'
         << std::setfill('0') << std::setw(2) << month << '/'
         << year;
     return ss.str();
@@ -60,9 +60,9 @@ int Date::compareDate(Date dateInSys, Date inputDate) {
             return 1;
         } else {
             //Check if day is conflict
-            if (dateInSys.getDate() > inputDate.getDate()) {
+            if (dateInSys.getDay() > inputDate.getDay()) {
                 return -1;
-            } else if (dateInSys.getDate() < inputDate.getDate()) {
+            } else if (dateInSys.getDay() < inputDate.getDay()) {
                 return 1;
             } else {
                 return 0;
@@ -78,8 +78,8 @@ int Date::getMonth() const {
     return month;
 }
 
-int Date::getDate() const {
-    return date;
+int Date::getDay() const {
+    return day;
 }
 
 int Date::getYear() const {
@@ -90,8 +90,8 @@ void Date::setMonth(int month) {
     Date::month = month;
 }
 
-void Date::setDate(int date) {
-    Date::date = date;
+void Date::setDay(int date) {
+    Date::day = date;
 }
 
 void Date::setYear(int year) {
@@ -153,7 +153,7 @@ bool Date::isDateValid(string date) {
 
 Date Date::parseDate(string date) {
     Date dateTemp;
-    dateTemp.setDate(std::stoi(date.substr(0, 2)));
+    dateTemp.setDay(std::stoi(date.substr(0, 2)));
     dateTemp.setMonth(std::stoi(date.substr(3, 2)));
     dateTemp.setYear(std::stoi(date.substr(6, 4)));
     return dateTemp;
@@ -163,11 +163,11 @@ int Date::getDuration(Date start, Date end) {
     int durations = 0;
     int temp = 0;
 
-    int startDay = start.getDate();
+    int startDay = start.getDay();
     int startMonth = start.getMonth();
     int startYear = start.getYear();
 
-    int endDay = end.getDate();
+    int endDay = end.getDay();
     int endMonth = end.getMonth();
 
     if (startMonth == endMonth) {
