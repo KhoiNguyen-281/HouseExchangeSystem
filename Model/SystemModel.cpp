@@ -9,6 +9,7 @@
 #define skip() cout << "\n\n";
 
 #include "SystemModel.h"
+#include "./Libs/Config.h"
 #include <random>
 #include "fstream"
 #include <sstream>
@@ -521,6 +522,65 @@ void System::getAvailableHouse(vector<House *> &list_of_houses, bool isQualified
             continue;
 
         list_of_houses.push_back(&houseVect[i]);
+    }
+}
+
+void System::viewAllHouseBySearchingLocation(bool isQualified, string location, Date startingDate, Date endingDate)
+{
+    if (houseVect.empty())
+    {
+        cout << "There are no houses on our system.\n";
+        return;
+    }
+
+    // Display all houses
+
+    if (isQualified)
+    {
+        vector<House *> fetchAvailableHouses;
+
+        getAvailableHouses(true, location, startingDate, endingDate);
+
+        if (fetchAvailableHouses.size() == 0)
+        {
+            cout << "There are no qualified houses.\n";
+            return;
+        }
+
+        int days = Date::getDuration(startingDate, endingDate);
+
+        for (int i = 0; i < availableHouses.size(); i++)
+        {
+            log(DIVIDER);
+            log(Colors::BLUE << Colors::BOLD
+                             << "\t\tHouse #" + std::to_string(i + 1)
+                             << Colors::RESET << newl);
+
+            logInfo("Location: " << Colors::GREEN << availableHouses[i]->getLocation());
+            logInfo("Description: " << Colors::GREEN << availableHouses[i]->getDescription());
+            logInfo("Available from: " << Colors::GREEN << availableHouses[i]->getListingStart().toDateString());
+            logInfo("Available until: " << Colors::GREEN << availableHouses[i]->getListingEnd().toDateString());
+            logInfo("Consumption points (per day): " << Colors::GREEN << std::to_string(availableHouses[i]->getConsumptionPts()));
+            logInfo("Expected consumption points: " << Colors::GREEN
+                                                    << days * availableHouses[i]->getConsumptionPts());
+        }
+    }
+    else
+    {
+        for (int i = 0; i < houses.size(); i++)
+        {
+            cout << "\t\tHouse " + std::to_string(i + 1) << "\n";
+
+            cout << "Location: " << houses[i].getLocation());
+            cout << "Description: " << houses[i].getDescription());
+
+            cout << "Listing start: " << houses[i].getListingStart().toDateString() << "\n";
+            cout << "Listing end: " << houses[i].getListingEnd().toDateString() << "\n";
+            cout << "Consumption points (per day): " << std::to_string(houses[i].getConsumptionPts()) << "\n";
+            cout << "Owner ID: " << houses[i].getOwner()->getId() << "\n";
+            cout << "Owner Username: " << houses[i].getOwner()->getUsername() << "\n";
+            cout << "Owner Name: " << houses[i].getOwner()->getFullName() << "\n";
+        }
     }
 }
 

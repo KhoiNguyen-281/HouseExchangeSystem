@@ -7,6 +7,7 @@
 #include <iostream>
 #include "string"
 #include <ctime>
+#include "./Libs/Config.h"
 
 using std::cin;
 using std::cout;
@@ -330,7 +331,8 @@ public:
     void viewHouseDetail();
     void viewAllHouse();
 
-    void getAvailableHouse(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
+    void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
+    void getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
     void getAvailableLocation();
 
     // Verify input function
