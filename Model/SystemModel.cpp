@@ -881,7 +881,10 @@ void System::searchHouse(vector<House*>& houseList, int option) {
             temp = "";
             break;
         }
-
+        case 3: {
+            viewAllHouse();
+            break;
+        }
     }
 }
 
