@@ -386,6 +386,10 @@ public:
     void getRatingFromSys(vector<Rating*>& ratingVal, Member * requester);
     void getRatingFromSys(vector<Rating*>& ratingVal, House * house);
 
+    //Function to search house
+    void searchHouse(vector<House*>& houseList, int option);
+    void getHouseByDate(vector<House*>& availableHouse, Date start, Date end);
+
     bool systemStart();
     bool systemShutdown();
 

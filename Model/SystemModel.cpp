@@ -827,7 +827,63 @@ bool System::systemShutdown() {
 }
 
 
+//--------------------------------Request function--------------------------------//
+void System::getHouseByDate(vector<House*> &availableHouse, Date start, Date end) {
+    for (House & house : houseVect) {
+        if (Date::compareDate(house.getStartListDate(), start) > 1
+        && Date::compareDate(house.getEndListDate(), end) > 1) {
+            availableHouse.push_back(&house);
+        }
+    }
+}
 
+
+void System::searchHouse(vector<House*>& houseList, int option) {
+    string temp;
+    switch (option) {
+        case 1: {
+            Date start, end;
+            sysLog("Please enter start and end date \n")
+            sysLog("Start date: ");
+            inputStr(temp);
+            while (!Date::isDateValid(temp)) {
+                sysLog("Date is not valid, please try again \n");
+                sysLog("Start date: ");
+                inputStr(temp);
+            }
+            start = Date::parseDate(temp);
+
+            temp = "";
+            sysLog("End date: ");
+            inputStr(temp);
+            while (!Date::isDateValid(temp)) {
+                sysLog("Date is not valid, please try again \n");
+                sysLog("End date: ");
+                inputStr(temp);
+            }
+            end = Date::parseDate(temp);
+
+            getHouseByDate(houseList, start, end);
+            temp = "";
+            break;
+        }
+        case 2: {
+            sysLog("Please enter available location (1,2,3): ")
+            int choice;
+            for (int i = 0; i < availableLocation.size(); i++) {
+                int num  = i + 1;
+                sysLog(to_string(num) + ": " + availableLocation[i] + "\n");
+            }
+            sysLog("Your choice: ");
+            cin >> choice;
+            temp = availableLocation[choice];
+//            getHouseByLoc(houseList, temp);
+            temp = "";
+            break;
+        }
+
+    }
+}
 
 
 
