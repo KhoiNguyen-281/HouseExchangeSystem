@@ -1,3 +1,0 @@
-/Users/macbookpro/Desktop/C++/SED_GROUP/cmake-build-debug/CMakeFiles/SED_GROUP.dir
-/Users/macbookpro/Desktop/C++/SED_GROUP/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/macbookpro/Desktop/C++/SED_GROUP/cmake-build-debug/CMakeFiles/rebuild_cache.dir
