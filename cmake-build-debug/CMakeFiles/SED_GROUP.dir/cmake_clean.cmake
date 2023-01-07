@@ -1,10 +1,8 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/SED_GROUP.dir/main.cpp.obj"
-  "CMakeFiles/SED_GROUP.dir/main.cpp.obj.d"
-  "SED_GROUP.exe"
-  "SED_GROUP.exe.manifest"
+  "CMakeFiles/SED_GROUP.dir/main.cpp.o"
+  "CMakeFiles/SED_GROUP.dir/main.cpp.o.d"
+  "SED_GROUP"
   "SED_GROUP.pdb"
-  "libSED_GROUP.dll.a"
 )
 
 # Per-language clean rules from dependency scanning.

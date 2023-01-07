@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "C:/SED_GROUP/main.cpp" "CMakeFiles/SED_GROUP.dir/main.cpp.obj" "gcc" "CMakeFiles/SED_GROUP.dir/main.cpp.obj.d"
+  "/Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/main.cpp" "CMakeFiles/SED_GROUP.dir/main.cpp.o" "gcc" "CMakeFiles/SED_GROUP.dir/main.cpp.o.d"
   )
 
 # Targets to which this target links.
