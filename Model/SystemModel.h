@@ -379,6 +379,8 @@ public:
     bool systemStart();
     bool systemShutdown();
 
+    // Function to get house by location
+    void getHouseByLoc(vector<House*>& house, string location);
 
     //Current member funciotn
 

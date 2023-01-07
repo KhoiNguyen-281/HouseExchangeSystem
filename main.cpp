@@ -33,12 +33,12 @@ int main() {
 //    system->loadHouse();
 //    system->registerMember(*Guest::registerNewMember());
 
-    Guest::login();
-    system->viewHouseDetail();
+    //Guest::login();
+    //system->viewHouseDetail();
 //    system->getCurrentMem()->rateHouse();
 //    Guest::registerNewMember();
 //    Guest::registerNewMember();
-
+system->viewAllHouse();
 //    system->getCurrentMem()->registerHouse();
 //    system->saveMember();
 //    system->saveHouse();

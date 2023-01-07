@@ -3,6 +3,7 @@
 //
 #include "SystemModel.h"
 #include "../Libs/Config.h"
+
 #define sysLog(x) cout << x;
 
 #define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n"; //log error and new line

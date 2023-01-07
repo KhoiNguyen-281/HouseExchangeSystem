@@ -721,6 +721,15 @@ void System::getRatingFromSys(vector<Rating *>& ratingVal, House *house) {
     }
 }
 
+//------------------------Get house by location function----------------//
+void System::getHouseByLoc(vector<House*>& house, string location){
+    for (House & eachHouse: houseVect) {
+        if (eachHouse.getLocation() == location) {
+            house.push_back(&eachHouse);
+        }
+    }
+}
+
 //------------------------start and exit---------------//
 
 bool System::systemStart() {
