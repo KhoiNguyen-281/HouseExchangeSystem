@@ -1,9 +1,11 @@
 #include <iostream>
+#include <iomanip>
 
 #include "string"
 using std::string;
 using std::cout;
 using std::cin;
+using namespace std;
 // using std::vector;
 #include <vector>
 

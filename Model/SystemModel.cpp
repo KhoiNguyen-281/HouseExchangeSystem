@@ -29,7 +29,7 @@ const string RATINGS = "ratings.dat";
 
 //Helper functions
 string getFilePath(const string &file) {
-    return "../Data/" + file;
+    return "./Data/" + file;
 }
 
 
