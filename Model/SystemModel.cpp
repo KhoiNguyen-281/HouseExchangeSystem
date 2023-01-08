@@ -749,14 +749,13 @@ bool System::removeHouse() {
         for (House & house  : houseVect) {
             if (house.getId() == houseTmp->getId()) {
                 currentMem->setHouse(nullptr);
-
                 houseVect.erase(houseVect.begin() + (std::stoi(house.getId()) - 1));
                 skip();
                 sysLogSuccess("Remove house successfully!!");
                 return true;
             } else {
                 skip();
-                sysLogSuccess("Cannot find your house in the system");
+                sysErrLog("Cannot find your house in the system");
                 return false;
             }
         }
@@ -783,6 +782,14 @@ void System::getRatingFromSys(vector<Rating *>& ratingVal, House *house) {
     }
 }
 
+//------------------------Get house by location function----------------//
+void System::getHouseByLoc(vector<House*>& house, string location){
+    for (House & eachHouse: houseVect) {
+        if (eachHouse.getLocation() == location) {
+            house.push_back(&eachHouse);
+        }
+    }
+}
 
 //------------------------start and exit---------------//
 

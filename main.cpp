@@ -1,9 +1,11 @@
 #include <iostream>
+#include <iomanip>
 
 #include "string"
 using std::string;
 using std::cout;
 using std::cin;
+using namespace std;
 // using std::vector;
 #include <vector>
 
@@ -13,9 +15,12 @@ using std::cin;
 #include "Model/HouseModel.cpp"
 #include "Model/DateModel.cpp"
 #include "Model/RatingModel.cpp"
+
 #include "Model/RequestModel.cpp"
+#include "Controllers/HomepageController.h"
 #include "Controllers/HomepageController.cpp"
 
+using namespace HomepageComponent;
 
 
 int main() {
@@ -37,6 +42,12 @@ int main() {
     system->getCurrentMem()->registerHouse();
     system->saveMember();
     system->saveHouse();
+system->viewAllHouse();
+//    system->getCurrentMem()->registerHouse();
+//    system->saveMember();
+//    system->saveHouse();
+
+//    system->viewAllHouse();
 
 //    system->viewMember();
 
@@ -46,5 +57,5 @@ int main() {
 //    Member::changePassword();
 //    cout << system->getCurrentMem()->getPassword();
 
-
+//    displayHousesOption();
 }
