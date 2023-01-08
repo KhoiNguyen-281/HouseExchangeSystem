@@ -97,11 +97,25 @@ Date House::getEndListDate() {
 //Show info function
 void House::showInfo() {
 
+//    string id;
+//    string location;
+//    string description = "";
+//
+//    int creditPointsPerDay = 0;
+//    float minimumOccupierRating = 0.0;
+//
+//    Member* owner = nullptr;
+//    Member* occupier = nullptr;
+////
+//    Date startListDate;
+//    Date endListDate;
+
     sysLogInfo("House ID: " + this->id);
     sysLogInfo("Location: " + this->location);
     sysLogInfo("Description: " + this->description);
-    sysLogInfo("Credit points perday: " + to_string(this->creditPointsPerDay));
-    sysLogInfo("Minimum rating required: " << std::fixed << std::setprecision(2) << this->getMinimumOccupierRating())
+    sysLogInfo("Credit points per day: " + to_string(this->creditPointsPerDay));
+    sysLogInfo("Minimum rating required: " << std::fixed << std::setprecision(2) << this->getMinimumOccupierRating());
+
 }
 
 //---------------------------Rating function---------------//

@@ -8,6 +8,42 @@ Request::~Request() {
 
 }
 
+void Request::showInfo() {
+//    string id = "";
+//
+//    House *house = nullptr;
+//    Member *requester = nullptr;
+//
+//    Date start_date = Date();
+//    Date end_date = Date();
+//
+//    int status = PENDING;
+
+    sysLogInfo("Request ID: " + this->id);
+    sysLogInfo("Requester: ");
+    this->getRequester()->showInfo();
+    sysLogInfo("Start date: " + this->getStartDate().dateToString());
+    sysLogInfo("End date: " + this->getEndDate().dateToString());
+    switch (status) {
+        case 0:
+            sysLogInfo("PENDING");
+            break;
+        case 1:
+            sysLogInfo("APPROVED");
+            break;
+        case 2:
+            sysLogInfo("DENIED");
+            break;
+        case 3:
+            sysLogInfo("FINISHED");
+            break;
+
+        default:
+            sysLogInfo("N/A");
+            break;
+    }
+}
+
 void Request::setId(const string &id) {
     Request::id = id;
 }
@@ -44,15 +80,18 @@ Member *Request::getRequester() const {
     return requester;
 }
 
-const Date &Request::getStartDate() const {
+Date Request::getStartDate() {
     return start_date;
 }
 
-const Date &Request::getEndDate() const {
+Date Request::getEndDate() {
     return end_date;
 }
 
 int Request::getStatus() const {
     return status;
 }
+
+
 //Getter functions
+

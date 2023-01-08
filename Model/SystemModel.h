@@ -41,7 +41,7 @@ class Rating;
 class Date {
 private:
     int month;
-    int date;
+    int day;
     int year = thisYear();
 
 public:
@@ -54,12 +54,12 @@ public:
 
     //getter
     int getMonth() const;
-    int getDate() const;
+    int getDay() const;
     int getYear() const;
 
     //Setter
     void setMonth(int month);
-    void setDate(int date);
+    void setDay(int date);
     void setYear(int year);
 
 
@@ -67,7 +67,7 @@ public:
 
     static Date parseDate( string date);
 
-    int getDuration(Date start, Date end);
+    static int getDuration(Date start, Date end);
 
     static int compareDate(Date dateInSys, Date inputDate);
 
@@ -214,7 +214,7 @@ private:
     Date start_date = Date();
     Date end_date = Date();
 
-    int status = 0;
+    int status = PENDING;
 
 public:
     // Default constructor
@@ -222,6 +222,8 @@ public:
 
     // Destructor
     ~Request();
+
+    void showInfo();
 
     // Setters
     void setId(const string &id);
@@ -243,9 +245,9 @@ public:
 
     Member *getRequester() const;
 
-    const Date &getStartDate() const;
+    Date getStartDate();
 
-    const Date &getEndDate() const;
+    Date getEndDate();
 
     int getStatus() const;
 };
@@ -321,6 +323,7 @@ public:
     void setCurrentMem(Member *currentMem);
     void setIsLoggedIn(bool isLoggedIn);
     void setIsAdmin(bool isAdmin);
+    bool hasRequest();
 
     Member *getCurrentMem();
     bool isUser() const;
@@ -341,8 +344,8 @@ public:
     //Function to add objects to vector
     Member* addMemberToSys(Member member);
     House* addHouseToSys(House house);
-    Rating* addRatingtoSys(const Rating& rating);
-    Request* addRequest(Request request);
+    Rating* addRatingtoSys(Rating rating);
+    Request* addRequestToSys(Request request);
 
     //Function to add or remove credit points of members
     bool addCreditPoints(Member * member, int creditP);
@@ -372,8 +375,11 @@ public:
     void viewMember();
     void viewHouseDetail();
     void viewAllHouse();
+    void viewRequest();
 
-    void getAvailableHouse(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
+    int getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints);
+    void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
+    void getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
     void getAvailableLocation();
 
     //Verify input function
@@ -383,20 +389,25 @@ public:
 
     bool removeHouse();
 
+    bool isHouseSuitable(House house);
+
 
     //Function to get rating from system
     void getRatingFromSys(vector<Rating*>& ratingVal, Member * requester);
     void getRatingFromSys(vector<Rating*>& ratingVal, House * house);
 
     //Function to search house
-    void searchHouse(vector<House*>& houseList, int option);
+    void searchHouse();
     void getHouseByDate(vector<House*>& availableHouse, Date start, Date end);
+    void getHouseByLoc(vector<House*>& house, string location);
+    void getHouseWithCreditPoint(vector<House*> &house);
+
 
     bool systemStart();
     bool systemShutdown();
 
-    // Function to get house by location
-    void getHouseByLoc(vector<House*>& house, string location);
+    //
+
 
     //Current member funciotn
 

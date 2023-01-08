@@ -23,11 +23,22 @@ Member::~Member() {
 
 void Member::showInfo() {
 
+//    string id;
+//    string userName;
+//    string fullName;
+//    string phoneNum;
+//    string password;
+//    int creditP = CREDIT_POINT;
+//    House* house = nullptr;
+//    Request* request = nullptr;
+
     sysLogInfo("ID: " + this->id);
     sysLogInfo("Username: " + this->userName);
     sysLogInfo("Full name: " + this->fullName);
     sysLogInfo("Phone number: " + this->phoneNum);
-    sysLogInfo("Credit points: " + to_string(this->creditP));
+    sysLogInfo("Credit points: " + to_string(this->creditP) + "\n");
+
+
 //    sysLog("ID: " << this->id << "\n");
 //    sysLog("Username: " << this->userName <<"\n");
 //    sysLog("Full name: " << this->fullName <<"\n");
