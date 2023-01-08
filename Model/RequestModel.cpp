@@ -7,64 +7,52 @@ Request::Request() {}
 Request::~Request() {
 
 }
+
+void Request::setId(const string &id) {
+    Request::id = id;
+}
+
+void Request::setHouse(House *house) {
+    Request::house = house;
+}
+
+void Request::setRequester(Member *requester) {
+    Request::requester = requester;
+}
+
+void Request::setStartDate(const Date &startDate) {
+    start_date = startDate;
+}
+
+void Request::setEndDate(const Date &endDate) {
+    end_date = endDate;
+}
+
+void Request::setStatus(int status) {
+    Request::status = status;
+}
+
+const string &Request::getId() const {
+    return id;
+}
+
+House *Request::getHouse() const {
+    return house;
+}
+
+Member *Request::getRequester() const {
+    return requester;
+}
+
+const Date &Request::getStartDate() const {
+    return start_date;
+}
+
+const Date &Request::getEndDate() const {
+    return end_date;
+}
+
+int Request::getStatus() const {
+    return status;
+}
 //Getter functions
-void Request::setId(string id)
-{
-    this->id = id;
-}
-
-void Request::setHouse(House *house)
-{
-    this->house = house;
-}
-
-void Request::setRequester(Member *requester)
-{
-    this->requester = requester;
-}
-
-void Request::setStartingDate(Date startingDate)
-{
-    this->start_date = startingDate;
-}
-
-void Request::setEndingDate(Date endingDate)
-{
-    this->end_date = endingDate;
-}
-
-void Request::setStatus(int status)
-{
-    this->status = status;
-}
-
-// Getters
-string Request::getId()
-{
-    return this->id;
-}
-
-House *Request::getHouse()
-{
-    return this->house;
-}
-
-Member *Request::getRequester()
-{
-    return this->requester;
-}
-
-Date Request::getStartingDate()
-{
-    return this->start_date;
-}
-
-Date Request::getEndingDate()
-{
-    return this->end_date;
-}
-
-int Request::getStatus()
-{
-    return this->status;
-}

@@ -1,12 +1,26 @@
+//
+// Created by Macbook Pro Silver on 29/12/2022.
+//
+//
+// Created by Macbook Pro Silver on 27/12/2022.
+//
+
 #include "HomepageController.h"
-#include "../Model/SystemModel.h"
-#include "../Libs/Config.h"
+//#include "../Model/SystemModel.h"
+//#include "../Model/"
+
+//
+// Created by Macbook Pro Silver on 27/12/2022.
+//
+
+
 #include <iostream>
 #include "string"
 
 using std::string;
 using std::cout;
 using std::cin;
+
 
 using namespace HomepageComponent;
 
@@ -72,7 +86,7 @@ namespace HomepageComponent{
                 system->loadMember();
                 system->loadHouse();
 
-                system->getAvailableHouse(availableHouses, true, "Ha Noi", start_date, end_date);
+//                system->getAvailableHouse(availableHouses, true, "Ha Noi", start_date, end_date);
 
                 for(int i = 0; i < availableHouses.size(); i++){
                     availableHouses[i]->showInfo();
@@ -132,7 +146,6 @@ namespace HomepageComponent{
     }
 
     void displayGuestHomepage(){
-        System *system = System::getInstance();
         cout << "\n—----------------- Guest Homepage —-----------------\n"
                 "This is your menu:\n"
                 "\t0.  Exit\n"
@@ -149,18 +162,11 @@ namespace HomepageComponent{
                 /// view Information
                 cout << "Register\n";
                 break;
-            case 2: {
+            case 2:
                 /// Unlist current house
-                string userName = fieldInput("userName");
-                string password = fieldInput("password");
+                cout << "Login\n";
 
-                Member* member = system->login(userName, password);
-
-                if(member){
-                    displayMemberHomepage(userName);
-                }
                 break;
-            }
             case 3:
                 /// Search available house
                 cout << "View available houses \n";
@@ -168,6 +174,42 @@ namespace HomepageComponent{
             default:
                 cout << "Invalid option, please try again....\n";
                 displayGuestHomepage();
+        }
+    }
+
+    void displayMemberHomepage(){
+        cout << "\n—----------------- Homepage —-----------------\n"
+                "This is your menu:\n"
+                "\t0.  Exit\n"
+                "\t1.  View Information\n"
+                "\t2.  List available houses.\n"
+                "\t3.  Unlist current house\n"
+                "\t4.  Search available house.\n";
+        int option = optionInput();
+
+        switch (option){
+            case 0:
+                exit(1);
+                break;
+            case 1:
+                /// view Information
+                cout << "View information\n";
+                break;
+            case 2:
+                /// List available house
+                displayHousesOption();
+                break;
+            case 3:
+                /// Unlist current house
+                cout << "Unlist current house \n";
+                break;
+            case 4:
+                /// Search available house
+                cout << "Search available house\n";
+                break;
+            default:
+                cout << "Invalid option, please try again....\n";
+                displayMemberHomepage();
         }
     }
 
@@ -220,32 +262,21 @@ namespace HomepageComponent{
                 "Use the app as 1. Guest   2. Member   3. Admin\n";
         int option = optionInput();
 
-        System* system = System::getInstance();
-
         switch (option){
             case 0:
                 exit(1);
             case 1:
                 displayGuestHomepage();
                 break;
-            case 2:{
-                string userName = fieldInput("userName");
-                string password = fieldInput("password");
-
-                Member* member = system->login(userName, password);
-
-                if(member != nullptr){
-                    displayMemberHomepage(userName);
-                }
-                displayGuestHomepage();
+            case 2:
+                displayMemberHomepage();
                 break;
-            }
             case 3:
                 displayAdminHomepage();
                 break;
             default:
                 cout << "Invalid option, please try again....\n";
-//                displayMemberHomepage();
+                displayMemberHomepage();
         }
     }
 

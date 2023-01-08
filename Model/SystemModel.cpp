@@ -27,13 +27,73 @@ const string HOUSES = "houses.dat";
 const string REQUESTS = "requests.dat";
 const string RATINGS = "ratings.dat";
 
+
 //Helper functions
 string getFilePath(const string &file) {
-    return "./Data/" + file;
+    return "../Data/" + file;
 }
 
 
-// Setters
+
+
+//int Member::unListHouse(vector<House> &houseVector) {
+//    if (this == nullptr) {
+//        sysLog("You have not logged in the system yet");
+//        return 0;
+//    }
+//    string choice;
+//    sysLog("Do you really want to remove this house ? (Y/N)");
+//    getline(cin, choice);
+//    bool found = false;
+//    int count  = 0;
+//    if (choice == "Y" || choice ==  "y") {
+//        for (auto & i : houseVector) {
+//            if (i.getOwner() ==  this) {
+//                found = true;
+//            }
+//            count += 1;
+//        }
+//        if (found) {
+//            this->setHouse(nullptr);
+//            houseVector.erase(houseVector.begin() + count);
+//            sysLog("Remove house successfully");
+//            return 0;
+//        } else {
+//            sysLog("Your house does not exist in the system");
+//            return 0;
+//        }
+//    } else if (choice == "N" || choice == "n") {
+//        return 0;
+//    }
+//    return 0;
+//}
+// Getter and setter function
+
+
+
+
+//Setter
+
+
+//void House::showInfo() {
+//
+////    int ptsPerDay = 0;
+////    double occupierRating;
+////    Member * owner = nullptr;
+////    Member* occupier = nullptr;
+//    cout << "House: " << this->id << "\n";
+//    cout << "Location: " << this->location << "\n";
+//    cout << "Description: " << this->description << "\n";
+//    cout << "Points per day: " << this->ptsPerDay << "\n";
+//    cout << "Owner: " << this->owner->getUserName() << "\n \n";
+//}
+
+
+//Getter and setter
+//Getter
+
+
+
 
 System::System() {
 
@@ -185,7 +245,7 @@ House * System::addHouseToSys(House house) {
     }
 }
 
-Rating * System::addRatingtoSys(Rating rating) {
+Rating * System::addRatingtoSys(const Rating& rating) {
     //Check if rating already exist in system
     for (Rating & temp : ratingVect) {
         if (temp.getHouse()->getId() == rating.getHouse()->getId()
@@ -601,6 +661,7 @@ void System::viewHouseDetail() {
     }
 
     House * house = currentMem->getHouse();
+
     if (house == nullptr) {
         sysLog("You have not registered any house yet");
         string choice;
@@ -749,6 +810,7 @@ bool System::systemStart() {
         sysErrLog("Failed to load ratings!!!");
         return false;
     }
+
 //
 //    if (!loadRequest()) {
 //        sysLog("Failed to load requests!!!");
@@ -790,6 +852,67 @@ bool System::systemShutdown() {
 }
 
 
+//--------------------------------Request function--------------------------------//
+void System::getHouseByDate(vector<House*> &availableHouse, Date start, Date end) {
+    for (House & house : houseVect) {
+        if (Date::compareDate(house.getStartListDate(), start) > 1
+        && Date::compareDate(house.getEndListDate(), end) > 1) {
+            availableHouse.push_back(&house);
+        }
+    }
+}
+
+
+void System::searchHouse(vector<House*>& houseList, int option) {
+    string temp;
+    switch (option) {
+        case 1: {
+            Date start, end;
+            sysLog("Please enter start and end date \n")
+            sysLog("Start date: ");
+            inputStr(temp);
+            while (!Date::isDateValid(temp)) {
+                sysLog("Date is not valid, please try again \n");
+                sysLog("Start date: ");
+                inputStr(temp);
+            }
+            start = Date::parseDate(temp);
+
+            temp = "";
+            sysLog("End date: ");
+            inputStr(temp);
+            while (!Date::isDateValid(temp)) {
+                sysLog("Date is not valid, please try again \n");
+                sysLog("End date: ");
+                inputStr(temp);
+            }
+            end = Date::parseDate(temp);
+
+            getHouseByDate(houseList, start, end);
+            temp = "";
+            break;
+        }
+        case 2: {
+            sysLog("Please enter available location (1,2,3): ")
+            int choice;
+            for (int i = 0; i < availableLocation.size(); i++) {
+                int num  = i + 1;
+                sysLog(to_string(num) + ": " + availableLocation[i] + "\n");
+            }
+            sysLog("Your choice: ");
+            cin >> choice;
+            temp = availableLocation[choice];
+//            getHouseByLoc(houseList, temp);
+            temp = "";
+            break;
+        }
+        case 3: {
+            viewAllHouse();
+            break;
+        }
+    }
+}
 
 
 
+// method

@@ -96,6 +96,7 @@ Date House::getEndListDate() {
 
 //Show info function
 void House::showInfo() {
+
     sysLogInfo("House ID: " + this->id);
     sysLogInfo("Location: " + this->location);
     sysLogInfo("Description: " + this->description);
