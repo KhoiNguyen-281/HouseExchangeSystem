@@ -298,12 +298,16 @@ namespace HomepageComponent{
                 string userName = fieldInput("userName");
                 string password = fieldInput("password");
 
+                system->loadMember();
+                system->loadHouse();
                 Member* member = system->login(userName, password);
 
                 if(member != nullptr){
                     displayMemberHomepage(member);
                 }
-                displayGuestHomepage();
+                else{
+                    displayGuestHomepage();
+                }
                 break;
             }
             case 3:
