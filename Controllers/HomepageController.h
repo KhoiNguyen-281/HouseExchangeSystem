@@ -10,6 +10,7 @@
 
 namespace HomepageComponent {
     int optionInput();
+    string fieldInput(std::string field);
     void displayGuestHomepage();
     void displayHousesOption();
     void displayLocationOption();

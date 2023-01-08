@@ -253,7 +253,7 @@ public:
 class Rating {
 private:
     // Attributes
-    Member* rater = nullptr;
+    Member *rater = nullptr;
     double score;
     House* house = nullptr;
     Member* occupier = nullptr;
@@ -281,7 +281,8 @@ public:
     Member *getOccupier() const;
 
 
-    // Friend class]
+    // Friend class
+//    friend class Member;
 //    friend class House;
 };
 
@@ -326,7 +327,6 @@ public:
     bool isAdmin() const;
     bool changePassword(string newpwd, string oldpwd);
     bool updateInfo();
-
 
     //Function to generate id automatically
     string generateID(int &count);
@@ -373,11 +373,13 @@ public:
     void viewHouseDetail();
     void viewAllHouse();
 
+    void getAvailableHouse(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
     void getAvailableLocation();
 
     //Verify input function
     bool checkLocation(string location);
     bool isInteger(const string &input);
+
 
     bool removeHouse();
 
@@ -399,4 +401,4 @@ public:
     virtual ~System();
 };
 
-#endif //SED_GROUP_SYSTEMMODEL_H
+#endif // SED_GROUP_SYSTEMMODEL_H
