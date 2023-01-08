@@ -115,11 +115,11 @@ namespace HomepageComponent{
                 system->getAvailableHouses(availableHouses, true, "Ha Noi", startingDate, endingDate);
                 system->viewAllHouseBySearchingLocation(true, "Ha Noi", startingDate, endingDate);
 
-                string houseNumber;
+                string houseID;
                 cout << "Enter the house ID: ";
-                getline(cin, houseNumber);
+                inputStr(houseID);
 
-                House* getSearchingHouseByID = system->getHouse(houseNumber);
+                House* getSearchingHouseByID = system->getHouse(houseID);
                 getSearchingHouseByID->showInfo();
 
                 int houseNumber = availableHouses.size();
