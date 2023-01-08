@@ -18,6 +18,10 @@ using std::cin;
 
 using namespace HomepageComponent;
 
+template <class X, class Y, class Z> void myFunc(X int1, Y int2){
+    cout << (int1 / int2) << "\n";
+}
+
 
 int main() {
 
@@ -43,4 +47,5 @@ int main() {
 //    Member::changePassword();
 //    cout << system->getCurrentMem()->getPassword();
     displayHousesOption();
+
 }
