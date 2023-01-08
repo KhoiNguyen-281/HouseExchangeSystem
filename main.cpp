@@ -29,6 +29,7 @@ int main() {
     bool isLoggedIn = system->isUser();
     bool isAdmin = system->isAdmin();
     system->systemStart();
+    
 //    system->loadMember();
 //    system->loadHouse();
 //    system->registerMember(*Guest::registerNewMember());

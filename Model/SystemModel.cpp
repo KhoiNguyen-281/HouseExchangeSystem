@@ -30,7 +30,7 @@ const string RATINGS = "ratings.dat";
 
 //Helper functions
 string getFilePath(const string &file) {
-    return "../Data/" + file;
+    return "./Data/" + file;
 }
 
 
@@ -245,7 +245,7 @@ House * System::addHouseToSys(House house) {
     }
 }
 
-Rating * System::addRatingtoSys(const Rating& rating) {
+Rating * System::addRatingtoSys(Rating rating) {
     //Check if rating already exist in system
     for (Rating & temp : ratingVect) {
         if (temp.getHouse()->getId() == rating.getHouse()->getId()
@@ -913,6 +913,3 @@ void System::searchHouse(vector<House*>& houseList, int option) {
     }
 }
 
-
-
-// method

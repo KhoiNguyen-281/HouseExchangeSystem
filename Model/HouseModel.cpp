@@ -126,3 +126,32 @@ float House::sumRating() {
     }
     return 0;
 }
+
+bool House::approveRequest(Request* request, vector<Request*> listRequest){
+    // Check request status
+    if (request->getStatus() != PENDING)
+    {
+        sysErrLog("The request is not in pending");
+        return false;
+    }
+
+    // Add credit to owner
+    int duration = Date::getDuration(request->getStartingDate(),request->getEndingDate());
+    int totalcreditPoint = creditPointsPerDay*duration;
+    owner->setCreditP(totalcreditPoint);
+    occupier->setCreditP(occupier->getCreditP()-totalcreditPoint);
+    request->getHouse()->setOccupier(request->getRequester());
+    request->setStatus(APPROVED);
+    // Deny other requests
+    for(Request* each: listRequest){
+        if (each->getStatus() == PENDING)
+        {
+            each->setStatus(DENIED);
+        }
+    }
+    return true;   
+}
+
+bool denyRequest(Request* request){
+    return true;
+}

@@ -10,11 +10,11 @@
 #include <iomanip>
 
 
-using std::string;
-using std::cout;
 using std::cin;
-using std::vector;
+using std::cout;
+using std::string;
 using std::to_string;
+using std::vector;
 #include <vector>
 
 #define CREDIT_POINT 500;
@@ -26,12 +26,14 @@ enum Status {
     FINISHED
 };
 
-int thisYear() {
+
+int thisYear()
+{
+
     std::time_t t = std::time(nullptr);
     std::tm *const pTInfo = std::localtime(&t);
     return 1900 + pTInfo->tm_year;
 }
-
 
 class Guest;
 class Member;
@@ -39,7 +41,8 @@ class House;
 class Request;
 class Rating;
 
-class Date {
+class Date
+{
 private:
     int month;
     int date;
@@ -51,60 +54,60 @@ public:
     ~Date();
     Date(const Date &date);
 
-    Date &operator = (const Date&otherDate);
+    Date &operator=(const Date &otherDate);
 
-    //getter
+    // getter
     int getMonth() const;
     int getDate() const;
     int getYear() const;
 
-    //Setter
+    // Setter
     void setMonth(int month);
     void setDate(int date);
     void setYear(int year);
 
-
     static bool isDateValid(string date);
 
-    static Date parseDate( string date);
+    static Date parseDate(string date);
 
-    int getDuration(Date start, Date end);
+    static int getDuration(Date start, Date end);
 
     static int compareDate(Date dateInSys, Date inputDate);
 
     string dateToString();
 };
 
-class Guest {
+class Guest
+{
 public:
     Guest();
     virtual ~Guest();
 
-    static Member* registerNewMember();
+    static Member *registerNewMember();
 
-    static Member* login();
+    static Member *login();
 
     void showAllHouse();
 };
 
-class Member : public Guest{
+class Member : public Guest
+{
 private:
-
     string id;
     string userName;
     string fullName;
     string phoneNum;
     string password;
     int creditP = CREDIT_POINT;
-    House* house = nullptr;
-    Request* request = nullptr;
+    House *house = nullptr;
+    Request *request = nullptr;
 
 public:
     Member(string userName, string fullName, string phoneNum, string passWord);
     Member();
     void showInfo();
 
-    //getter
+    // getter
     [[nodiscard]] const string &getId() const;
     [[nodiscard]] const string &getUserName() const;
     [[nodiscard]] const string &getFullName() const;
@@ -115,7 +118,7 @@ public:
     [[nodiscard]] Request *getRequest() const;
     float sumRating();
 
-    //Setter
+    // Setter
     void setId(const string &id);
     void setUserName(const string &userName);
     void setFullName(const string &fullName);
@@ -125,13 +128,11 @@ public:
     void setHouse(House *house);
     void setRequest(Request *request);
 
-    //Function authentication
-    Member* registerNewMember();
-    Member* login();
+    // Function authentication
+    Member *registerNewMember();
+    Member *login();
 
     static bool logout();
-
-    bool verifyPassword(string password);
 
     bool changePassword();
 
@@ -139,7 +140,7 @@ public:
     bool deleteProfile();
 
     bool registerHouse();
-    bool isHouseAvailable(House * house, Date startDate, Date endDate);
+    bool isHouseAvailable(House *house, Date startDate, Date endDate);
 
 
 
@@ -148,13 +149,16 @@ public:
 
     bool hasRatings();
 
-    virtual ~Member();
+    // Friend function
+    // Set new occupier to the house after successfully request
+    friend House* addNewOccupierToHouse(House* house, Member * occupier);
 
+    virtual ~Member();
 };
 
-class House {
+class House
+{
 private:
-
     string id;
     string location;
     string description = "";
@@ -162,9 +166,9 @@ private:
     int creditPointsPerDay = 0;
     float minimumOccupierRating = 0.0;
 
-    Member* owner = nullptr;
-    Member* occupier = nullptr;
-//
+    Member *owner = nullptr;
+    Member *occupier = nullptr;
+    //
     Date startListDate;
     Date endListDate;
 
@@ -176,7 +180,7 @@ public:
 
     void showInfo();
 
-    //setter
+    // setter
     void setOwner(Member *owner);
     void setOccupier(Member *occupier);
     void setId(const string &id);
@@ -184,10 +188,10 @@ public:
     void setDescription(const string &description);
     void setCreditPointsPerDay(int consumptionPts);
     void setMinimumOccupierRating(float minimumOccupierRating);
-    void setStartListDate( Date startListDate);
-    void setEndListDate( Date endListDate);
+    void setStartListDate(Date startListDate);
+    void setEndListDate(Date endListDate);
 
-    //getter
+    // getter
     Member *getOwner() const;
     Member *getOccupier() const;
     const string &getId() const;
@@ -198,10 +202,17 @@ public:
     Date getStartListDate();
     Date getEndListDate();
 
+    bool approveRequest(Request* request, vector<Request*> listRequest);
 
     bool hasRatings();
     float sumRating();
+
+    // Friend function
+    // Set new occupier to the house after successfully request
+    friend House* addNewOccupierToHouse(House* house, Member * occupier);
 };
+
+
 
 
 class Request
@@ -225,30 +236,20 @@ public:
     ~Request();
 
     // Setters
-    void setId(const string &id);
-
+    void setId(string id);
     void setHouse(House *house);
-
     void setRequester(Member *requester);
-
-    void setStartDate(const Date &startDate);
-
-    void setEndDate(const Date &endDate);
-
+    void setStartingDate(Date start_date);
+    void setEndingDate(Date end_date);
     void setStatus(int status);
 
     // Getters
-    const string &getId() const;
-
-    House *getHouse() const;
-
-    Member *getRequester() const;
-
-    const Date &getStartDate() const;
-
-    const Date &getEndDate() const;
-
-    int getStatus() const;
+    string getId();
+    House *getHouse();
+    Member *getRequester();
+    Date getStartingDate();
+    Date getEndingDate();
+    int getStatus();
 };
 
 class Rating {
@@ -267,7 +268,7 @@ public:
     ~Rating();
 
     // Setter Methods
-    void setRating(Member* rater, double score, string comment);
+    void setRating(Member *rater, double score, string comment);
     void setRater(Member *rater);
     void setScore(double score);
     void setComment(const string &comment);
@@ -281,44 +282,43 @@ public:
     House *getHouse() const;
     Member *getOccupier() const;
 
-
-    // Friend class
-//    friend class Member;
-//    friend class House;
 };
 
-class System {
+class System
+{
 private:
     int countMem = 0;
     int countHouse = 0;
     int countRequest = 0;
     int countRating = 0;
 
-    static System * instancePointer;
+    static System *instancePointer;
     System();
 
     vector<string> availableLocation = {"Ha Noi", "Ho Chi Minh", "Da Nang"};
 
-    //Admin login info
+    // Admin login info
     string adminUsername = "admin";
     string adminPassword = "admin123";
 
-    //Vector database;
+    // Vector database;
     vector<Member> memberVect;
     vector<House> houseVect;
+
     vector<Rating> ratingVect;
     vector<Request> requestVect;
 
-    //Current user
-    Member* currentMem = nullptr;
+
+    // Current user
+    Member *currentMem = nullptr;
     bool isLoggedIn = false;
     bool isAdminLoggedin = false;
 
-    //setter
+    // setter
 public:
-    static System * getInstance();
+    static System *getInstance();
 
-    //Current user functions
+    // Current user functions
     void setCurrentMem(Member *currentMem);
     void setIsLoggedIn(bool isLoggedIn);
     void setIsAdmin(bool isAdmin);
@@ -329,12 +329,13 @@ public:
     bool changePassword(string newpwd, string oldpwd);
     bool updateInfo();
 
-    //Function to generate id automatically
+
+    // Function to generate id automatically
     string generateID(int &count);
 
-    //Authentication functions
-    Member* registerMember(Member member);
-    Member* login(string username, string password);
+    // Authentication functions
+    Member *registerMember(Member member);
+    Member *login(string username, string password);
     bool logout();
 
 
@@ -342,32 +343,34 @@ public:
     //Function to add objects to vector
     Member* addMemberToSys(Member member);
     House* addHouseToSys(House house);
-    Rating* addRatingtoSys(const Rating& rating);
+    Rating* addRatingtoSys(Rating rating);
     Request* addRequest(Request request);
 
     //Function to add or remove credit points of members
-    bool addCreditPoints(Member * member, int creditP);
-    bool removeCreditPoints(Member * member, int creditP);
+   /*  bool addCreditPoints(Member * member, int creditP);
+    bool removeCreditPoints(Member * member, int creditP); */
 
+    // Function to add or remove credit points of members
+    /* bool addCreditPoints(Member *member, int creditP);
+    bool removeCreditPoints(Member *member, int creditP); */
 
-    //Function to get objects by ID
+    // Function to get objects by ID
     Member *getMember(string ID);
     House *getHouse(string ID);
-    Rating *getRating(string houseID, string memberID);
-    Request *getRequest(string ID);
+   /*  Rating *getRating(string houseID, string memberID);
+    Request *getRequest(string ID); */
 
-
-    //Function to save data to file text
+    // Function to save data to file text
     bool saveMember();
     bool saveHouse();
     bool saveRating();
-    bool saveRequest();
+//    bool saveRequest();
 
-    //Funciton to load data from file
+    // Funciton to load data from file
     bool loadMember();
     bool loadHouse();
     bool loadRating();
-    bool loadRequest();
+    //bool loadRequest();
 
     //View functions
     void viewMember();
@@ -377,10 +380,9 @@ public:
     void getAvailableHouse(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
     void getAvailableLocation();
 
-    //Verify input function
+    // Verify input function
     bool checkLocation(string location);
     bool isInteger(const string &input);
-
 
     bool removeHouse();
 
@@ -398,6 +400,7 @@ public:
 
     // Function to get house by location
     void getHouseByLoc(vector<House*>& house, string location);
+
 
     //Current member funciotn
 

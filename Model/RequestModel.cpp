@@ -8,51 +8,62 @@ Request::~Request() {
 
 }
 
-void Request::setId(const string &id) {
-    Request::id = id;
+void Request::setId(string id)
+{
+    this->id = id;
 }
 
-void Request::setHouse(House *house) {
-    Request::house = house;
+void Request::setHouse(House *house)
+{
+    this->house = house;
 }
 
-void Request::setRequester(Member *requester) {
-    Request::requester = requester;
+void Request::setRequester(Member *requester)
+{
+    this->requester = requester;
 }
 
-void Request::setStartDate(const Date &startDate) {
-    start_date = startDate;
+void Request::setStartingDate(Date start_date)
+{
+    this->start_date = start_date;
 }
 
-void Request::setEndDate(const Date &endDate) {
-    end_date = endDate;
+void Request::setEndingDate(Date end_date)
+{
+    this->end_date = end_date;
 }
 
-void Request::setStatus(int status) {
-    Request::status = status;
+void Request::setStatus(int status)
+{
+    this->status = status;
 }
 
-const string &Request::getId() const {
-    return id;
+string Request::getId()
+{
+    return this->id;
 }
 
-House *Request::getHouse() const {
-    return house;
+House *Request::getHouse()
+{
+    return this->house;
 }
 
-Member *Request::getRequester() const {
-    return requester;
+Member *Request::getRequester()
+{
+    return this->requester;
 }
 
-const Date &Request::getStartDate() const {
-    return start_date;
+Date Request::getStartingDate()
+{
+    return this->start_date;
 }
 
-const Date &Request::getEndDate() const {
-    return end_date;
+Date Request::getEndingDate()
+{
+    return this->end_date;
 }
 
-int Request::getStatus() const {
-    return status;
+int Request::getStatus()
+{
+    return this->status;
 }
-//Getter functions
