@@ -298,6 +298,39 @@ Request * System::addRequestToSys(Request request) {
 }
 //
 
+//------------------------Function to add and decrease credit points-----------------------//
+bool System::addCreditPoints(Member * member, int creditP) {
+    if (member == nullptr) {
+        sysErrLog("Member not found!!!");
+        return false;
+    }
+
+    int newPoints = member->getCreditP() + creditP;
+    if (newPoints < 0) {
+        sysErrLog("Your credit points balance is not enough!!!");
+        return false;
+    }
+
+    member->setCreditP(newPoints);
+    return true;
+}
+
+bool System::removeCreditPoints(Member *member, int creditP) {
+    if (member == nullptr) {
+        sysErrLog("Member not found!!!");
+        return false;
+    }
+
+    int newPoint = member->getCreditP() - creditP;
+    if (newPoint < 0) {
+        sysErrLog("Your credit points balance is not enough!!!");
+        return false;
+    }
+
+    member->setCreditP(newPoint);
+    return true;
+}
+
 
 //--------------------Save data to files-------------------//
 bool System::saveMember() {
