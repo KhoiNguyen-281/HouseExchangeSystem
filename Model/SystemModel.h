@@ -24,6 +24,13 @@ int thisYear()
     return 1900 + pTInfo->tm_year;
 }
 
+enum RequestState
+{
+    PENDING,
+    ACCEPTED,
+    DENIED
+};
+
 class Guest;
 class Member;
 class House;
@@ -130,6 +137,7 @@ public:
 
     bool registerHouse();
     bool isHouseAvailable(House *house, Date startDate, Date endDate);
+    bool bookAccommodation(House *house, Date startingDate, Date endingDate);
 
     virtual ~Member();
 };
@@ -267,7 +275,7 @@ private:
     // Vector database;
     vector<Member> memberVect;
     vector<House> houseVect;
-    //    vector<Request> requestVect;
+       vector<Request> requestVect;
 
     // Current user
     Member *currentMem = nullptr;
@@ -301,7 +309,7 @@ public:
     Member *addMemberToSys(Member member);
     House *addHouseToSys(House house);
     Rating *addRatingtoSys(Rating rating);
-    Request *addRequest(Request request);
+    Request *addRequest(Request request, string id);
 
     // Function to add or remove credit points of members
     bool addCreditPoints(Member *member, int creditP);
@@ -334,6 +342,8 @@ public:
     void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
     void getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
     void getAvailableLocation();
+    void getHouseByDate(vector<House *> &availableHouse, Date start, Date end);
+    // vector<House* > getHouseByID(vector<House *> &house, int id);
 
     // Verify input function
     bool checkLocation(string location);

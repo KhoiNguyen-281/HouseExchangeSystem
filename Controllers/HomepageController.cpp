@@ -19,12 +19,52 @@ namespace HomepageComponent{
         return std::stoi(option);
     }
 
+    int houseIDInput(){
+        string houseID;
+        cout << ("Enter the option: ");
+        getline(cin, houseID);
+
+        return std::stoi(houseID);
+    }
+
     string fieldInput(string field){
         string result;
         cout << "Enter your " << field << ": ";
         getline(cin, result);
 
         return result;
+    }
+
+    void displayRequestOption(Member *member, House *requestHouse)
+    {
+        // System *system = System::getInstance();
+        // Request* currentRequest;
+        // cout << LIGHT_CYAN_CLS << "\n—----------------- Accommodations options —-----------------\n"
+        //     "\t1.  Request to occupy the house\n"
+        //     "\t2.  Back\n";
+        // int option = optionInput();
+
+        //                     switch (option)
+        // {
+        // case 1:
+        //     // newRequest->setRequester(member);
+        //     system->addRequest(currentRequest, houseSize)
+        //         // system->saveRequest()
+        //         break;
+        // default:
+        //     break;
+        // }
+    }
+
+    void displaySpecificHouseOption(vector<House *> &availableHouses)
+    {
+        // System *system = System::getInstance();
+        // string houseNumber;
+        // cout << "Enter the house ID: ";
+        // getline(cin, houseNumber);
+        // vector<House *> getSpecificHouseByID = system->getHouseByID(availableHouses, std::stoi(houseNumber));
+        // getSpecificHouseByID[0]->showInfo();
+        // displayRequestOption();
     }
 
     void displayHousesOption(){
@@ -73,8 +113,35 @@ namespace HomepageComponent{
                 system->loadHouse();
 
                 system->getAvailableHouses(availableHouses, true, "Ha Noi", startingDate, endingDate);
-
                 system->viewAllHouseBySearchingLocation(true, "Ha Noi", startingDate, endingDate);
+
+                string houseNumber;
+                cout << "Enter the house ID: ";
+                getline(cin, houseNumber);
+
+                House* getSearchingHouseByID = system->getHouse(houseNumber);
+                getSearchingHouseByID->showInfo();
+
+                int houseNumber = availableHouses.size();
+
+                cout << "Do you want to book this house ? " << "\n";
+                cout << "1. Yes\n 2. No\n";
+                int option = optionInput();
+                
+                switch (option)
+                {
+                case 1: {
+                    // member->bookHouse(getSearchingHouseByID, startingDate, endingDate);
+                    break;
+                }
+
+                default:
+                    break;
+                }
+            // system->addRequest(currentRequest, houseSize)
+
+                // displayRequestOption(Member* member, House* getSearchingHouseByID)
+
                 break;
             }
             case 2: {
@@ -92,7 +159,7 @@ namespace HomepageComponent{
         }
     }
 
-    void displayMemberHomepage(string user_name){
+    void displayMemberHomepage(Member* member){
         cout << "\n—----------------- Homepage —-----------------\n"
                 "This is your menu:\n"
                 "\t0.  Exit\n"
@@ -106,11 +173,12 @@ namespace HomepageComponent{
             case 0:
                 exit(1);
                 break;
-            case 1:
+            case 1:{
                 /// view Information
                 cout << "View information\n";
-                cout << user_name << "\n";
+                member->showInfo();
                 break;
+            }
             case 2:
                 /// List available house
                 displayHousesOption();
@@ -155,7 +223,7 @@ namespace HomepageComponent{
                 Member* member = system->login(userName, password);
 
                 if(member){
-                    displayMemberHomepage(userName);
+                    displayMemberHomepage(member);
                 }
                 break;
             }
@@ -233,7 +301,7 @@ namespace HomepageComponent{
                 Member* member = system->login(userName, password);
 
                 if(member != nullptr){
-                    displayMemberHomepage(userName);
+                    displayMemberHomepage(member);
                 }
                 displayGuestHomepage();
                 break;

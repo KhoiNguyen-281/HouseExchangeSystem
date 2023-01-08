@@ -32,6 +32,36 @@ void Member::showInfo() {
 
 }
 
+bool Member::bookAccommodation(House* house, Date startingDate, Date endingDate){
+    // Create a new request
+    Request request;
+
+    // Set request data.
+    request.setRequester(this);
+    request.setHouse(house);
+    request.setStartingDate(startingDate);
+    request.setEndingDate(endingDate);
+
+    // Add a new request to the system.
+    Request *newRequest = System::getInstance()->addRequest(request, house->getId());
+
+    // Check if the request was added successfully.
+    if (newRequest != nullptr)
+    {
+        cout << "Request added successfully.\n";
+        setRequest(newRequest);
+
+        return true;
+    }
+    else
+    {
+        cout << "Request failed.\n";
+        return false;
+    }
+}
+
+
+
 //int Member::unListHouse(vector<House> &houseVector) {
 //    if (this == nullptr) {
 //        sysLog("You have not logged in the system yet");
@@ -301,8 +331,45 @@ House * System::addHouseToSys(House house) {
     }
 }
 
-//Request * System::addRequest(Request request) {
-//}
+Request * System::addRequest(Request request, string id) {
+    if (id.empty())
+    {
+        // Check if the current user has any request.
+        // If they do, return nullptr.
+        if (currentMem->getRequest() != nullptr && currentMem->getRequest()->getStatus() == PENDING)
+        {
+            cout << "You already have a request.\n";
+            return nullptr;
+        }
+        int houseSize = houseVect.size();
+        string id = generateID(houseSize);
+
+        // Add request to requests vector
+        requestVect.push_back(request);
+
+        Request *newRequest = &requestVect.back();
+        newRequest->setId(id);
+
+        return newRequest;
+    }
+    else
+    {
+        // Check if request already exists
+        // if it does, update the request
+        for (int i = 0; i < requestVect.size(); i++)
+        {
+            if (requestVect[i].getId() == id)
+            {
+                requestVect[i] = request;
+                requestVect[i].setId(id);
+
+                return &requestVect[i];
+            }
+        }
+
+        return nullptr;
+    }
+}
 //
 //Rating * System::addRatingtoSys(Rating rating) {}
 
@@ -319,8 +386,8 @@ bool System::saveMember() {
 
     for (Member member : memberVect) {
         file << member.getId() << "," << member.getUserName() << ","
-             << member.getPassword() << "," << member.getFullName() << ","
-             << member.getPhoneNum() << "," << member.getCreditP() << "\n";
+            << member.getPassword() << "," << member.getFullName() << ","
+            << member.getPhoneNum() << "," << member.getCreditP() << "\n";
     }
     file.close();
     successMess("Saved", std::to_string(memberVect.size()), "member(s)");
@@ -339,14 +406,14 @@ bool System::saveHouse() {
 
     for (House house : houseVect) {
         file
-             << house.getId() << ","
-             << house.getLocation() << ","
-             << house.getDescription() << ","
-             << house.getStartListDate().dateToString() << ","
-             << house.getEndListDate().dateToString() << ","
-             << house.getCreditPointsPerDay() << ","
-             << house.getMinimumOccupierRating() << ","
-             << house.getOwner()->getId() << "\n";
+            << house.getId() << ","
+            << house.getLocation() << ","
+            << house.getDescription() << ","
+            << house.getStartListDate().dateToString() << ","
+            << house.getEndListDate().dateToString() << ","
+            << house.getCreditPointsPerDay() << ","
+            << house.getMinimumOccupierRating() << ","
+            << house.getOwner()->getId() << "\n";
     }
 
     file.close();
@@ -486,7 +553,6 @@ bool System::loadHouse() {
     return true;
 }
 
-
 //---------------------Instance getter-------------//
 Member * System::getMember(string ID) {
     for (Member &member : memberVect) {
@@ -524,6 +590,7 @@ void System::getAvailableHouses(vector<House *> &list_of_houses, bool isQualifie
         list_of_houses.push_back(&houseVect[i]);
     }
 }
+
 
 int System::getTotalConsumptionPoint(int currentCreditPoint, int startingDate, int endingDate){
     return ((endingDate - startingDate) * currentCreditPoint);
@@ -595,6 +662,28 @@ void System::getAvailableLocation() {
 
     sysLog("\n");
 }
+
+void System::getHouseByDate(vector<House *> &availableHouse, Date start, Date end){
+    for (House &house : houseVect)
+    {
+        if (Date::compareDate(house.getStartListDate(), start) > 1 && Date::compareDate(house.getEndListDate(), end) > 1)
+        {
+            availableHouse.push_back(&house);
+        }
+    }
+}
+
+// vector<House* > System::getHouseByID(vector<House *> &availableHouse, int id)
+// {
+    // vector<House* > getSpecificHouse;
+    // for (House & eachHouse: houseVect) {
+    //     if (std::stoi(eachHouse.getId()) == id) {
+    //         availableHouse.push_back(&eachHouse);
+    //     }
+    // }
+
+    // return getSpecificHouse;
+// }
 
 bool System::checkLocation(string location) {
     for (string loc : availableLocation) {
