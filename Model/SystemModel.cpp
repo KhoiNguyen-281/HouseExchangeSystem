@@ -12,6 +12,7 @@
 #include <random>
 #include "fstream"
 #include <sstream>
+#include <cmath>
 
 const string MEMBERS = "members.dat";
 const string HOUSES = "houses.dat";
@@ -403,7 +404,7 @@ House *System::addHouseToSys(House house)
 }
 
 Request *System::addRequest(Request request, string id)
-{   
+{
     if (id.empty())
     {
         // Check if the current user has any request.
@@ -413,8 +414,8 @@ Request *System::addRequest(Request request, string id)
             cout << "You already have a request.\n";
             return nullptr;
         }
-            
-        int requestSize = requestVect.size();       
+
+        int requestSize = requestVect.size();
         // cout << "You already have a request.\n";
         string id = generateID(requestSize);
 
@@ -850,7 +851,7 @@ void System::getAvailableHouses(vector<House *> &list_of_houses, bool isQualifie
 
 int System::getTotalConsumptionPoint(int currentCreditPoint, int startingDate, int endingDate)
 {
-    return ((endingDate - startingDate) * currentCreditPoint);
+    return (endingDate - startingDate) < 0 ? ((endingDate - startingDate) * -1) * currentCreditPoint : (endingDate - startingDate) * currentCreditPoint;
 }
 
 void System::viewAllHouseBySearchingLocation(bool isQualified, string location, Date startingDate, Date endingDate)
@@ -1010,7 +1011,6 @@ void System::viewHouseDetail()
 
 void System::viewAllHouse()
 {
-
     if (!isLoggedIn)
     {
         for (House &house : houseVect)
@@ -1023,8 +1023,8 @@ void System::viewAllHouse()
         for (House &house : houseVect)
         {
             house.showInfo();
-            sysLog("Listing start from: " + house.getStartListDate().dateToString());
-            sysLog("Listing end at: " + house.getEndListDate().dateToString());
+            sysLog("Listing start from: " + house.getStartListDate().dateToString() + "\n");
+            sysLog( "Listing end at: " + house.getEndListDate().dateToString() + "" + "\n");
         }
     }
 }
