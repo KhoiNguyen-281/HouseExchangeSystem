@@ -14,6 +14,7 @@ using std::cout;
 using std::cin;
 using std::vector;
 using std::to_string;
+using std::vector;
 #include <vector>
 
 #define CREDIT_POINT 500;
@@ -147,7 +148,9 @@ public:
 
     bool hasRatings();
 
+    bool bookAccommodation(House *house, Date startingDate, Date endingDate);
     virtual ~Member();
+
 
 };
 
@@ -268,7 +271,7 @@ public:
     ~Rating();
 
     // Setter Methods
-    void setRating(Member* rater, double score, string comment);
+    void setRating(Member *rater, double score, string comment);
     void setRater(Member *rater);
     void setScore(double score);
     void setComment(const string &comment);
@@ -381,6 +384,7 @@ public:
     void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
     void getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
     void getAvailableLocation();
+     // vector<House* > getHouseByID(vector<House *> &house, int id);
 
     //Verify input function
     bool checkLocation(string location);

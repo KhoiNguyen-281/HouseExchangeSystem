@@ -37,6 +37,36 @@ string getFilePath(const string &file) {
 
 
 
+bool Member::bookAccommodation(House* house, Date startingDate, Date endingDate){
+    // Create a new request
+    Request request;
+
+    // Set request data.
+    request.setRequester(this);
+    request.setHouse(house);
+    request.setStartDate(startingDate);
+    request.setEndDate(endingDate);
+
+    // Add a new request to the system.
+    Request *newRequest = System::getInstance()->addRequestToSys(request);
+
+    // Check if the request was added successfully.
+    if (newRequest != nullptr)
+    {
+        cout << "Request added successfully.\n";
+        setRequest(newRequest);
+
+        return true;
+    }
+    else
+    {
+        cout << "Request failed.\n";
+        return false;
+    }
+}
+
+
+
 //int Member::unListHouse(vector<House> &houseVector) {
 //    if (this == nullptr) {
 //        sysLog("You have not logged in the system yet");

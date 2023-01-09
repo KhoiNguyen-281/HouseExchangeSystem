@@ -80,9 +80,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Libs/Config.h">
-			<Option target="SED_GROUP"/>
-		</Unit>
 		<Unit filename="/Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/main.cpp">
 			<Option target="SED_GROUP"/>
 		</Unit>
