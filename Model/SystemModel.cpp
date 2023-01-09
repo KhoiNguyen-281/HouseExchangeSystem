@@ -832,8 +832,11 @@ House *System::getHouse(string ID)
 void System::getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date startingDate,
                                 Date endingDate)
 {
+//    houseVect[0].showInfo();
+    cout << Date::compareDate(startingDate, houseVect[0].getStartListDate()) << "\n";
     for (int i = 0; i < houseVect.size(); i++)
     {
+//        houseVect[i].showInfo();
         if (isQualified && houseVect[i].getLocation().compare(location) != 0)
             continue;
 
@@ -846,6 +849,7 @@ void System::getAvailableHouses(vector<House *> &list_of_houses, bool isQualifie
             continue;
 
         list_of_houses.push_back(&houseVect[i]);
+
     }
 }
 
