@@ -92,7 +92,17 @@ namespace HomepageComponent{
                 cout << "Enter the house ID: ";
                 inputStr(houseID);
 
-                House* getSearchingHouseByID = system->getHouse(houseID);
+                House* getSearchingHouseByID;
+
+                for(auto & availableHouse : availableHouses){
+                    if(availableHouse->getId() == houseID){
+                        getSearchingHouseByID = system->getHouse(houseID);
+                    }
+                    else{
+                        cout << "\nSorry, house not found !!!\n";
+                        displayLocationOption(member);
+                    }
+                }
                 getSearchingHouseByID->showInfo();
 
                 int houseNumber = availableHouses.size();
@@ -140,9 +150,18 @@ namespace HomepageComponent{
                 cout << "Enter the house ID: ";
                 inputStr(houseID);
 
-                House* getSearchingHouseByID = system->getHouse(houseID);
-                getSearchingHouseByID->showInfo();
+                House* getSearchingHouseByID;
 
+                for(auto & availableHouse : availableHouses){
+                    if(availableHouse->getId() == houseID){
+                        getSearchingHouseByID = system->getHouse(houseID);
+                    }
+                    else{
+                        cout << "\nSorry, house not found !!!\n";
+                        displayLocationOption(member);
+                    }
+                }
+                getSearchingHouseByID->showInfo();
                 int houseNumber = availableHouses.size();
 
                 cout << "Do you want to book this house ? " << "\n";
@@ -186,7 +205,17 @@ namespace HomepageComponent{
                 cout << "Enter the house ID: ";
                 inputStr(houseID);
 
-                House* getSearchingHouseByID = system->getHouse(houseID);
+                House* getSearchingHouseByID;
+
+                for(auto & availableHouse : availableHouses){
+                    if(availableHouse->getId() == houseID){
+                        getSearchingHouseByID = system->getHouse(houseID);
+                    }
+                    else{
+                        cout << "\nSorry, house not found !!!\n";
+                        displayLocationOption(member);
+                    }
+                }
                 getSearchingHouseByID->showInfo();
 
                 int houseNumber = availableHouses.size();
