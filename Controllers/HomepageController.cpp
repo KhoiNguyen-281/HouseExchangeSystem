@@ -74,7 +74,9 @@ namespace HomepageComponent{
                 "\t2.  Hue.\n"
                 "\t3.  Ho Chi Minh\n";
         System* system = System::getInstance();
-        
+//        system->loadMember();
+        system->loadHouse();
+
         int option = optionInput();
 
         switch(option){
@@ -84,10 +86,8 @@ namespace HomepageComponent{
                 vector<House* > availableHouses;
                 Date startingDate = Date::parseDate(fieldInput("starting date"));
                 Date endingDate = Date::parseDate(fieldInput("ending date"));
-                
 
-                system->loadMember();
-                system->loadHouse();
+
 
                 system->getAvailableHouses(availableHouses, true, "Ha Noi", startingDate, endingDate);
                 system->viewAllHouseBySearchingLocation(true, "Ha Noi", startingDate, endingDate);
@@ -104,11 +104,11 @@ namespace HomepageComponent{
                 cout << "Do you want to book this house ? " << "\n";
                 cout << "1. Yes\n 2. No\n";
                 int option = optionInput();
-                
+
+                system->loadRequest();
                 switch (option)
                 {
                 case 1: {
-                    system->loadRequest();
                     member->bookAccommodation(getSearchingHouseByID, startingDate, endingDate);
                     system->saveRequest();
                     break;
