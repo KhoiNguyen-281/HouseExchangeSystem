@@ -67,30 +67,7 @@ namespace HomepageComponent{
         // displayRequestOption();
     }
 
-    void displayHousesOption(){
-        System *system = System::getInstance();
-        cout << LIGHT_CYAN_CLS << "\n—----------------- Accommodations options —-----------------\n"
-                "\t0.  Exit\n"
-                "\t1.  Display all available houses\n"
-                "\t2.  Display the affordable houses by searching available locations.\n";
-        int option = optionInput();
-        switch (option){
-            case 0: exit(1);
-            case 1: {
-                system->loadMember();
-                system->loadHouse();
-
-                system->viewAllHouse();
-                break;
-            }
-            case 2: {
-                displayLocationOption();
-                break;
-            }
-        }
-    }
-
-    void displayLocationOption(){
+    void displayLocationOption(Member* member){
         cout << "\n—----------------- Available Locations —-----------------\n"
                 "\t0.  Exit\n"
                 "\t1.  Ha Noi\n"
@@ -131,8 +108,13 @@ namespace HomepageComponent{
                 switch (option)
                 {
                 case 1: {
-                    // member->bookHouse(getSearchingHouseByID, startingDate, endingDate);
+                    system->loadRequest();
+                    member->bookAccommodation(getSearchingHouseByID, startingDate, endingDate);
+                    system->saveRequest();
                     break;
+                }
+                case 2: {
+                    displayHousesOption(member);
                 }
 
                 default:
@@ -154,6 +136,29 @@ namespace HomepageComponent{
             }
             default: {
                 cout << "Invalid location";
+                break;
+            }
+        }
+    }
+
+    void displayHousesOption(Member* member){
+        System *system = System::getInstance();
+        cout << LIGHT_CYAN_CLS << "\n—----------------- Accommodations options —-----------------\n"
+                                  "\t0.  Exit\n"
+                                  "\t1.  Display all available houses\n"
+                                  "\t2.  Display the affordable houses by searching available locations.\n";
+        int option = optionInput();
+        switch (option){
+            case 0: exit(1);
+            case 1: {
+                system->loadMember();
+                system->loadHouse();
+
+                system->viewAllHouse();
+                break;
+            }
+            case 2: {
+                displayLocationOption(member);
                 break;
             }
         }
@@ -181,7 +186,7 @@ namespace HomepageComponent{
             }
             case 2:
                 /// List available house
-                displayHousesOption();
+                displayHousesOption(member);
                 break;
             case 3:
                 /// Unlist current house

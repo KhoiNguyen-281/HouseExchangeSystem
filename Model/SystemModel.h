@@ -217,6 +217,7 @@ public:
     void setEndingDate(Date end_date);
     void setStatus(int status);
 
+    void showInfo();
     // Getters
     string getId();
     House *getHouse();
@@ -226,34 +227,42 @@ public:
     int getStatus();
 };
 
-class Rating
-{
+class Rating {
 private:
     // Attributes
     Member *rater = nullptr;
     double score;
+    House* house = nullptr;
+    Member* occupier = nullptr;
     string comment;
 
 public:
     // Constructor
-    Rating(Member *rater, double score, string comment);
+    Rating(Member * rater, double score, string comment);
+    Rating();
     ~Rating();
 
     // Setter Methods
-    void setRating(Member *rater, double score, string comment);
+    void setRating(Member* rater, double score, string comment);
     void setRater(Member *rater);
     void setScore(double score);
     void setComment(const string &comment);
+    void setHouse(House *house);
+    void setOccupier(Member *occupier);
 
     // Getter Methods
     Member *getRater() const;
     double getScore() const;
     string getComment() const;
+    House *getHouse() const;
+    Member *getOccupier() const;
+
 
     // Friend class
-    //    friend class Member;
-    //    friend class House;
+//    friend class Member;
+//    friend class House;
 };
+
 
 class System
 {
@@ -275,7 +284,8 @@ private:
     // Vector database;
     vector<Member> memberVect;
     vector<House> houseVect;
-       vector<Request> requestVect;
+    vector<Request> requestVect;
+    vector<Rating> ratingVect;
 
     // Current user
     Member *currentMem = nullptr;

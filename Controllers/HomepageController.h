@@ -12,7 +12,7 @@ namespace HomepageComponent {
     int optionInput();
     string fieldInput(std::string field);
     void displayRequestOption(Member *member, House* requestHouse);
-    void displayHousesOption();
+    void displayHousesOption(Member* member);
     void displaySpecificHouseOption(); 
     void displayLocationOption();
     void displayMemberHomepage(Member *member);
