@@ -198,17 +198,18 @@ bool House::approveRequest(){
         request->getHouse()->setOccupier(request->getRequester());
         sysLogSuccess("\nApproved request successfully, you received " << Colors::LIGHT_YELLOW_CLS << to_string(totalCreditPoint))
         sysLog("Your current balance: " << owner->getCreditP() << "\n")
+        for (Request * temp : requestList) {
+            if (temp->getId() != request->getId() && temp->getStatus() ==PENDING) {
+                temp->setStatus(DENIED);
+            }
+        }
         return true;
     } else {
         sysErrLog("Cannot find request with ID " + strBuffer + " in your request list");
         return false;
     }
 
-    for (Request * temp : requestList) {
-        if (temp->getId() != request->getId() && temp->getStatus() ==PENDING) {
-            temp->setStatus(DENIED);
-        }
-    }
+
 }
 
 //bool denyRequest(Request* request){

@@ -42,6 +42,7 @@ void Request::showInfo() {
             sysLogInfo("N/A");
             break;
     }
+    sysLog("\n");
 }
 
 void Request::setId(const string &id) {
