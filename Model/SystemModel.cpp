@@ -8,7 +8,7 @@
 #include <sstream>
 #include "../Libs/Config.h"
 
-#define sysLog(x) cout << x << Colors::RESET;
+#define sysLog(x) cout << x;
 #define inputStr(x) getline(cin, x);
 #define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
 #define formatErr(x) cout << "Error: Invalid " << x <<" format \n";
@@ -287,7 +287,7 @@ House * System::addHouseToSys(House house) {
     }
 }
 
-Rating * System::addRatingtoSys(Rating rating) {
+Rating * System::addRatingToSys(Rating rating) {
     //Check if rating already exist in system
     for (Rating & temp : ratingVect) {
         if (temp.getHouse()->getId() == rating.getHouse()->getId()
@@ -926,7 +926,7 @@ void System::viewAllHouse() {
     }
 }
 
-void System::viewRequest() {
+void System::getAndShowRequest(vector<Request *> &requestList, House * house) {
     if (currentMem == nullptr) {
         sysErrLog("You have not logged in yet \n");
         return;
@@ -937,19 +937,17 @@ void System::viewRequest() {
         return;
     }
 
-    vector<Request *> temp;
-
     bool hasRequest = false;
 
     for (Request & request : requestVect) {
-        if (request.getHouse()->getId() == currentMem->getHouse()->getId()) {
-            temp.push_back(&request);
+        if (request.getHouse()->getId() == house->getId()) {
+            requestList.push_back(&request);
             hasRequest = true;
         }
     }
 
     if (hasRequest) {
-        for (Request * request : temp) {
+        for (Request * request : requestList) {
             request->showInfo();
         }
     } else {
@@ -1017,6 +1015,14 @@ void System::getRatingFromSys(vector<Rating *>& ratingVal, House *house) {
         }
     }
 }
+
+//void System::getRequestFromSys(vector<Request*> &requestVal, House * house) {
+//    for (Request & request : requestVect) {
+//        if (request.getHouse()->getId() == house->getId()) {
+//            requestVal.push_back(&request);
+//        }
+//    }
+//}
 
 //------------------------Get request by location function----------------//
 

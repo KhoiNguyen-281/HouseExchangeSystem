@@ -323,64 +323,64 @@ bool Member::updateInfo(){
 }
 
 //-------------------------------Rating function--------------------------//
-Rating * Member::rateHouse() {
+//Rating * Member::rateHouse() {
+//
+//    System * system = System::getInstance();
+//    string comment;
+//    double score;
+//
+//
+//    sysLog("How was your experience from -10 to 10 : ");
+//    cin >> score;
+//    while(score < -10 || score > 10) {
+//        sysLog("Invalid score, score must be in range from -10 to 10: ");
+//        cin >> score;
+//    }
+//
+//    sysLog("You can leave a comment for more details: ");
+//    inputStr(comment);
+//
+//    Rating rating;
+//    rating.setRater(this);
+//    rating.setHouse(this->getRequest()->getHouse());
+//    rating.setScore(score);
+//    rating.setComment(comment);
+//
+//    system->addRatingToSys(rating);
+//    return &rating;
+//}
 
-    System * system = System::getInstance();
-    string comment;
-    double score;
-
-
-    sysLog("How was your experience from -10 to 10 : ");
-    cin >> score;
-    while(score < -10 || score > 10) {
-        sysLog("Invalid score, score must be in range from -10 to 10: ");
-        cin >> score;
-    }
-
-    sysLog("You can leave a comment for more details: ");
-    inputStr(comment);
-
-    Rating rating;
-    rating.setRater(this);
-    rating.setHouse(this->getRequest()->getHouse());
-    rating.setScore(score);
-    rating.setComment(comment);
-
-    system->addRatingtoSys(rating);
-    return &rating;
-}
-
-Rating * Member::rateOccupier() {
-    System * system = System::getInstance();
-    string comment;
-    double score;
-
-    sysLog("How would you rate your occupier from -10 to 10 : ");
-    cin >> score;
-    while (score < -10 || score > 10) {
-        sysLog("Invalid score, score must be in range from -10 to 10: ");
-        cin >> score;
-    }
-
-    sysLog("Leave a comment for more details: ");
-    inputStr(comment);
-
-    Rating  rating;
-    rating.setRater(this);
-    rating.setOccupier(this->getRequest()->getRequester());
-    rating.setScore(score);
-    rating.setComment(comment);
-
-    system->addRatingtoSys(rating);
-    return &rating;
-}
+//Rating * Member::rateOccupier() {
+//    System * system = System::getInstance();
+//    string comment;
+//    double score;
+//
+//    sysLog("How would you rate your occupier from -10 to 10 : ");
+//    cin >> score;
+//    while (score < -10 || score > 10) {
+//        sysLog("Invalid score, score must be in range from -10 to 10: ");
+//        cin >> score;
+//    }
+//
+//    sysLog("Leave a comment for more details: ");
+//    inputStr(comment);
+//
+//    Rating  rating;
+//    rating.setRater(this);
+//    rating.setOccupier(this->getRequest()->getRequester());
+//    rating.setScore(score);
+//    rating.setComment(comment);
+//
+//    system->addRatingToSys(rating);
+//    return &rating;
+//}
 
 bool Member::hasRatings() {
     System * system = System::getInstance();
     vector<Rating*> ratingVal;
     system->getRatingFromSys(ratingVal, this);
 
-    return ratingVal.size() > 0;
+    return !ratingVal.empty();
 }
 
 
@@ -398,3 +398,18 @@ float Member::sumRating() {
     return 0;
 }
 
+
+
+//bool Member::denyRequest(vector<string> &ID) {
+//    if (ID.empty()) {
+//        return false;
+//    }
+//
+//    System * system =  System::getInstance();
+//    Request * request;
+//    for (string temp : ID) {
+//        request = system->getRequest(temp);
+//        request->setStatus(DENIED);
+//    }
+//    return true;
+//}

@@ -16,10 +16,10 @@ using namespace std;
 #include "Model/RatingModel.cpp"
 
 #include "Model/RequestModel.cpp"
-#include "Controllers/HomepageController.h"
-#include "Controllers/HomepageController.cpp"
+//#include "Controllers/HomepageController.h"
+//#include "Controllers/HomepageController.cpp"
 
-using namespace HomepageComponent;
+//using namespace HomepageComponent;
 
 
 int main() {
@@ -27,24 +27,11 @@ int main() {
     System * system = System::getInstance();
     bool isLoggedIn = system->isUser();
     bool isAdmin = system->isAdmin();
-//    system->systemStart();
-//    system->loadMember();
-//    system->loadHouse();
-//    system->registerMember(*Guest::registerNewMember());
-//    Guest::login();
-//    Guest::registerNewMember();
-//    Guest::registerNewMember();
 
-//    system->getCurrentMem()->registerHouse();
-//    system->saveMember();
-//    system->saveHouse();
+    system->systemStart();
+    Guest::login();
 
-//    system->viewAllHouse();
+    system->getCurrentMem()->getHouse()->approveRequest();
+    system->systemShutdown();
 
-//    system->systemShutdown();
-//    Guest::login();
-//    Member::changePassword();
-//    cout << system->getCurrentMem()->getPassword();
-
-//    displayHousesOption();
 }

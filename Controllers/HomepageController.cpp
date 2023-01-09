@@ -69,7 +69,7 @@ namespace HomepageComponent{
 
     void displayHousesOption(){
         System *system = System::getInstance();
-        cout << LIGHT_CYAN_CLS << "\n—----------------- Accommodations options —-----------------\n"
+        cout << Colors::LIGHT_CYAN_CLS << "\n—----------------- Accommodations options —-----------------\n"
                 "\t0.  Exit\n"
                 "\t1.  Display all available houses\n"
                 "\t2.  Display the affordable houses by searching available locations.\n";

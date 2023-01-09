@@ -9,10 +9,9 @@
 #include <ctime>
 
 
-using std::string;
-using std::cout;
 using std::cin;
-using std::vector;
+using std::cout;
+using std::string;
 using std::to_string;
 using std::vector;
 #include <vector>
@@ -84,7 +83,7 @@ public:
 
     static Member* login();
 
-    void showAllHouse();
+//    void showAllHouse();
 };
 
 class Member : public Guest{
@@ -139,16 +138,22 @@ public:
     bool deleteProfile();
 
     bool registerHouse();
-    bool isHouseAvailable(House * house, Date startDate, Date endDate);
+//    bool isHouseAvailable(House * house, Date startDate, Date endDate);
 
 
+//    bool denyRequest(vector<string> &ID);
 
-    Rating * rateHouse();
-    Rating * rateOccupier();
+
+//    Rating * rateHouse();
+//    Rating * rateOccupier();
 
     bool hasRatings();
 
     bool bookAccommodation(House *house, Date startingDate, Date endingDate);
+    // Friend function
+    // Set new occupier to the house after successfully request
+//    friend House* addNewOccupierToHouse(House* house, Member * occupier);
+
     virtual ~Member();
 
 
@@ -200,10 +205,16 @@ public:
     Date getStartListDate();
     Date getEndListDate();
 
-
     bool hasRatings();
     float sumRating();
+
+    bool approveRequest();
+    // Friend function
+    // Set new occupier to the house after successfully request
+    friend House* addNewOccupierToHouse(House* house, Member * occupier);
 };
+
+
 
 
 class Request
@@ -271,7 +282,7 @@ public:
     ~Rating();
 
     // Setter Methods
-    void setRating(Member *rater, double score, string comment);
+    void setRating(Member* rater, double score, string comment);
     void setRater(Member *rater);
     void setScore(double score);
     void setComment(const string &comment);
@@ -347,7 +358,7 @@ public:
     //Function to add objects to vector
     Member* addMemberToSys(Member member);
     House* addHouseToSys(House house);
-    Rating* addRatingtoSys(Rating rating);
+    Rating* addRatingToSys(Rating rating);
     Request* addRequestToSys(Request request);
 
     //Function to add or remove credit points of members
@@ -378,9 +389,10 @@ public:
     void viewMember();
     void viewHouseDetail();
     void viewAllHouse();
-    void viewRequest();
 
-    int getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints);
+
+
+    static int getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints);
     void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
     void getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
     void getAvailableLocation();
@@ -399,6 +411,10 @@ public:
     //Function to get rating from system
     void getRatingFromSys(vector<Rating*>& ratingVal, Member * requester);
     void getRatingFromSys(vector<Rating*>& ratingVal, House * house);
+
+
+    //Function to manipulate request
+    void getAndShowRequest(vector<Request *> & requestList, House * house);
 
     //Function to search house
     void searchHouse();
