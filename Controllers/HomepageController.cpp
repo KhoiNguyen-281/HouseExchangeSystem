@@ -109,9 +109,15 @@ namespace HomepageComponent{
                 switch (option)
                 {
                 case 1: {
-                    member->bookAccommodation(getSearchingHouseByID, startingDate, endingDate);
-                    system->saveRequest();
-                    break;
+                    if(member->getCreditP() < getSearchingHouseByID->getCreditPointsPerDay()){
+                        cout << "Your credit point is not enough to book this house.\n";
+                        displayHousesOption(member);
+                    }
+                    else{
+                        member->bookAccommodation(getSearchingHouseByID, startingDate, endingDate);
+                        system->saveRequest();
+                        displayHousesOption(member);
+                    }
                 }
                 case 2: {
                     displayHousesOption(member);
