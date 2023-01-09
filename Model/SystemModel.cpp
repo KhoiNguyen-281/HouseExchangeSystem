@@ -11,10 +11,15 @@
 #define sysLog(x) cout << x;
 #define inputStr(x) getline(cin, x);
 #define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
-#define formatErr(x) cout << "Error: Invalid " << x <<" format \n";
-
+#define formatErr(x) cout << "Error: Invalid " << x << " format \n";
+#define successMess(x, y, z) cout << x << " " << y << " " << z << "\n";
 #define skip() cout << "\n\n";
 
+#include "SystemModel.h"
+#include <random>
+#include "fstream"
+#include <sstream>
+#include <cmath>
 
 // define log message with color;
 #define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n" ; //log error and new line
@@ -37,7 +42,9 @@ string getFilePath(const string &file) {
 
 
 
-bool Member::bookAccommodation(House* house, Date startingDate, Date endingDate){
+bool Member::bookAccommodation(House *house, Date startingDate, Date endingDate)
+{
+    System *system = System::getInstance();
     // Create a new request
     Request request;
 
@@ -47,8 +54,13 @@ bool Member::bookAccommodation(House* house, Date startingDate, Date endingDate)
     request.setStartDate(startingDate);
     request.setEndDate(endingDate);
 
+    // cout << "current ID = " << request.getId() << "\n";
+
+    //    request.showInfo();
     // Add a new request to the system.
-    Request *newRequest = System::getInstance()->addRequestToSys(request);
+    Request *newRequest = system->addRequestToSys(request);
+
+    //    newRequest->showInfo();
 
     // Check if the request was added successfully.
     if (newRequest != nullptr)
@@ -198,7 +210,6 @@ Member * System::registerMember(Member member) {
     string username, password, fullName, phone;
     sysLog("Sign up successfully! awarded with 500 points.");
     skip();
-
 
     return newMem;
 }
@@ -375,8 +386,8 @@ bool System::saveMember() {
 
     for (Member member : memberVect) {
         file << member.getId() << "," << member.getUserName() << ","
-             << member.getPassword() << "," << member.getFullName() << ","
-             << member.getPhoneNum() << "," << member.getCreditP() << "\n";
+            << member.getPassword() << "," << member.getFullName() << ","
+            << member.getPhoneNum() << "," << member.getCreditP() << "\n";
     }
     file.close();
     sysLogSuccess("Saved " +  std::to_string(memberVect.size()) + " member(s)");

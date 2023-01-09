@@ -1,6 +1,3 @@
-//
-// Created by Nguyen Hoang Minh Khoi on 1/3/23.
-//
 #include "SystemModel.h"
 
 Request::Request() {}

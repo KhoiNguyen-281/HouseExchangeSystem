@@ -90,27 +90,23 @@ namespace HomepageComponent{
         }
     }
 
-    void displayLocationOption(){
+    void displayLocationOption(Member* member){
         cout << "\n—----------------- Available Locations —-----------------\n"
                 "\t0.  Exit\n"
                 "\t1.  Ha Noi\n"
-                "\t2.  Hue.\n"
+                "\t2.  Da Nang.\n"
                 "\t3.  Ho Chi Minh\n";
         System* system = System::getInstance();
-        
+
         int option = optionInput();
 
         switch(option){
             case 0: exit(1);
             case 1: {
-                cout << "Houses in hanoi\n";
+                cout << "Houses in Ha Noi\n";
                 vector<House* > availableHouses;
                 Date startingDate = Date::parseDate(fieldInput("starting date"));
                 Date endingDate = Date::parseDate(fieldInput("ending date"));
-                
-
-                system->loadMember();
-                system->loadHouse();
 
                 system->getAvailableHouses(availableHouses, true, "Ha Noi", startingDate, endingDate);
                 system->viewAllHouseBySearchingLocation(true, "Ha Noi", startingDate, endingDate);
@@ -127,33 +123,156 @@ namespace HomepageComponent{
                 cout << "Do you want to book this house ? " << "\n";
                 cout << "1. Yes\n 2. No\n";
                 int option = optionInput();
-                
+
+//                system->loadRequest();
+
                 switch (option)
                 {
-                case 1: {
-                    // member->bookHouse(getSearchingHouseByID, startingDate, endingDate);
-                    break;
+                    case 1: {
+                        if(member->getCreditP() < getSearchingHouseByID->getCreditPointsPerDay()){
+                            cout << "Your credit point is not enough to book this house.\n";
+                            displayHousesOption(member);
+                            break;
+                        }
+                        else{
+                            member->bookAccommodation(getSearchingHouseByID, startingDate, endingDate);
+                            system->saveRequest();
+                            displayHousesOption(member);
+                        }
+                    }
+                    case 2: {
+                        displayHousesOption(member);
+                    }
+
+                    default:
+                        break;
                 }
-
-                default:
-                    break;
-                }
-            // system->addRequest(currentRequest, houseSize)
-
-                // displayRequestOption(Member* member, House* getSearchingHouseByID)
-
                 break;
             }
             case 2: {
-//                system->viewAllHouseBySearchingLocation(true, "Ha Noi", )
+                cout << "Houses in Da Nang\n";
+                vector<House* > availableHouses;
+                Date startingDate = Date::parseDate(fieldInput("starting date"));
+                Date endingDate = Date::parseDate(fieldInput("ending date"));
+
+
+                system->getAvailableHouses(availableHouses, true, "Da Nang", startingDate, endingDate);
+                system->viewAllHouseBySearchingLocation(true, "Da Nang", startingDate, endingDate);
+
+                string houseID;
+                cout << "Enter the house ID: ";
+                inputStr(houseID);
+
+                House* getSearchingHouseByID = system->getHouse(houseID);
+                getSearchingHouseByID->showInfo();
+
+                int houseNumber = availableHouses.size();
+
+                cout << "Do you want to book this house ? " << "\n";
+                cout << "1. Yes\n 2. No\n";
+                int option = optionInput();
+
+//                system->loadRequest();
+
+                switch (option)
+                {
+                    case 1: {
+                        if(member->getCreditP() < getSearchingHouseByID->getCreditPointsPerDay()){
+                            cout << "Your credit point is not enough to book this house.\n";
+                            displayHousesOption(member);
+                            break;
+                        }
+                        else{
+                            member->bookAccommodation(getSearchingHouseByID, startingDate, endingDate);
+                            system->saveRequest();
+                            displayHousesOption(member);
+                        }
+                    }
+                    case 2: {
+                        displayHousesOption(member);
+                    }
+
+                    default:
+                        break;
+                }
                 break;
             }
             case 3: {
-                cout << "Houses in Saigon\n";
+                vector<House* > availableHouses;
+                Date startingDate = Date::parseDate(fieldInput("starting date"));
+                Date endingDate = Date::parseDate(fieldInput("ending date"));
+
+                system->getAvailableHouses(availableHouses, true, "Ho Chi Minh", startingDate, endingDate);
+                system->viewAllHouseBySearchingLocation(true, "Ho Chi Minh", startingDate, endingDate);
+
+                string houseID;
+                cout << "Enter the house ID: ";
+                inputStr(houseID);
+
+                House* getSearchingHouseByID = system->getHouse(houseID);
+                getSearchingHouseByID->showInfo();
+
+                int houseNumber = availableHouses.size();
+
+                cout << "Do you want to book this house ? " << "\n";
+                cout << "1. Yes\n 2. No\n";
+                int option = optionInput();
+
+//                system->loadRequest();
+
+                switch (option)
+                {
+                    case 1: {
+                        if(member->getCreditP() < getSearchingHouseByID->getCreditPointsPerDay()){
+                            cout << "Your credit point is not enough to book this house.\n";
+                            displayHousesOption(member);
+                            break;
+                        }
+                        else{
+                            member->bookAccommodation(getSearchingHouseByID, startingDate, endingDate);
+                            system->saveRequest();
+                            displayHousesOption(member);
+                        }
+                    }
+                    case 2: {
+                        displayHousesOption(member);
+                    }
+
+                    default:
+                        break;
+                }
                 break;
             }
             default: {
                 cout << "Invalid location";
+                break;
+            }
+        }
+    }
+
+    void displayHousesOption(Member* member){
+        System *system = System::getInstance();
+        cout << "\n—----------------- Accommodations options —-----------------\n"
+                                  "\t0.  Exit\n"
+                                  "\t1.  Display all available houses\n"
+                                  "\t2.  Display the affordable houses by searching available locations.\n"
+                                  "\t3.  Back to the homepage.\n";
+
+        int option = optionInput();
+        switch (option){
+            case 0: exit(1);
+            case 1: {
+//                system->loadHouse();
+                system->viewAllHouse();
+                displayMemberHomepage(member);
+                break;
+            }
+            case 2: {
+                displayLocationOption(member);
+                break;
+            }
+            case 3: {
+                displayMemberHomepage(member);
                 break;
             }
         }
@@ -181,7 +300,7 @@ namespace HomepageComponent{
             }
             case 2:
                 /// List available house
-                displayHousesOption();
+                displayHousesOption(member);
                 break;
             case 3:
                 /// Unlist current house
@@ -274,6 +393,10 @@ namespace HomepageComponent{
     }
 
     void displayAppHomepage(){
+        System* system = System::getInstance();
+        system->loadMember();
+        system->loadHouse();
+        system->loadRequest();
         cout << "EEET2482/COSC2082 ASSIGNMENT \n"
                 "VACATION HOUSE EXCHANGE APPLICATION\n"
                 "\n"
@@ -286,7 +409,6 @@ namespace HomepageComponent{
                 "Use the app as 1. Guest   2. Member   3. Admin\n";
         int option = optionInput();
 
-        System* system = System::getInstance();
 
         switch (option){
             case 0:
@@ -298,8 +420,6 @@ namespace HomepageComponent{
                 string userName = fieldInput("userName");
                 string password = fieldInput("password");
 
-                system->loadMember();
-                system->loadHouse();
                 Member* member = system->login(userName, password);
 
                 if(member != nullptr){

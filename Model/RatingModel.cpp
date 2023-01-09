@@ -15,7 +15,6 @@ Rating::Rating(Member *rater, double score, string comment) {
 }
 
 Rating::Rating() {};
-
 Rating::~Rating() {}
 
 
@@ -71,5 +70,5 @@ Member *Rating::getOccupier() const {
 
 
 //Getter Methods
-	
+
 
