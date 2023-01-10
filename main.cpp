@@ -31,7 +31,9 @@ int main() {
     system->systemStart();
     Guest::login();
 
-    system->getCurrentMem()->getHouse()->approveRequest();
+//    cout << system->currentDate().dateToString();
+
+//    system->getCurrentMem()->getHouse()->approveRequest();
     system->getCurrentMem()->bookAccommodation();
     system->systemShutdown();
 

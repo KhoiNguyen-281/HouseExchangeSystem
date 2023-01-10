@@ -490,6 +490,7 @@ bool Member::bookAccommodation() {
         cin >> choice;
     }
 
+
     House * house =  availableHouse[choice - 1];
 
     Request request;

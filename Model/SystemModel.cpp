@@ -34,7 +34,19 @@ string getFilePath(const string &file) {
 
 
 
+Date System::currentDate() {
+    std::time_t t = std::time(nullptr);
+    std::tm *const pointerInfo =  std::localtime(&t);
+    int month = pointerInfo->tm_mon + 1;
+    int year = thisYear();
+    int day = pointerInfo->tm_mday;
+    Date currentDate;
+    currentDate.setDay(day);
+    currentDate.setMonth(month);
+    currentDate.setYear(year);
 
+    return currentDate;
+}
 
 
 
@@ -274,6 +286,32 @@ Rating * System::addRatingToSys(Rating rating) {
 
 Request * System::addRequestToSys(Request request) {
     //When the request ID is empty
+
+    for (auto & i : requestVect) {
+        //valid if != 0
+
+        //check if date conflict
+        if (i.getHouse()  == request.getHouse()) {
+            if (request.getStartDate().getDay() < i.getStartDate().getDay()) {
+                if (request.getEndDate().getDay() <= i.getStartDate().getDay()) {
+                    continue;
+                } else {
+                    sysErrLog("This house is not available for that date;")
+                    return nullptr;
+                }
+            } else if (request.getStartDate().getDay() > i.getStartDate().getDay()) {
+                if (request.getStartDate().getDay() >= i.getEndDate().getDay()) {
+                    continue;
+                } else {
+                    sysErrLog("This house is not available for that date;")
+                    return nullptr;
+                }
+            }
+        } else {
+            continue;
+        }
+    }
+
     if (request.getId().empty()) {
         //When request is already exist but cannot find ID
         if (currentMem->getRequest() != nullptr && currentMem->getRequest()->getStatus() ==  PENDING) {
@@ -295,6 +333,7 @@ Request * System::addRequestToSys(Request request) {
             }
         }
     }
+
     return nullptr;
 }
 //
@@ -703,7 +742,7 @@ void System::getAvailableHouses(vector<House *> &availableHouses, bool isQualifi
              Date::compareDate(i.getEndListDate(), endingDate) > 0))
             continue;
 
-        if (isHouseSuitable(i) && i.getOwner() == currentMem)
+        if (isQualified && i.getOwner() == currentMem)
             continue;
 
         availableHouses.push_back(&i);
@@ -1108,6 +1147,15 @@ void System::searchHouse(vector<House*>&houseList, string location, Date startDa
     for (int i = 0; i < houseList.size(); i++) {
         sysLog("House no." << (i + 1) << "\n");
         houseList[i]->showInfo();
+    }
+}
+
+void System::changeStatusOfRequestAuto() {
+    for (Request & request : requestVect) {
+        if (Date::compareDate(currentDate(), request.getEndDate()) == 0
+            && Date::compareDate(currentDate(), request.getEndDate()) > 0) {
+            request.setStatus(FINISHED);
+        }
     }
 }
 

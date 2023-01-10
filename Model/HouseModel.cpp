@@ -212,6 +212,4 @@ bool House::approveRequest(){
 
 }
 
-//bool denyRequest(Request* request){
-//    return true;
-//}
+

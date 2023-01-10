@@ -27,9 +27,10 @@ enum Status {
 
 int thisYear() {
     std::time_t t = std::time(nullptr);
-    std::tm *const pTInfo = std::localtime(&t);
-    return 1900 + pTInfo->tm_year;
+    std::tm *const pointerInfo = std::localtime(&t);
+    return 1900 + pointerInfo->tm_year;
 }
+
 
 
 class Guest;
@@ -203,6 +204,8 @@ public:
     float sumRating();
 
     bool approveRequest();
+
+
     // Friend function
     // Set new occupier to the house after successfully request
     friend House* addNewOccupierToHouse(House* house, Member * occupier);
@@ -323,6 +326,7 @@ private:
 
     // setter
 public:
+    Date currentDate();
     static System *getInstance();
 
     // Current user functions
@@ -408,14 +412,12 @@ public:
 //    void getHouseByLoc(vector<House*>& house, const string& location);
     void getHouseWithCreditPoint(vector<House*> &house);
 
+    void changeStatusOfRequestAuto();
+
 
     bool systemStart();
     bool systemShutdown();
 
-    //
-
-
-    //Current member funciotn
 
     virtual ~System();
 };
