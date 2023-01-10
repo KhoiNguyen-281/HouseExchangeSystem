@@ -436,6 +436,17 @@ bool Member::bookAccommodation() {
     string startStr, endStr;
     Date startDate, endDate;
 
+    string temp;
+    system->getAvailableLocation();
+
+    sysLog("Please enter your demand city: ");
+    inputStr(temp);
+    while(!system->checkLocation(temp)) {
+        sysErrLog("Your city is not available, please try again!!\n");
+        sysLog("Please enter your demand city: ");
+        inputStr(temp);
+    }
+
     sysLog("Please enter your start and end date\n")
     sysLog("Start date: ");
     inputStr(startStr);
@@ -456,11 +467,21 @@ bool Member::bookAccommodation() {
     }
     endDate = Date::parseDate(endStr);
 
-    system->searchHouse(availableHouse, startDate, endDate);
+    system->getAvailableHouses(availableHouse, true, temp, startDate, endDate);
+
+    if (availableHouse.empty()) {
+        sysErrLog("There are not any available houses");
+        return false;
+    }
+
+    for (int i = 0; i < availableHouse.size(); i++) {
+        sysLog("House no." << (i + 1) << "\n");
+        availableHouse[i]->showInfo();
+    }
 
     int choice;
 
-    sysLog("Please enter the house's number you want to book");
+    sysLog("Please enter the house's number you want to book \n");
     sysLog("House no: ");
     cin >> choice;
     while (choice < 1 || choice > (availableHouse.size() + 1)) {

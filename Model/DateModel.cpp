@@ -4,21 +4,7 @@
 #include "SystemModel.h"
 
 
-int checkMonth(int month, int year, int duration) {
-    if (month == 1 || month == 3 || month == 5 || month == 7 ||
-        month == 8 || month == 10 || month == 12) {
-        duration += 31;
-    } else if (month == 2) {
-        if (year % 4 == 0) {
-            duration += 29;
-        } else {
-            duration += 28;
-        }
-    } else {
-        duration += 30;
-    }
-    return duration;
-}
+
 
 #define sysLog(x) cout << x;
 
@@ -159,6 +145,23 @@ Date Date::parseDate(string date) {
     return dateTemp;
 }
 
+
+int checkMonth(int month, int year, int duration) {
+    if (month == 1 || month == 3 || month == 5 || month == 7 ||
+        month == 8 || month == 10 || month == 12) {
+        duration += 31;
+    } else if (month == 2) {
+        if (year % 4 == 0) {
+            duration += 29;
+        } else {
+            duration += 28;
+        }
+    } else {
+        duration += 30;
+    }
+    return duration;
+}
+
 int Date::getDuration(Date start, Date end) {
     int durations = 0;
     int temp = 0;
@@ -174,7 +177,7 @@ int Date::getDuration(Date start, Date end) {
         durations = endDay - startDay;
     } else {
         for (int i = startMonth; i < endMonth; i++) {
-            durations = checkMonth(i, startYear, temp);
+            durations = ::checkMonth(i, startYear, temp);
         }
         durations += endDay;
     }

@@ -32,6 +32,7 @@ int main() {
     Guest::login();
 
     system->getCurrentMem()->getHouse()->approveRequest();
+    system->getCurrentMem()->bookAccommodation();
     system->systemShutdown();
 
 }

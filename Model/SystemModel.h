@@ -72,6 +72,8 @@ public:
     static int compareDate(Date dateInSys, Date inputDate);
 
     string dateToString();
+
+    int checkMonth(int month, int year, int duration);
 };
 
 class Guest {
@@ -190,7 +192,7 @@ public:
     Member *getOwner() const;
     Member *getOccupier() const;
     const string &getId() const;
-    const string &getLocation() const;
+    string getLocation();
     const string &getDescription() const;
     int getCreditPointsPerDay() const;
     float getMinimumOccupierRating() const;
@@ -302,7 +304,7 @@ private:
     static System *instancePointer;
     System();
 
-    vector<string> availableLocation = {"Ha Noi", "Ho Chi Minh", "Da Nang"};
+    vector<string> availableLocation = {"Ha Noi", "Hue", "Sai Gon"};
 
     // Admin login info
     string adminUsername = "admin";
@@ -378,7 +380,7 @@ public:
 
     int getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints);
     void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
-    void getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
+    void getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, const string& location, Date start_date, Date end_date);
     void getAvailableLocation();
      // vector<House* > getHouseByID(vector<House *> &house, int id);
 
@@ -401,9 +403,9 @@ public:
     void getAndShowRequest(vector<Request *> & requestList, House * house);
 
     //Function to search house
-    void searchHouse(vector<House *> &availableHouse, Date startDate, Date endDate);
-    void getHouseByDate(vector<House*>& availableHouse, Date start, Date end);
-    void getHouseByLoc(vector<House*>& house, string location);
+    void searchHouse(vector<House *> &availableHouse, string location,Date startDate, Date endDate);
+//    void getHouseByDate(vector<House*>& availableHouse, const Date& start, const Date& end);
+//    void getHouseByLoc(vector<House*>& house, const string& location);
     void getHouseWithCreditPoint(vector<House*> &house);
 
 

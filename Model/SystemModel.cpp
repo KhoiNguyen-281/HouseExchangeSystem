@@ -612,7 +612,6 @@ bool System::loadRating() {
     }
 
     file.close();
-
     sysLogSuccess("Loaded " + std::to_string(ratingVect.size()) + " rating(s)");
 
     return true;
@@ -674,7 +673,7 @@ bool System::loadRequest() {
     }
 
     file.close();
-
+    countRequest = stoi(requestVect.back().getId());
     sysLogSuccess("Loaded " + std::to_string(ratingVect.size()) + " request(s)");
 
     return true;
@@ -700,22 +699,21 @@ House * System::getHouse(string ID) {
     return nullptr;
 }
 
-void System::getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date startingDate,
+void System::getAvailableHouses(vector<House *> &availableHouses, bool isQualified, const string& location, Date startingDate,
                                 Date endingDate) {
-    for (int i = 0; i < houseVect.size(); i++)
-    {
-        if (isQualified && houseVect[i].getLocation().compare(location) != 0)
+    for (auto & i : houseVect) {
+        if (isQualified && i.getLocation() != location)
             continue;
 
         if (isQualified &&
-            (Date::compareDate(startingDate, houseVect[i].getStartListDate()) < 0 ||
-             Date::compareDate(endingDate, houseVect[i].getEndListDate()) > 0))
+            (Date::compareDate(i.getStartListDate(), startingDate) < 0 ||
+             Date::compareDate(i.getEndListDate(), endingDate) > 0))
             continue;
 
-        if (isQualified && houseVect[i].getOwner() == currentMem)
+        if (isHouseSuitable(i) && i.getOwner() == currentMem)
             continue;
 
-        list_of_houses.push_back(&houseVect[i]);
+        availableHouses.push_back(&i);
     }
 }
 
@@ -737,7 +735,6 @@ void System::viewAllHouseBySearchingLocation(bool isQualified, string location, 
     if (isQualified)
     {
         vector<House *> fetchAvailableHouses;
-
         getAvailableHouses(fetchAvailableHouses,true, location, startingDate, endingDate);
 
         if (fetchAvailableHouses.empty())
@@ -809,6 +806,7 @@ bool System::isInteger(const string& input) {
 }
 
 //-----------------------------Function to view information--------------------------//
+
 void System::viewMember() {
     if (currentMem == nullptr && !isAdminLoggedin) {
         sysErrLog("\n Please login first");
@@ -929,7 +927,7 @@ void System::getAndShowRequest(vector<Request *> &requestList, House * house) {
             request->showInfo();
         }
     } else {
-        sysLog("You have not receive any request yet")
+        sysLog("You have not receive any request yet\n")
     }
 }
 
@@ -1078,23 +1076,26 @@ bool System::isHouseSuitable(House house) {
     }
     return true;
 }
-
-void System::getHouseByDate(vector<House*> &availableHouse, Date start, Date end) {
-    for (int i  = 0; i < availableHouse.size(); i++) {
-        if (Date::compareDate(availableHouse[i]->getStartListDate(), start) > 0
-        && Date::compareDate(availableHouse[i]->getEndListDate(), end) > 0) {
-            availableHouse.erase(availableHouse.begin() + i);
-        }
-    }
-}
-
-void System::getHouseByLoc(vector<House*>& availableHouse, string location){
-    for (int i = 0; i < availableHouse.size(); i++) {
-        if (availableHouse[i]->getLocation() != location || !isHouseSuitable(*availableHouse[i])) {
-            availableHouse.erase(availableHouse.begin() + i);
-        }
-    }
-}
+//void System::getHouseByDate(vector<House*> &availableHouse, const Date& start, const Date& end) {
+//    for (int i  = 0; i < availableHouse.size(); i++) {
+//        if (Date::compareDate(availableHouse[i]->getStartListDate(), start) > 0
+//        && Date::compareDate(availableHouse[i]->getEndListDate(), end) > 0) {
+//            availableHouse.erase(availableHouse.begin() + i);
+//        }
+//    }
+//}
+//
+//void System::getHouseByLoc(vector<House*>& availableHouse, const string& location){
+//    for (int i = 0; i < availableHouse.size(); i++) {
+//        if (availableHouse[i]->getLocation() != location) {
+//            availableHouse.erase(availableHouse.begin() + i);
+//            cout << "true  ";
+//        }
+//    }
+//    for (House * house : availableHouse) {
+//        cout << house->getLocation();
+//    }
+//}
 
 void System::getHouseWithCreditPoint(vector<House *> &availableHouse) {
     int temp = currentMem->getCreditP();
@@ -1107,32 +1108,12 @@ void System::getHouseWithCreditPoint(vector<House *> &availableHouse) {
 
 
 
-void System::searchHouse(vector<House *> &houseList, Date startDate, Date endDate) {
-    string temp;
-//    vector<House*> houseList;
-    for (House & house : houseVect) {
-        houseList.push_back(&house);
-    }
+void System::searchHouse(vector<House*>&houseList, string location, Date startDate, Date endDate) {
 
-    sysLog("Please enter your demand city: ");
-    inputStr(temp);
-    while(!checkLocation(temp)) {
-        sysErrLog("Your city is not available, please try again!!\n");
-        sysLog("Please enter your demand city: ");
-        inputStr(temp);
-    }
-    getHouseByLoc(houseList, temp);
-
-    getHouseByDate(houseList, startDate, endDate);
+    this->getAvailableHouses(houseList, true, location, startDate, endDate);
 
     for (int i = 0; i < houseList.size(); i++) {
-        if (!isHouseSuitable(*houseList[i])) {
-            houseList.erase(houseList.begin() + i);
-        }
-    }
-
-    for (int i  = 0; i < houseList.size(); i++) {
-        sysLog("House no." << (i + 1));
+        sysLog("House no." << (i + 1) << "\n");
         houseList[i]->showInfo();
     }
 }

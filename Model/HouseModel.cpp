@@ -60,7 +60,7 @@ const string &House::getId() const {
     return id;
 }
 
-const string &House::getLocation() const {
+string House::getLocation() {
     return location;
 }
 
