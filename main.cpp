@@ -16,8 +16,8 @@ using namespace std;
 #include "Model/RatingModel.cpp"
 
 #include "Model/RequestModel.cpp"
-//#include "Controllers/HomepageController.h"
-//#include "Controllers/HomepageController.cpp"
+#include "Controllers/HomepageController.h"
+#include "Controllers/HomepageController.cpp"
 
 //using namespace HomepageComponent;
 

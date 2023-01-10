@@ -10,13 +10,16 @@
 
 namespace HomepageComponent {
     int optionInput();
+
+    void displayStartPage();
+    void displayGuestHomepage();
 //    string fieldInput(std::string field);
     void displayRequestOption(Member *member, House* requestHouse);
     void displayHousesOption(Member* member);
     void displaySpecificHouseOption(); 
     void displayLocationOption();
     void displayMemberHomepage(Member *member);
-    void displayGuestHomepage();
+
     void displayAdminHomepage();
     void displayAppHomepage();
 

@@ -192,10 +192,10 @@ Member *System::login(string username, string password) {
             setCurrentMem(nullptr);
             setIsLoggedIn(true);
             setIsAdmin(true);
-            sysLog("\nLogged in as an admin\n");
+            sysLogSuccess("\nLogged in as an admin\n");
             return nullptr;
         } else {
-            sysLog("Incorrect password.");
+            sysErrLog("Incorrect password.");
             return nullptr;
         }
     }
@@ -212,6 +212,7 @@ Member *System::login(string username, string password) {
                 }
                 return &i;
             } else {
+                int count = 1;
                 sysErrLog("Incorrect password")
                 return nullptr;
             }
@@ -837,6 +838,10 @@ bool System::isInteger(const string& input) {
     return true;
 }
 
+bool verifyPassword(string inputPassword, string memberPassword) {
+    return inputPassword == memberPassword;
+}
+
 //-----------------------------Function to view information--------------------------//
 
 void System::viewMember() {
@@ -1100,10 +1105,10 @@ bool System::systemShutdown() {
 bool System::isHouseSuitable(House house) {
     int creditPoint = currentMem->getCreditP();
     float ratingPoint = currentMem->sumRating();
-    if (house.getCreditPointsPerDay() - creditPoint >= 0) {
+    if (creditPoint - house.getCreditPointsPerDay() < 0) {
          return false;
     }
-    if (house.getMinimumOccupierRating() - ratingPoint >= 0) {
+    if (house.getMinimumOccupierRating() > ratingPoint) {
         return false;
     }
     return true;

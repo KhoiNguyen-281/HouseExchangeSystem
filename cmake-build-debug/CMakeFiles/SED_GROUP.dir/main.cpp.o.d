@@ -435,4 +435,7 @@ CMakeFiles/SED_GROUP.dir/main.cpp.o: \
   /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Model/HouseModel.cpp \
   /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Model/DateModel.cpp \
   /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Model/RatingModel.cpp \
-  /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Model/RequestModel.cpp
+  /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Model/RequestModel.cpp \
+  /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Controllers/HomepageController.h \
+  /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Controllers/../Model/SystemModel.h \
+  /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Controllers/HomepageController.cpp

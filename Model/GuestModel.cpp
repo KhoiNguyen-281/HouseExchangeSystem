@@ -51,7 +51,21 @@ Member * Guest::login() {
     sysLog("Username: ");
     getline(cin, username);
     sysLog("Password: ");
-    getline(cin, password);
+    inputStr(password)
+    Member * member = System::getInstance()->login(username, password);
+    int count = 1;
+    while (member == nullptr) {
+        if (count == 4) {
+            sysErrLog("Wrong password 4 times, try again later");
+            break;
+        } else {
+            sysErrLog("Password does not match, please try again");
+            sysLog("Password: ");
+            inputStr(password);
+            member = System::getInstance()->login(username, password);
+            count +=1;
+        }
+    }
 
-    return System::getInstance()->login(username, password);
+    return member;
 }

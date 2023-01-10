@@ -436,6 +436,7 @@ bool Member::bookAccommodation() {
     string startStr, endStr;
     Date startDate, endDate;
 
+
     string temp;
     system->getAvailableLocation();
 
@@ -467,6 +468,7 @@ bool Member::bookAccommodation() {
     }
     endDate = Date::parseDate(endStr);
 
+
     system->getAvailableHouses(availableHouse, true, temp, startDate, endDate);
 
     if (availableHouse.empty()) {
@@ -492,6 +494,13 @@ bool Member::bookAccommodation() {
 
 
     House * house =  availableHouse[choice - 1];
+
+    bool isEligible = system->isHouseSuitable(*house);
+
+    if (!isEligible) {
+        sysErrLog("Your credit points balance is not enough, please add more");
+        return false;
+    }
 
     Request request;
     request.setRequester(this);

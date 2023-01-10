@@ -132,7 +132,6 @@ public:
 
     static bool logout();
 
-    bool verifyPassword(string password);
     bool changePassword();
 
     bool updateInfo();
@@ -391,6 +390,7 @@ public:
     // Verify input function
     bool checkLocation(string location);
     bool isInteger(const string &input);
+    bool verifyPassword(string inputPassword, string memberPass);
 
 
     bool removeHouse();
