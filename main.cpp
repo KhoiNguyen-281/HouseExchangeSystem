@@ -4,6 +4,7 @@
 using std::string;
 using std::cout;
 using std::cin;
+using namespace std;
 // using std::vector;
 #include <vector>
 
@@ -18,7 +19,7 @@ using std::cin;
 #include "Controllers/HomepageController.h"
 #include "Controllers/HomepageController.cpp"
 
-using namespace HomepageComponent;
+//using namespace HomepageComponent;
 
 
 int main() {
@@ -26,30 +27,14 @@ int main() {
     System * system = System::getInstance();
     bool isLoggedIn = system->isUser();
     bool isAdmin = system->isAdmin();
+
     system->systemStart();
-//    system->loadMember();
-//    system->loadHouse();
-//    system->registerMember(*Guest::registerNewMember());
-
     Guest::login();
-    system->viewHouseDetail();
-//    system->getCurrentMem()->rateHouse();
-//    Guest::registerNewMember();
-//    Guest::registerNewMember();
 
-//    system->getCurrentMem()->registerHouse();
-//    system->saveMember();
-//    system->saveHouse();
+//    cout << system->currentDate().dateToString();
 
-//    system->viewAllHouse();
-
-//    system->viewMember();
-
-
+//    system->getCurrentMem()->getHouse()->approveRequest();
+    system->getCurrentMem()->bookAccommodation();
     system->systemShutdown();
-//    Guest::login();
-//    Member::changePassword();
-//    cout << system->getCurrentMem()->getPassword();
 
-//    displayHousesOption();
 }

@@ -1,20 +1,18 @@
 //
 // Created by Nguyen Hoang Minh Khoi on 12/12/22.
 //
+#define sysLog(x) cout << x;
+#define inputStr(x) getline(cin, x);
+#define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
+#define formatErr(x) cout << "Error: Invalid " << x << " format \n";
+#define successMess(x, y, z) cout << x << " " << y << " " << z << "\n";
+#define skip() cout << "\n\n";
 
 #include "SystemModel.h"
 #include <random>
 #include "fstream"
 #include <sstream>
-#include "../Libs/Config.h"
-
-#define sysLog(x) cout << x << Colors::RESET;
-#define inputStr(x) getline(cin, x);
-#define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
-#define formatErr(x) cout << "Error: Invalid " << x <<" format \n";
-
-#define skip() cout << "\n\n";
-
+#include <cmath>
 
 // define log message with color;
 #define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n" ; //log error and new line
@@ -27,13 +25,90 @@ const string HOUSES = "houses.dat";
 const string REQUESTS = "requests.dat";
 const string RATINGS = "ratings.dat";
 
+
+#include "../Libs/Config.h"
 //Helper functions
 string getFilePath(const string &file) {
     return "../Data/" + file;
 }
 
 
-// Setters
+
+Date System::currentDate() {
+    std::time_t t = std::time(nullptr);
+    std::tm *const pointerInfo =  std::localtime(&t);
+    int month = pointerInfo->tm_mon + 1;
+    int year = thisYear();
+    int day = pointerInfo->tm_mday;
+    Date currentDate;
+    currentDate.setDay(day);
+    currentDate.setMonth(month);
+    currentDate.setYear(year);
+
+    return currentDate;
+}
+
+
+
+
+//int Member::unListHouse(vector<House> &houseVector) {
+//    if (this == nullptr) {
+//        sysLog("You have not logged in the system yet");
+//        return 0;
+//    }
+//    string choice;
+//    sysLog("Do you really want to remove this house ? (Y/N)");
+//    getline(cin, choice);
+//    bool found = false;
+//    int count  = 0;
+//    if (choice == "Y" || choice ==  "y") {
+//        for (auto & i : houseVector) {
+//            if (i.getOwner() ==  this) {
+//                found = true;
+//            }
+//            count += 1;
+//        }
+//        if (found) {
+//            this->setHouse(nullptr);
+//            houseVector.erase(houseVector.begin() + count);
+//            sysLog("Remove house successfully");
+//            return 0;
+//        } else {
+//            sysLog("Your house does not exist in the system");
+//            return 0;
+//        }
+//    } else if (choice == "N" || choice == "n") {
+//        return 0;
+//    }
+//    return 0;
+//}
+// Getter and setter function
+
+
+
+
+//Setter
+
+
+//void House::showInfo() {
+//
+////    int ptsPerDay = 0;
+////    double occupierRating;
+////    Member * owner = nullptr;
+////    Member* occupier = nullptr;
+//    cout << "House: " << this->id << "\n";
+//    cout << "Location: " << this->location << "\n";
+//    cout << "Description: " << this->description << "\n";
+//    cout << "Points per day: " << this->ptsPerDay << "\n";
+//    cout << "Owner: " << this->owner->getUserName() << "\n \n";
+//}
+
+
+//Getter and setter
+//Getter
+
+
+
 
 System::System() {
 
@@ -65,6 +140,14 @@ void System::setIsAdmin(bool isAdmin) {
     this->isAdminLoggedin = isAdmin;
 }
 
+bool System::hasRequest() {
+    for (Request & request : requestVect) {
+        if (request.getHouse()->getId() ==  currentMem->getHouse()->getId()) {
+            return true;
+        }
+    }
+    return false;
+}
 
 // ------------------------ * Current user * ------------------------//
 
@@ -100,7 +183,6 @@ Member * System::registerMember(Member member) {
     sysLog("Sign up successfully! awarded with 500 points.");
     skip();
 
-
     return newMem;
 }
 
@@ -110,10 +192,10 @@ Member *System::login(string username, string password) {
             setCurrentMem(nullptr);
             setIsLoggedIn(true);
             setIsAdmin(true);
-            sysLog("\nLogged in as an admin\n");
+            sysLogSuccess("\nLogged in as an admin\n");
             return nullptr;
         } else {
-            sysLog("Incorrect password.");
+            sysErrLog("Incorrect password.");
             return nullptr;
         }
     }
@@ -125,8 +207,12 @@ Member *System::login(string username, string password) {
                 setIsLoggedIn(true);
 
                 sysLogSuccess("\nLogin successfully \n ");
+                if (hasRequest()) {
+                    sysLog("You have received new request!!!\n");
+                }
                 return &i;
             } else {
+                int count = 1;
                 sysErrLog("Incorrect password")
                 return nullptr;
             }
@@ -185,7 +271,7 @@ House * System::addHouseToSys(House house) {
     }
 }
 
-Rating * System::addRatingtoSys(Rating rating) {
+Rating * System::addRatingToSys(Rating rating) {
     //Check if rating already exist in system
     for (Rating & temp : ratingVect) {
         if (temp.getHouse()->getId() == rating.getHouse()->getId()
@@ -199,12 +285,37 @@ Rating * System::addRatingtoSys(Rating rating) {
     return newRating;
 }
 
-Request * System::addRequest(Request request) {
+Request * System::addRequestToSys(Request request) {
     //When the request ID is empty
+
+    for (auto & i : requestVect) {
+        //valid if != 0
+
+        //check if date conflict
+        if (i.getHouse()  == request.getHouse()) {
+            if (request.getStartDate().getDay() < i.getStartDate().getDay()) {
+                if (request.getEndDate().getDay() <= i.getStartDate().getDay()) {
+                    continue;
+                } else {
+                    sysErrLog("This house is not available for that date;")
+                    return nullptr;
+                }
+            } else if (request.getStartDate().getDay() > i.getStartDate().getDay()) {
+                if (request.getStartDate().getDay() >= i.getEndDate().getDay()) {
+                    continue;
+                } else {
+                    sysErrLog("This house is not available for that date;")
+                    return nullptr;
+                }
+            }
+        } else {
+            continue;
+        }
+    }
+
     if (request.getId().empty()) {
         //When request is already exist but cannot find ID
         if (currentMem->getRequest() != nullptr && currentMem->getRequest()->getStatus() ==  PENDING) {
-            sysLog("\nYou have already request a house \n\n");
             return nullptr;
         }
         string ID = generateID(countRequest);
@@ -223,9 +334,43 @@ Request * System::addRequest(Request request) {
             }
         }
     }
+
     return nullptr;
 }
 //
+
+//------------------------Function to add and decrease credit points-----------------------//
+bool System::addCreditPoints(Member * member, int creditP) {
+    if (member == nullptr) {
+        sysErrLog("Member not found!!!");
+        return false;
+    }
+
+    int newPoints = member->getCreditP() + creditP;
+    if (newPoints < 0) {
+        sysErrLog("Your credit points balance is not enough!!!");
+        return false;
+    }
+
+    member->setCreditP(newPoints);
+    return true;
+}
+
+bool System::removeCreditPoints(Member *member, int creditP) {
+    if (member == nullptr) {
+        sysErrLog("Member not found!!!");
+        return false;
+    }
+
+    int newPoint = member->getCreditP() - creditP;
+    if (newPoint < 0) {
+        sysErrLog("Your credit points balance is not enough!!!");
+        return false;
+    }
+
+    member->setCreditP(newPoint);
+    return true;
+}
 
 
 //--------------------Save data to files-------------------//
@@ -241,8 +386,8 @@ bool System::saveMember() {
 
     for (Member member : memberVect) {
         file << member.getId() << "," << member.getUserName() << ","
-             << member.getPassword() << "," << member.getFullName() << ","
-             << member.getPhoneNum() << "," << member.getCreditP() << "\n";
+            << member.getPassword() << "," << member.getFullName() << ","
+            << member.getPhoneNum() << "," << member.getCreditP() << "\n";
     }
     file.close();
     sysLogSuccess("Saved " +  std::to_string(memberVect.size()) + " member(s)");
@@ -276,20 +421,28 @@ bool System::saveHouse() {
     return true;
 }
 
-//bool System::saveRequest() {
-//    std::fstream file;
-//    string filePath = getFilePath(REQUESTS);
-//
-//    file.open(filePath, std::ios::out);
-//    if (!file.is_open()) {
-//        fileErrLog(filePath);
-//        return false;
-//    }
-//
-//    for (Request request : requestVect) {
-//
-//    }
-//}
+bool System::saveRequest() {
+    std::fstream file;
+    string filePath = getFilePath(REQUESTS);
+
+    file.open(filePath, std::ios::out);
+    if (!file.is_open()) {
+        fileErrLog(filePath);
+        return false;
+    }
+
+    for (Request request : requestVect) {
+        file << request.getId() << ","
+             << request.getRequester()->getId() << ","
+             << request.getHouse()->getId() << ","
+             << request.getStartDate().dateToString() << ","
+             << request.getEndDate().dateToString() << ","
+             << request.getStatus() << "\n";
+    }
+    file.close();
+    sysLogSuccess("Saved " + to_string(requestVect.size()) + " request(s)");
+    return true;
+}
 
 bool System::saveRating() {
     std::fstream file;
@@ -492,8 +645,69 @@ bool System::loadRating() {
     }
 
     file.close();
-
     sysLogSuccess("Loaded " + std::to_string(ratingVect.size()) + " rating(s)");
+
+    return true;
+}
+
+bool System::loadRequest() {
+    std::fstream file;
+    string filePath = getFilePath(REQUESTS);
+
+    file.open(filePath, std::ios::in);
+
+    if (!file.is_open()) {
+        fileErrLog(Colors::BOLD_RED_CLS + filePath);
+        return false;
+    }
+
+    string line;
+
+    while (getline(file, line)) {
+        std::stringstream ss(line);
+        string attribute;
+        vector<string> tokens;
+
+        while (getline(ss, attribute, ',')) {
+            tokens.push_back(attribute);
+        }
+
+        if (tokens.size() != 6) {
+            formatErr(Colors::BOLD_RED_CLS + "rating")
+            continue;
+        }
+
+        Request request;
+
+        string requesterID = tokens[1];
+        string houseId = tokens[2];
+
+        House* house = getHouse(tokens[2]);
+        Member* requester = getMember(tokens[1]);
+
+        if (house == nullptr) {
+            sysErrLog("House with ID: " + house->getId() + " not found!!!");
+            continue;
+        }
+
+        if (requester == nullptr) {
+            sysErrLog("Member with ID: " + requester->getId() + " not found!!!");
+            continue;
+        }
+
+        request.setId(tokens[0]);
+        request.setRequester(requester);
+        request.setHouse(house);
+        request.setStartDate(Date::parseDate(tokens[3]));
+        request.setEndDate(Date::parseDate(tokens[4]));
+        request.setStatus(stoi(tokens[5]));
+
+        requestVect.push_back(request);
+    }
+
+    file.close();
+    countRequest = stoi(requestVect.back().getId());
+    sysLogSuccess("Loaded " + std::to_string(ratingVect.size()) + " request(s)");
 
     return true;
 }
@@ -518,22 +732,80 @@ House * System::getHouse(string ID) {
     return nullptr;
 }
 
-void System::getAvailableHouse(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date)
-{
-    for (int i = 0; i < houseVect.size(); i++)
-    {
-        if (isQualified && houseVect[i].getLocation().compare(location) != 0)
+void System::getAvailableHouses(vector<House *> &availableHouses, bool isQualified, const string& location, Date startingDate,
+                                Date endingDate) {
+    for (auto & i : houseVect) {
+        if (isQualified && i.getLocation() != location)
             continue;
 
         if (isQualified &&
-            (Date::compareDate(start_date, houseVect[i].getStartListDate()) < 0 ||
-             Date::compareDate(end_date, houseVect[i].getEndListDate()) > 0))
+            (Date::compareDate(i.getStartListDate(), startingDate) < 0 ||
+             Date::compareDate(i.getEndListDate(), endingDate) > 0))
             continue;
 
-        if (isQualified && houseVect[i].getOwner() == currentMem)
+        if (isQualified && i.getOwner() == currentMem)
             continue;
 
-        list_of_houses.push_back(&houseVect[i]);
+        availableHouses.push_back(&i);
+    }
+}
+
+int System::getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints) {
+    return Date::getDuration(startDate, endDate) * creditPoints;
+}
+
+
+void System::viewAllHouseBySearchingLocation(bool isQualified, string location, Date startingDate, Date endingDate)
+{
+    if (houseVect.empty())
+    {
+        sysLog("There are no house on our system.\n");
+        return;
+    }
+
+    // Display all houses
+
+    if (isQualified)
+    {
+        vector<House *> fetchAvailableHouses;
+        getAvailableHouses(fetchAvailableHouses,true, location, startingDate, endingDate);
+
+        if (fetchAvailableHouses.empty())
+        {
+            cout << "There are no qualified houses.\n";
+            return;
+        }
+
+        int duration = Date::getDuration(startingDate, endingDate);
+
+        for (int i = 0; i < fetchAvailableHouses.size(); i++)
+        {
+            cout << Colors::LIGHT_CYAN_CLS << "\n\t\tHouse " << Colors::LIGHT_GREEN_CLS << std::to_string(i + 1) << "\n";
+
+            cout << "\nLocation: " << fetchAvailableHouses[i]->getLocation() << "\n";
+            cout << "Description: " <<  fetchAvailableHouses[i]->getDescription() << "\n";
+            cout << "Available from: " <<  fetchAvailableHouses[i]->getStartListDate().dateToString() << "\n";
+            cout << "Available until: " <<  fetchAvailableHouses[i]->getEndListDate().dateToString() << "\n";
+            cout << "Consumption points (per day): " << std::to_string(fetchAvailableHouses[i]->getCreditPointsPerDay()) << "\n";
+//            cout << "Expected consumption points: " << System::getTotalConsumptionPoint(duration, startingDate.getDay(), endingDate.getDay()) << "\n";
+        }
+    }
+    else
+    {
+        for (int i = 0; i < houseVect.size(); i++)
+        {
+            cout << "\n\t\tHouse " << std::to_string(i + 1) << "\n";
+
+            cout << "Location: " << houseVect[i].getLocation() << "\n";
+            cout << "Description: " << houseVect[i].getDescription() << "\n";
+
+            cout << "Listing start: " << houseVect[i].getStartListDate().dateToString() << "\n";
+            cout << "Listing end: " << houseVect[i].getEndListDate().dateToString() << "\n";
+            cout << "Consumption points (per day): " << std::to_string(houseVect[i].getCreditPointsPerDay()) << "\n";
+            cout << "Owner ID: " << houseVect[i].getOwner()->getId() << "\n";
+            cout << "Owner Username: " << houseVect[i].getOwner()->getUserName() << "\n";
+            cout << "Owner Name: " << houseVect[i].getOwner()->getFullName() << "\n";
+        }
     }
 }
 
@@ -566,7 +838,12 @@ bool System::isInteger(const string& input) {
     return true;
 }
 
+bool verifyPassword(string inputPassword, string memberPassword) {
+    return inputPassword == memberPassword;
+}
+
 //-----------------------------Function to view information--------------------------//
+
 void System::viewMember() {
     if (currentMem == nullptr && !isAdminLoggedin) {
         sysErrLog("\n Please login first");
@@ -601,6 +878,7 @@ void System::viewHouseDetail() {
     }
 
     House * house = currentMem->getHouse();
+
     if (house == nullptr) {
         sysLog("You have not registered any house yet");
         string choice;
@@ -661,6 +939,34 @@ void System::viewAllHouse() {
     }
 }
 
+void System::getAndShowRequest(vector<Request *> &requestList, House * house) {
+    if (currentMem == nullptr) {
+        sysErrLog("You have not logged in yet \n");
+        return;
+    }
+
+    if (requestVect.empty()) {
+        sysLog("There are 0 request in the system \n");
+        return;
+    }
+
+    bool hasRequest = false;
+
+    for (Request & request : requestVect) {
+        if (request.getHouse()->getId() == house->getId()) {
+            requestList.push_back(&request);
+            hasRequest = true;
+        }
+    }
+
+    if (hasRequest) {
+        for (Request * request : requestList) {
+            request->showInfo();
+        }
+    } else {
+        sysLog("You have not receive any request yet\n")
+    }
+}
 
 bool System::removeHouse() {
     if (currentMem == nullptr) {
@@ -704,6 +1010,8 @@ bool System::removeHouse() {
     return false;
 }
 
+
+
 //------------------------Get rating function----------------//
 void System::getRatingFromSys(vector<Rating*>& ratingVal, Member * requester) {
     for (Rating & rating : ratingVect) {
@@ -720,6 +1028,16 @@ void System::getRatingFromSys(vector<Rating *>& ratingVal, House *house) {
         }
     }
 }
+
+//void System::getRequestFromSys(vector<Request*> &requestVal, House * house) {
+//    for (Request & request : requestVect) {
+//        if (request.getHouse()->getId() == house->getId()) {
+//            requestVal.push_back(&request);
+//        }
+//    }
+//}
+
+//------------------------Get request by location function----------------//
 
 //------------------------start and exit---------------//
 
@@ -740,11 +1058,12 @@ bool System::systemStart() {
         sysErrLog("Failed to load ratings!!!");
         return false;
     }
+
 //
-//    if (!loadRequest()) {
-//        sysLog("Failed to load requests!!!");
-//        return false;
-//    }
+    if (!loadRequest()) {
+        sysLog("Failed to load requests!!!");
+        return false;
+    }
 
     sysLogSuccess("Data loaded successfully");
     return true;
@@ -768,10 +1087,10 @@ bool System::systemShutdown() {
         return false;
     }
 //
-//    if (!saveRequest()) {
-//        sysLog("Failed to save requests!!!");
-//        return false;
-//    }
+    if (!saveRequest()) {
+        sysLog("Failed to save requests!!!");
+        return false;
+    }
 
     sysLogSuccess("Saved data successfully ");
     skip();
@@ -781,6 +1100,71 @@ bool System::systemShutdown() {
 }
 
 
+//--------------------------------Request function--------------------------------//
+
+bool System::isHouseSuitable(House house) {
+    int creditPoint = currentMem->getCreditP();
+    float ratingPoint = currentMem->sumRating();
+    if (creditPoint - house.getCreditPointsPerDay() < 0) {
+         return false;
+    }
+    if (house.getMinimumOccupierRating() > ratingPoint) {
+        return false;
+    }
+    return true;
+}
+//void System::getHouseByDate(vector<House*> &availableHouse, const Date& start, const Date& end) {
+//    for (int i  = 0; i < availableHouse.size(); i++) {
+//        if (Date::compareDate(availableHouse[i]->getStartListDate(), start) > 0
+//        && Date::compareDate(availableHouse[i]->getEndListDate(), end) > 0) {
+//            availableHouse.erase(availableHouse.begin() + i);
+//        }
+//    }
+//}
+//
+//void System::getHouseByLoc(vector<House*>& availableHouse, const string& location){
+//    for (int i = 0; i < availableHouse.size(); i++) {
+//        if (availableHouse[i]->getLocation() != location) {
+//            availableHouse.erase(availableHouse.begin() + i);
+//            cout << "true  ";
+//        }
+//    }
+//    for (House * house : availableHouse) {
+//        cout << house->getLocation();
+//    }
+//}
+
+void System::getHouseWithCreditPoint(vector<House *> &availableHouse) {
+    int temp = currentMem->getCreditP();
+    for (int i = 0; i < availableHouse.size(); i++) {
+        if (temp - availableHouse[i]->getCreditPointsPerDay() <= 0) {
+            availableHouse.erase(availableHouse.begin() + i);
+        }
+    }
+}
 
 
 
+void System::searchHouse(vector<House*>&houseList, string location, Date startDate, Date endDate) {
+
+    this->getAvailableHouses(houseList, true, location, startDate, endDate);
+
+    for (int i = 0; i < houseList.size(); i++) {
+        sysLog("House no." << (i + 1) << "\n");
+        houseList[i]->showInfo();
+    }
+}
+
+void System::changeStatusOfRequestAuto() {
+    for (Request & request : requestVect) {
+        if (Date::compareDate(currentDate(), request.getEndDate()) == 0
+            && Date::compareDate(currentDate(), request.getEndDate()) > 0) {
+            request.setStatus(FINISHED);
+        }
+    }
+}
+
+
+
+
+// method

@@ -6,15 +6,20 @@
 #define SED_GROUP_HOMEPAGECONTROLLER_H
 
 
-//#include "../Model/SystemModel.h"
+#include "../Model/SystemModel.h"
 
 namespace HomepageComponent {
     int optionInput();
-    string fieldInput(std::string field);
+
+    void displayStartPage();
     void displayGuestHomepage();
-    void displayHousesOption();
+//    string fieldInput(std::string field);
+    void displayRequestOption(Member *member, House* requestHouse);
+    void displayHousesOption(Member* member);
+    void displaySpecificHouseOption(); 
     void displayLocationOption();
-    void displayMemberHomepage();
+    void displayMemberHomepage(Member *member);
+
     void displayAdminHomepage();
     void displayAppHomepage();
 

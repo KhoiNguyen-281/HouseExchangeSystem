@@ -23,11 +23,22 @@ Member::~Member() {
 
 void Member::showInfo() {
 
+//    string id;
+//    string userName;
+//    string fullName;
+//    string phoneNum;
+//    string password;
+//    int creditP = CREDIT_POINT;
+//    House* house = nullptr;
+//    Request* request = nullptr;
+
     sysLogInfo("ID: " + this->id);
     sysLogInfo("Username: " + this->userName);
     sysLogInfo("Full name: " + this->fullName);
     sysLogInfo("Phone number: " + this->phoneNum);
-    sysLogInfo("Credit points: " + to_string(this->creditP));
+    sysLogInfo("Credit points: " + to_string(this->creditP) + "\n");
+
+
 //    sysLog("ID: " << this->id << "\n");
 //    sysLog("Username: " << this->userName <<"\n");
 //    sysLog("Full name: " << this->fullName <<"\n");
@@ -274,14 +285,10 @@ bool Member::updateInfo(){
     this->showInfo();
 
     sysLog("Enter your option: ");
-    sysLog("1. Change username");
-    skipLine();
-    sysLog("2. Change fullname");
-    skipLine();
-    sysLog("3. Change phone number");
-    skipLine();
-    sysLog("4. Change password");
-    skipLine();
+    sysLog("1. Change username \n");
+    sysLog("2. Change fullname \n");
+    sysLog("3. Change phone number \n");
+    sysLog("4. Change password \n");
     cin >> option;
 
     switch (option) {
@@ -302,10 +309,6 @@ bool Member::updateInfo(){
         case 3:
             sysLog("Enter new phone number: ");
             inputStr(input);
-//            cin >> phone;
-//            newNum = to_string(phone);
-//            getline(cin, newNum);
-//            System::getInstance()->getCurrentMem()->setPhoneNum(newNum);
             this->setPhoneNum(input);
             skipLine();
             sysLog("Change phone number successfully !")
@@ -315,94 +318,69 @@ bool Member::updateInfo(){
             break;
     }
 
-//    if(option == "1"){
-//        sysLog("Enter new username: ");
-//        inputStr(input);
-//        System::getInstance()->getCurrentMem()->setUserName(input);
-//        skipLine();
-//        sysLog("Change username successfully !")
-//    }
-//    else if(option == "2"){
-//        sysLog("Enter new fullname: ");
-//        ;
-//        System::getInstance()->getCurrentMem()->setFullName(newFname);
-//        skipLine();
-//        sysLog("Change fullname successfully !")
-//    }
-//    else if(option == "3"){
-//        sysLog("Enter new phone number: ");
-//        cin >> phone;
-//        newNum = to_string(phone);
-//        getline(cin, newNum);
-//        System::getInstance()->getCurrentMem()->setPhoneNum(newNum);
-//        skipLine();
-//        sysLog("Change phone number successfully !")
-//    }
-//    else if(option == "4"){
-//        changePassword();
-//    }
+//
     return true;
 }
 
 //-------------------------------Rating function--------------------------//
-Rating * Member::rateHouse() {
+//Rating * Member::rateHouse() {
+//
+//    System * system = System::getInstance();
+//    string comment;
+//    double score;
+//
+//
+//    sysLog("How was your experience from -10 to 10 : ");
+//    cin >> score;
+//    while(score < -10 || score > 10) {
+//        sysLog("Invalid score, score must be in range from -10 to 10: ");
+//        cin >> score;
+//    }
+//
+//    sysLog("You can leave a comment for more details: ");
+//    inputStr(comment);
+//
+//    Rating rating;
+//    rating.setRater(this);
+//    rating.setHouse(this->getRequest()->getHouse());
+//    rating.setScore(score);
+//    rating.setComment(comment);
+//
+//    system->addRatingToSys(rating);
+//    return &rating;
+//}
 
-    System * system = System::getInstance();
-    string comment;
-    double score;
-
-
-    sysLog("How was your experience from -10 to 10 : ");
-    cin >> score;
-    while(score < -10 || score > 10) {
-        sysLog("Invalid score, score must be in range from -10 to 10: ");
-        cin >> score;
-    }
-
-    sysLog("You can leave a comment for more details: ");
-    inputStr(comment);
-
-    Rating rating;
-    rating.setRater(this);
-    rating.setHouse(this->getRequest()->getHouse());
-    rating.setScore(score);
-    rating.setComment(comment);
-
-    system->addRatingtoSys(rating);
-    return &rating;
-}
-
-Rating * Member::rateOccupier() {
-    System * system = System::getInstance();
-    string comment;
-    double score;
-
-    sysLog("How would you rate your occupier from -10 to 10 : ");
-    cin >> score;
-    while (score < -10 || score > 10) {
-        sysLog("Invalid score, score must be in range from -10 to 10: ");
-        cin >> score;
-    }
-
-    sysLog("Leave a comment for more details: ");
-    inputStr(comment);
-
-    Rating  rating;
-    rating.setRater(this);
-    rating.setOccupier(this->getRequest()->getRequester());
-    rating.setScore(score);
-    rating.setComment(comment);
-
-    system->addRatingtoSys(rating);
-    return &rating;
-}
+//Rating * Member::rateOccupier() {
+//    System * system = System::getInstance();
+//    string comment;
+//    double score;
+//
+//    sysLog("How would you rate your occupier from -10 to 10 : ");
+//    cin >> score;
+//    while (score < -10 || score > 10) {
+//        sysLog("Invalid score, score must be in range from -10 to 10: ");
+//        cin >> score;
+//    }
+//
+//    sysLog("Leave a comment for more details: ");
+//    inputStr(comment);
+//
+//    Rating  rating;
+//    rating.setRater(this);
+//    rating.setOccupier(this->getRequest()->getRequester());
+//    rating.setScore(score);
+//    rating.setComment(comment);
+//
+//    system->addRatingToSys(rating);
+//    return &rating;
+//}
 
 bool Member::hasRatings() {
     System * system = System::getInstance();
     vector<Rating*> ratingVal;
     system->getRatingFromSys(ratingVal, this);
 
-    return ratingVal.size() > 0;
+    return !ratingVal.empty();
 }
 
 
@@ -420,3 +398,139 @@ float Member::sumRating() {
     return 0;
 }
 
+
+//bool Member::bookAccommodation(House *house, Date startDate, Date endDate) {
+//    System *system = System::getInstance();
+//    // Create a new request
+//    Request request;
+//
+//    // Set request data.
+//    request.setRequester(this);
+//    request.setHouse(house);
+//    request.setStartDate(startDate);
+//    request.setEndDate(endDate);
+//
+//    // cout << "current ID = " << request.getId() << "\n";
+//
+//    //    request.showInfo();
+//    // Add a new request to the system.
+//    Request *newRequest = system->addRequestToSys(request);
+//
+//    //    newRequest->showInfo();
+//
+//    // Check if the request was added successfully.
+//    if (newRequest != nullptr) {
+//        sysLogSuccess("You have successfully request house");
+//        setRequest(newRequest);
+//        return true;
+//    }
+//    else {
+//        sysErrLog("Failed to create request!!!");
+//        return false;
+//    }
+//}
+
+bool Member::bookAccommodation() {
+    System * system = System::getInstance();
+    vector<House *> availableHouse;
+    string startStr, endStr;
+    Date startDate, endDate;
+
+
+    string temp;
+    system->getAvailableLocation();
+
+    sysLog("Please enter your demand city: ");
+    inputStr(temp);
+    while(!system->checkLocation(temp)) {
+        sysErrLog("Your city is not available, please try again!!\n");
+        sysLog("Please enter your demand city: ");
+        inputStr(temp);
+    }
+
+    sysLog("Please enter your start and end date\n")
+    sysLog("Start date: ");
+    inputStr(startStr);
+    while (!Date::isDateValid(startStr)) {
+        sysErrLog("Wrong date format, please try again!!");
+        sysLog("Start date: ");
+        inputStr(startStr);
+    }
+
+    startDate = Date::parseDate(startStr);
+
+    sysLog("End date: ");
+    inputStr(endStr);
+    while (!Date::isDateValid(endStr)) {
+        sysErrLog("Wrong date format, please try again!!");
+        sysLog("End date: ");
+        inputStr(endStr);
+    }
+    endDate = Date::parseDate(endStr);
+
+
+    system->getAvailableHouses(availableHouse, true, temp, startDate, endDate);
+
+    if (availableHouse.empty()) {
+        sysErrLog("There are not any available houses");
+        return false;
+    }
+
+    for (int i = 0; i < availableHouse.size(); i++) {
+        sysLog("House no." << (i + 1) << "\n");
+        availableHouse[i]->showInfo();
+    }
+
+    int choice;
+
+    sysLog("Please enter the house's number you want to book \n");
+    sysLog("House no: ");
+    cin >> choice;
+    while (choice < 1 || choice > (availableHouse.size() + 1)) {
+        sysErrLog("Invalid house's number, please try again");
+        sysLog("House no: ");
+        cin >> choice;
+    }
+
+
+    House * house =  availableHouse[choice - 1];
+
+    bool isEligible = system->isHouseSuitable(*house);
+
+    if (!isEligible) {
+        sysErrLog("Your credit points balance is not enough, please add more");
+        return false;
+    }
+
+    Request request;
+    request.setRequester(this);
+    request.setHouse(house);
+    request.setStartDate(startDate);
+    request.setEndDate(endDate);
+
+    Request * newRequest  =  system->addRequestToSys(request);
+    if (newRequest == nullptr) {
+        sysErrLog("Failed to add request");
+        return false;
+    }
+
+    sysLogSuccess("Add request successfully")
+    sysLogInfo("Your request info: ");
+    this->setRequest(newRequest);
+    newRequest->showInfo();
+    return true;
+}
+
+//bool Member::denyRequest(vector<string> &ID) {
+//    if (ID.empty()) {
+//        return false;
+//    }
+//
+//    System * system =  System::getInstance();
+//    Request * request;
+//    for (string temp : ID) {
+//        request = system->getRequest(temp);
+//        request->setStatus(DENIED);
+//    }
+//    return true;
+//}
