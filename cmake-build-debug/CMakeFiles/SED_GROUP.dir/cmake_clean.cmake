@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
   "CMakeFiles/SED_GROUP.dir/main.cpp.o"
-  "CMakeFiles/SED_GROUP.dir/main.cpp.o.d"
   "SED_GROUP"
   "SED_GROUP.pdb"
 )
