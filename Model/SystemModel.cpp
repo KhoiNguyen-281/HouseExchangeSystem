@@ -816,7 +816,6 @@ void System::getAvailableLocation() {
         sysLog(" -"+ to_string(count) +"- " + loc);
         count += 1;
     }
-
     sysLog("\n");
 }
 
@@ -1113,37 +1112,39 @@ bool System::isHouseSuitable(House house) {
     }
     return true;
 }
-//void System::getHouseByDate(vector<House*> &availableHouse, const Date& start, const Date& end) {
-//    for (int i  = 0; i < availableHouse.size(); i++) {
-//        if (Date::compareDate(availableHouse[i]->getStartListDate(), start) > 0
-//        && Date::compareDate(availableHouse[i]->getEndListDate(), end) > 0) {
-//            availableHouse.erase(availableHouse.begin() + i);
-//        }
-//    }
-//}
-//
-//void System::getHouseByLoc(vector<House*>& availableHouse, const string& location){
-//    for (int i = 0; i < availableHouse.size(); i++) {
-//        if (availableHouse[i]->getLocation() != location) {
-//            availableHouse.erase(availableHouse.begin() + i);
-//            cout << "true  ";
-//        }
-//    }
-//    for (House * house : availableHouse) {
-//        cout << house->getLocation();
-//    }
-//}
-
-void System::getHouseWithCreditPoint(vector<House *> &availableHouse) {
-    int temp = currentMem->getCreditP();
-    for (int i = 0; i < availableHouse.size(); i++) {
-        if (temp - availableHouse[i]->getCreditPointsPerDay() <= 0) {
-            availableHouse.erase(availableHouse.begin() + i);
+void System::getHouseByDate(vector<House*> &availableHouse, const Date& start, const Date& end) {
+    for (auto & i : houseVect) {
+        if (Date::compareDate(i.getStartListDate(), start) >= 0
+        && Date::compareDate(i.getEndListDate(), end) <= 0) {
+            availableHouse.push_back(&i);
         }
     }
 }
 
+void System::getHouseByLoc(vector<House*>& availableHouse, const string& location){
+    for (auto & i : houseVect) {
+        if (i.getLocation() == location) {
+            availableHouse.push_back(&i);
+        }
+    }
+}
 
+void System::getHouseWithCreditPoint(vector<House *> &availableHouse) {
+    int temp = currentMem->getCreditP();
+    for (House & house : houseVect) {
+        if (temp - house.getCreditPointsPerDay() >= 0) {
+            availableHouse.push_back(&house);
+        }
+    }
+}
+
+void System::getHouseByCreditInRange(vector<House*> &availableHouse, int creditFrom, int creditTo) {
+    for (House & house : houseVect) {
+        if (house.getCreditPointsPerDay() >= creditFrom && house.getCreditPointsPerDay() <= creditTo) {
+            availableHouse.push_back(&house);
+        }
+    }
+}
 
 void System::searchHouse(vector<House*>&houseList, string location, Date startDate, Date endDate) {
 

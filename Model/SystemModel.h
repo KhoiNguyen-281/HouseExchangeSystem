@@ -144,8 +144,8 @@ public:
 //    bool denyRequest(vector<string> &ID);
 
 
-//    Rating * rateHouse();
-//    Rating * rateOccupier();
+    Rating * rateHouse();
+    Rating * rateOccupier();
 
     bool hasRatings();
 
@@ -408,9 +408,10 @@ public:
 
     //Function to search house
     void searchHouse(vector<House *> &availableHouse, string location,Date startDate, Date endDate);
-//    void getHouseByDate(vector<House*>& availableHouse, const Date& start, const Date& end);
-//    void getHouseByLoc(vector<House*>& house, const string& location);
+    void getHouseByDate(vector<House*>& availableHouse, const Date& start, const Date& end);
+    void getHouseByLoc(vector<House*>& house, const string& location);
     void getHouseWithCreditPoint(vector<House*> &house);
+    void getHouseByCreditInRange(vector<House*> &house, int creditFrom, int creditTo);
 
     void changeStatusOfRequestAuto();
 
