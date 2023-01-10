@@ -1,13 +1,6 @@
 //
 // Created by Nguyen Hoang Minh Khoi on 12/12/22.
 //
-
-#include "SystemModel.h"
-#include <random>
-#include "fstream"
-#include <sstream>
-#include "../Libs/Config.h"
-
 #define sysLog(x) cout << x;
 #define inputStr(x) getline(cin, x);
 #define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
