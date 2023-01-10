@@ -399,6 +399,96 @@ float Member::sumRating() {
 }
 
 
+//bool Member::bookAccommodation(House *house, Date startDate, Date endDate) {
+//    System *system = System::getInstance();
+//    // Create a new request
+//    Request request;
+//
+//    // Set request data.
+//    request.setRequester(this);
+//    request.setHouse(house);
+//    request.setStartDate(startDate);
+//    request.setEndDate(endDate);
+//
+//    // cout << "current ID = " << request.getId() << "\n";
+//
+//    //    request.showInfo();
+//    // Add a new request to the system.
+//    Request *newRequest = system->addRequestToSys(request);
+//
+//    //    newRequest->showInfo();
+//
+//    // Check if the request was added successfully.
+//    if (newRequest != nullptr) {
+//        sysLogSuccess("You have successfully request house");
+//        setRequest(newRequest);
+//        return true;
+//    }
+//    else {
+//        sysErrLog("Failed to create request!!!");
+//        return false;
+//    }
+//}
+
+bool Member::bookAccommodation() {
+    System * system = System::getInstance();
+    vector<House *> availableHouse;
+    string startStr, endStr;
+    Date startDate, endDate;
+
+    sysLog("Please enter your start and end date\n")
+    sysLog("Start date: ");
+    inputStr(startStr);
+    while (!Date::isDateValid(startStr)) {
+        sysErrLog("Wrong date format, please try again!!");
+        sysLog("Start date: ");
+        inputStr(startStr);
+    }
+
+    startDate = Date::parseDate(startStr);
+
+    sysLog("End date: ");
+    inputStr(endStr);
+    while (!Date::isDateValid(endStr)) {
+        sysErrLog("Wrong date format, please try again!!");
+        sysLog("End date: ");
+        inputStr(endStr);
+    }
+    endDate = Date::parseDate(endStr);
+
+    system->searchHouse(availableHouse, startDate, endDate);
+
+    int choice;
+
+    sysLog("Please enter the house's number you want to book");
+    sysLog("House no: ");
+    cin >> choice;
+    while (choice < 1 || choice > (availableHouse.size() + 1)) {
+        sysErrLog("Invalid house's number, please try again");
+        sysLog("House no: ");
+        cin >> choice;
+    }
+
+    House * house =  availableHouse[choice - 1];
+
+    Request request;
+    request.setRequester(this);
+    request.setHouse(house);
+    request.setStartDate(startDate);
+    request.setEndDate(endDate);
+
+    Request * newRequest  =  system->addRequestToSys(request);
+    if (newRequest == nullptr) {
+        sysErrLog("Failed to add request");
+        return false;
+    }
+
+    sysLogSuccess("Add request successfully")
+    sysLogInfo("Your request info: ");
+    this->setRequest(newRequest);
+    newRequest->showInfo();
+    return true;
+}
 
 //bool Member::denyRequest(vector<string> &ID) {
 //    if (ID.empty()) {

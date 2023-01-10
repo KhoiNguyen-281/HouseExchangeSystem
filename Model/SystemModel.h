@@ -147,8 +147,8 @@ public:
 
     bool hasRatings();
 
-    bool bookAccommodation(House *house, Date startingDate, Date endingDate);
-
+//    bool bookAccommodation(House *house, Date startingDate, Date endingDate);
+    bool bookAccommodation();
     virtual ~Member();
 };
 
@@ -376,7 +376,7 @@ public:
     void viewHouseDetail();
     void viewAllHouse();
 
-    static int getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints);
+    int getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints);
     void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
     void getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, string location, Date start_date, Date end_date);
     void getAvailableLocation();
@@ -401,7 +401,7 @@ public:
     void getAndShowRequest(vector<Request *> & requestList, House * house);
 
     //Function to search house
-    void searchHouse();
+    void searchHouse(vector<House *> &availableHouse, Date startDate, Date endDate);
     void getHouseByDate(vector<House*>& availableHouse, Date start, Date end);
     void getHouseByLoc(vector<House*>& house, string location);
     void getHouseWithCreditPoint(vector<House*> &house);

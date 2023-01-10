@@ -42,40 +42,7 @@ string getFilePath(const string &file) {
 
 
 
-bool Member::bookAccommodation(House *house, Date startingDate, Date endingDate)
-{
-    System *system = System::getInstance();
-    // Create a new request
-    Request request;
 
-    // Set request data.
-    request.setRequester(this);
-    request.setHouse(house);
-    request.setStartDate(startingDate);
-    request.setEndDate(endingDate);
-
-    // cout << "current ID = " << request.getId() << "\n";
-
-    //    request.showInfo();
-    // Add a new request to the system.
-    Request *newRequest = system->addRequestToSys(request);
-
-    //    newRequest->showInfo();
-
-    // Check if the request was added successfully.
-    if (newRequest != nullptr)
-    {
-        cout << "Request added successfully.\n";
-        setRequest(newRequest);
-
-        return true;
-    }
-    else
-    {
-        cout << "Request failed.\n";
-        return false;
-    }
-}
 
 
 
@@ -1140,9 +1107,9 @@ void System::getHouseWithCreditPoint(vector<House *> &availableHouse) {
 
 
 
-void System::searchHouse() {
+void System::searchHouse(vector<House *> &houseList, Date startDate, Date endDate) {
     string temp;
-    vector<House*> houseList;
+//    vector<House*> houseList;
     for (House & house : houseVect) {
         houseList.push_back(&house);
     }
@@ -1155,8 +1122,18 @@ void System::searchHouse() {
         inputStr(temp);
     }
     getHouseByLoc(houseList, temp);
-    for (House * house : houseList) {
-        house->showInfo();
+
+    getHouseByDate(houseList, startDate, endDate);
+
+    for (int i = 0; i < houseList.size(); i++) {
+        if (!isHouseSuitable(*houseList[i])) {
+            houseList.erase(houseList.begin() + i);
+        }
+    }
+
+    for (int i  = 0; i < houseList.size(); i++) {
+        sysLog("House no." << (i + 1));
+        houseList[i]->showInfo();
     }
 }
 
