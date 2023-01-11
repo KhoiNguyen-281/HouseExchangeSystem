@@ -144,8 +144,8 @@ public:
 //    bool denyRequest(vector<string> &ID);
 
 
-//    Rating * rateHouse();
-//    Rating * rateOccupier();
+    Rating * rateHouse();
+    Rating * rateOccupier();
 
     bool hasRatings();
 
@@ -202,7 +202,7 @@ public:
     bool hasRatings();
     float sumRating();
 
-    bool approveRequest();
+    bool approveRequest(vector<Request *>& requestList);
 
 
     // Friend function
@@ -395,7 +395,7 @@ public:
 
     bool removeHouse();
 
-    bool isHouseSuitable(House house);
+    bool isHouseSuitable(House house, Date start, Date end);
 
 
     //Function to get rating from system
@@ -408,12 +408,12 @@ public:
 
     //Function to search house
     void searchHouse(vector<House *> &availableHouse, string location,Date startDate, Date endDate);
-//    void getHouseByDate(vector<House*>& availableHouse, const Date& start, const Date& end);
-//    void getHouseByLoc(vector<House*>& house, const string& location);
+    void getHouseByDate(vector<House*>& availableHouse, const Date& start, const Date& end);
+    void getHouseByLoc(vector<House*>& house, const string& location);
     void getHouseWithCreditPoint(vector<House*> &house);
+    void getHouseByCreditInRange(vector<House*> &house, int creditFrom, int creditTo);
 
     void changeStatusOfRequestAuto();
-
 
     bool systemStart();
     bool systemShutdown();

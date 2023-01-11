@@ -18,6 +18,7 @@ using namespace std;
 #include "Model/RequestModel.cpp"
 #include "Controllers/HomepageController.h"
 #include "Controllers/HomepageController.cpp"
+#include "Controllers/OldMemAndRating.cpp"
 
 //using namespace HomepageComponent;
 
@@ -34,7 +35,10 @@ int main() {
 //    cout << system->currentDate().dateToString();
 
 //    system->getCurrentMem()->getHouse()->approveRequest();
-    system->getCurrentMem()->bookAccommodation();
-    system->systemShutdown();
+//    system->getCurrentMem()->bookAccommodation();
+//    system->systemShutdown();
+
+    oldMemberMenu(*system);
+//    searchHouseMenu(*system);
 
 }

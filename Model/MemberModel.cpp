@@ -36,7 +36,7 @@ void Member::showInfo() {
     sysLogInfo("Username: " + this->userName);
     sysLogInfo("Full name: " + this->fullName);
     sysLogInfo("Phone number: " + this->phoneNum);
-    sysLogInfo("Credit points: " + to_string(this->creditP) + "\n");
+    sysLogInfo("Credit points: " + to_string(this->creditP));
 
 
 //    sysLog("ID: " << this->id << "\n");
@@ -323,57 +323,67 @@ bool Member::updateInfo(){
 }
 
 //-------------------------------Rating function--------------------------//
-//Rating * Member::rateHouse() {
-//
-//    System * system = System::getInstance();
-//    string comment;
-//    double score;
-//
-//
-//    sysLog("How was your experience from -10 to 10 : ");
-//    cin >> score;
-//    while(score < -10 || score > 10) {
-//        sysLog("Invalid score, score must be in range from -10 to 10: ");
-//        cin >> score;
-//    }
-//
-//    sysLog("You can leave a comment for more details: ");
-//    inputStr(comment);
-//
-//    Rating rating;
-//    rating.setRater(this);
-//    rating.setHouse(this->getRequest()->getHouse());
-//    rating.setScore(score);
-//    rating.setComment(comment);
-//
-//    system->addRatingToSys(rating);
-//    return &rating;
-//}
+Rating * Member::rateHouse() {
 
-//Rating * Member::rateOccupier() {
-//    System * system = System::getInstance();
-//    string comment;
-//    double score;
-//
-//    sysLog("How would you rate your occupier from -10 to 10 : ");
-//    cin >> score;
-//    while (score < -10 || score > 10) {
-//        sysLog("Invalid score, score must be in range from -10 to 10: ");
-//        cin >> score;
+    System * system = System::getInstance();
+    string comment;
+    string score;
+
+
+    sysLog("How was your experience from -10 to 10 : ");
+    inputStr(score);
+//    if (!system->isInteger(score)) {
+//        sysErrLog("Invalid format number")
+//        return nullptr;
 //    }
 //
-//    sysLog("Leave a comment for more details: ");
-//    inputStr(comment);
-//
-//    Rating  rating;
-//    rating.setRater(this);
-//    rating.setOccupier(this->getRequest()->getRequester());
-//    rating.setScore(score);
-//    rating.setComment(comment);
-//
-//    system->addRatingToSys(rating);
-//    return &rating;
-//}
+
+    if(stod(score) < -10 || stod(score) > 10) {
+        sysErrLog("Invalid score, score must be in range from -10 to 10");
+        return nullptr;
+    }
+
+    sysLog("You can leave a comment for more details: ");
+    inputStr(comment);
+
+    Rating rating;
+    rating.setRater(this);
+    rating.setHouse(this->getRequest()->getHouse());
+    rating.setScore(stod(score));
+    rating.setComment(comment);
+
+    system->addRatingToSys(rating);
+    return &rating;
+}
+
+Rating * Member::rateOccupier() {
+    System * system = System::getInstance();
+    string comment;
+    string score;
+
+    sysLog("How would you rate your occupier from -10 to 10 : ");
+    inputStr(score);
+//    if (!system->isInteger(score)) {
+//        sysErrLog("Invalid format number");
+//        return nullptr;
+//    }
+    if (stod(score) < -10 || stod(score) > 10) {
+        sysLog("Invalid score, score must be in range from -10 to 10");
+        return nullptr;
+    }
+
+    sysLog("Leave a comment for more details: ");
+    inputStr(comment);
+
+    Rating  rating;
+    rating.setRater(this);
+    rating.setOccupier(this->getRequest()->getRequester());
+    rating.setScore(stod(score));
+    rating.setComment(comment);
+
+    system->addRatingToSys(rating);
+    return &rating;
+}
 
 bool Member::hasRatings() {
     System * system = System::getInstance();
@@ -442,32 +452,28 @@ bool Member::bookAccommodation() {
 
     sysLog("Please enter your demand city: ");
     inputStr(temp);
-    while(!system->checkLocation(temp)) {
+    if(!system->checkLocation(temp)) {
         sysErrLog("Your city is not available, please try again!!\n");
-        sysLog("Please enter your demand city: ");
-        inputStr(temp);
+        return false;
     }
 
     sysLog("Please enter your start and end date\n")
     sysLog("Start date: ");
     inputStr(startStr);
-    while (!Date::isDateValid(startStr)) {
+    if (!Date::isDateValid(startStr)) {
         sysErrLog("Wrong date format, please try again!!");
-        sysLog("Start date: ");
-        inputStr(startStr);
+        return false;
     }
 
     startDate = Date::parseDate(startStr);
 
     sysLog("End date: ");
     inputStr(endStr);
-    while (!Date::isDateValid(endStr)) {
+    if (!Date::isDateValid(endStr)) {
         sysErrLog("Wrong date format, please try again!!");
-        sysLog("End date: ");
-        inputStr(endStr);
+        return false;
     }
     endDate = Date::parseDate(endStr);
-
 
     system->getAvailableHouses(availableHouse, true, temp, startDate, endDate);
 
@@ -495,7 +501,7 @@ bool Member::bookAccommodation() {
 
     House * house =  availableHouse[choice - 1];
 
-    bool isEligible = system->isHouseSuitable(*house);
+    bool isEligible = system->isHouseSuitable(*house, startDate, endDate);
 
     if (!isEligible) {
         sysErrLog("Your credit points balance is not enough, please add more");

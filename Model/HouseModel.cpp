@@ -142,13 +142,10 @@ float House::sumRating() {
 }
 
 
-bool House::approveRequest(){
+bool House::approveRequest(vector<Request*> &requestList){
     System * system = System::getInstance();
     // Check request status
     Member * owner = system->getCurrentMem();
-
-    vector<Request*> requestList;
-    system->getAndShowRequest(requestList, this);
 
 //    if (request->getStatus() != PENDING)
 //    {
@@ -208,8 +205,6 @@ bool House::approveRequest(){
         sysErrLog("Cannot find request with ID " + strBuffer + " in your request list");
         return false;
     }
-
-
 }
 
 

@@ -1,27 +1,27 @@
-//#include "HomepageController.h"
-//#include "../Model/SystemModel.h"
-//#include "../Libs/Config.h"
-//#include <iostream>
-//#include "string"
-//
-//using std::string;
-//using std::cout;
-//using std::cin;
-//
-//#define logInfo(x) sysLog(x << newLine)
-//
-//#define newLine "\n";
-//#define DIVIDER "-----------------------------------------------"
-//
-//#define APP_HEADER "EEET2482/COSC2082 ASSIGNMENT"
-//#define APP_NAME "VACATION HOUSE EXCHANGE APPLICATION"
-//#define INSTRUCTOR "Instructors: Mr. Linh Tran & Phong Ngo"
-//#define GROUP_NAME "Group 4"
-//#define STUDENT1 "s3759804, NGUYEN HOANG MINH KHOI"
-//#define STUDENT2 ""
-//#define STUDENT3 ""
-//#define STUDENT4 ""
-//
+#include "HomepageController.h"
+#include "../Model/SystemModel.h"
+#include "../Libs/Config.h"
+#include <iostream>
+#include "string"
+
+using std::string;
+using std::cout;
+using std::cin;
+
+#define logInfo(x) sysLog(x << newLine)
+
+#define newLine "\n\n";
+#define DIVIDER "----------------------------------------------------------------\n"
+
+#define APP_HEADER "EEET2482/COSC2082 ASSIGNMENT"
+#define APP_NAME "VACATION HOUSE EXCHANGE APPLICATION"
+#define INSTRUCTOR "Instructors: Mr. Linh Tran & Phong Ngo"
+#define GROUP_NAME "Group 4"
+#define STUDENT1 "s3759804, NGUYEN HOANG MINH KHOI"
+#define STUDENT2 ""
+#define STUDENT3 ""
+#define STUDENT4 ""
+
 //using namespace HomepageComponent;
 //
 //namespace HomepageComponent{
