@@ -851,20 +851,19 @@ void System::viewMember() {
     if (isAdminLoggedin) {
         for (Member & member: memberVect) {
             member.showInfo();
+            skipline();
         }
         return;
     }
     if (currentMem != nullptr) {
         currentMem->showInfo();
-
         bool hasRatings = currentMem->hasRatings();
         if (hasRatings) {
             float ratingScore = currentMem->sumRating();
             sysLogSuccess("Rating: " << std::fixed << std::setprecision(2) << to_string(ratingScore));
             skipline();
         } else {
-            sysLog("You have not been rated yet. \n\n ");
-            skipline();
+            sysLog("You have not been rated yet.");
         }
         return;
     }
@@ -922,6 +921,7 @@ void System::viewAllHouse() {
     if (!isLoggedIn) {
         for (House & house : houseVect) {
             house.showInfo();
+            skipline()
         }
         return;
     } else if(isAdminLoggedin) {
@@ -938,6 +938,7 @@ void System::viewAllHouse() {
                 float ratingScore = house.sumRating();
                 sysLogSuccess("Rating: " << std::fixed << std::setprecision(2) << ratingScore);
             }
+            skipline();
         }
         return;
     }

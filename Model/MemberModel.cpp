@@ -38,7 +38,6 @@ void Member::showInfo() {
     sysLogInfo("Phone number: " + this->phoneNum);
     sysLogInfo("Credit points: " + to_string(this->creditP));
 
-
 //    sysLog("ID: " << this->id << "\n");
 //    sysLog("Username: " << this->userName <<"\n");
 //    sysLog("Full name: " << this->fullName <<"\n");

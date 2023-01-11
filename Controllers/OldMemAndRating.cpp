@@ -35,11 +35,8 @@ namespace HomepageComponent{
         sysLog("Do you want to continue ? \n")
         sysLog("0. Exit\n");
         sysLog("1. Continue\n");
-        if (choice == 0) {
-            return 0;
-        } else {
-            return choice;
-        }
+        choice = inputOption();
+        return choice;
     }
 
     void oldMemberMenu(System system) {
@@ -48,78 +45,74 @@ namespace HomepageComponent{
         sysLog("                       WELCOME BACK                      \n");
         sysLog(DIVIDER);
         skipLine()
-
-        while (inputOption() != 0) {
-
-
-//        sysLog(newline);
-
-            sysLog("0. Exit\n");
-            sysLog("1. View information\n");
-            sysLog("2. Register new house\n");
-            sysLog("3. Remove house\n");
-            sysLog("4. Book a house\n");
-            sysLog("5. Search houses\n");
-            sysLog("6. View request\n");
-            sysLog("7. Give feedback\n")
-
-            switch (inputOption()) {
-                case 0:
-                    break;
-                case 1:
-                    skipline();
-                    system.viewMember();
-                    continueOption(inputOption());
-                    break;
-                case 2:
-                    skipline();
-                    system.getCurrentMem()->registerHouse();
-                    continueOption(inputOption());
-                    break;
-                case 3:
-                    skipline();
-                    system.removeHouse();
-                    break;
-                case 4:
-                    skipline();
-                    system.getCurrentMem()->bookAccommodation();
-                    continueOption(inputOption());
-                    break;
-                case 5:
-                    skipline();
-                    searchHouseMenu(system);
-                    continueOption(inputOption());
-                    break;
-                case 6: {
-                    vector<Request *> requestList;
-                    skipline();
-                    system.getAndShowRequest(requestList, system.getCurrentMem()->getHouse());
-                    if (!system.hasRequest()) {
-                        sysLog("You have not received any request yet");
-                        continueOption(inputOption());
-                        break;
-                    }
-                    for (Request * request : requestList) {
-                        request->showInfo();
-                        skipline();
-                    }
-                    if (continueOption(inputOption()) == 0) {
-                        break;
-                    }
-                    system.getCurrentMem()->getHouse()->approveRequest(requestList);
-                    continueOption(inputOption());
+        sysLog("0. Exit\n");
+        sysLog("1. View information\n");
+        sysLog("2. Register new house\n");
+        sysLog("3. Remove house\n");
+        sysLog("4. Book a house\n");
+        sysLog("5. Search houses\n");
+        sysLog("6. View request\n");
+        sysLog("7. Give feedback\n")
+        int choice = inputOption();
+        switch (choice) {
+            case 0:
+                break;
+            case 1:
+                skipline();
+                system.viewMember();
+                break;
+            case 2:
+                skipline();
+                system.getCurrentMem()->registerHouse();
+                break;
+            case 3:
+                skipline();
+                system.removeHouse();
+                break;
+            case 4:
+                skipline();
+                system.getCurrentMem()->bookAccommodation();
+                break;
+            case 5:
+                skipline();
+                searchHouseMenu(system);
+                break;
+            case 6: {
+                vector<Request *> requestList;
+                skipline();
+                system.getAndShowRequest(requestList, system.getCurrentMem()->getHouse());
+                if (!system.hasRequest()) {
+                    sysLog("You have not received any request yet");
                     break;
                 }
-                case 7:
+                for (Request * request : requestList) {
+                    request->showInfo();
                     skipline();
-                    ratingMenu(system);
-                    break;
-                default:
-                    sysErrLog("Invalid option")
-                    continueOption(inputOption());
-                    break;
+                }
+
+                system.getCurrentMem()->getHouse()->approveRequest(requestList);
+                break;
             }
+            case 7:
+                skipline();
+                ratingMenu(system);
+                break;
+            default:
+                sysErrLog("Invalid option")
+                break;
         }
+
+        switch (continueOption(choice)) {
+            case 1:
+                oldMemberMenu(system);
+                break;
+            case 0:
+                break;
+            default:
+                sysErrLog("Invalid option")
+                break;
+        }
+
     }
 
     void searchHouseMenu(System system) {
@@ -129,7 +122,6 @@ namespace HomepageComponent{
         sysLog(DIVIDER);
         sysLog(newline);
 
-        while(inputOption()!= 0) {
             sysLog("0. Exit\n");
             sysLog("1. Search by location\n");
             sysLog("2. Search by date\n");
@@ -140,7 +132,8 @@ namespace HomepageComponent{
             vector<House *> houseList;
             string location, dateTemp;
             Date startDate, endDate;
-            switch (inputOption()) {
+            int choice = inputOption();
+            switch (choice) {
                 case 0:
                     break;
                 case 1:
@@ -151,19 +144,17 @@ namespace HomepageComponent{
                     inputStr(location);
                     if (!system.checkLocation(location)) {
                         sysErrLog("Invalid location \n");
-                        continueOption(inputOption());
                         break;
                     }
                     system.getHouseByLoc(houseList, location);
                     if (houseList.empty()) {
                         sysLog("There are not any available house with location " + location);
-                        continueOption(inputOption());
                         break;
                     }
                     for (House *house: houseList) {
                         house->showInfo();
+                        skipline();
                     }
-                    continueOption(inputOption());
                     break;
                 case 2:
                     skipline();
@@ -172,7 +163,6 @@ namespace HomepageComponent{
                     inputStr(dateTemp);
                     if (!Date::isDateValid(dateTemp)) {
                         sysErrLog("Invalid date format!!!");
-                        continueOption(inputOption());
                         break;
                     }
 
@@ -183,7 +173,6 @@ namespace HomepageComponent{
                     inputStr(dateTemp);
                     if (!Date::isDateValid(dateTemp)) {
                         sysErrLog("Invalid date format!!!");
-                        continueOption(inputOption());
                         break;
                     }
 
@@ -194,28 +183,26 @@ namespace HomepageComponent{
                         sysLog("There are not any available houses from "
                                + startDate.dateToString() + " to "
                                + endDate.dateToString() + "\n");
-                        continueOption(inputOption());
                         break;
                     }
 
                     for (House *house: houseList) {
                         house->showInfo();
+                        skipline();
                     }
-                    continueOption(inputOption());
                     break;
                 case 3:
                     skipline();
                     system.getHouseWithCreditPoint(houseList);
                     if (houseList.empty()) {
                         sysLog("There are not any available with your credit points\n");
-                        continueOption(inputOption());
                         break;
                     }
 
                     for (House * house : houseList) {
                         house->showInfo();
+                        skipline();
                     }
-                    continueOption(inputOption());
                     break;
                 case 4: {
                     string pointsFrom, pointsTo;
@@ -225,7 +212,6 @@ namespace HomepageComponent{
                     inputStr(pointsFrom);
                     if (!system.isInteger(pointsFrom)) {
                         sysErrLog("Invalid format\n");
-                        continueOption(inputOption());
                         break;
                     }
 
@@ -233,7 +219,6 @@ namespace HomepageComponent{
                     inputStr(pointsTo);
                     if (!system.isInteger(pointsTo)) {
                         sysErrLog("Invalid format\n");
-                        continueOption(inputOption());
                         break;
                     }
 
@@ -243,7 +228,6 @@ namespace HomepageComponent{
                         sysLog("There are not any house available from "
                                        << Colors::LIGHT_YELLOW_CLS << pointsFrom << " to " << pointsTo << Colors::RESET
                                        << endl);
-                        continueOption(inputOption());
                         break;
                     }
 
@@ -251,19 +235,25 @@ namespace HomepageComponent{
                         house->showInfo();
                         skipline();
                     }
-                    continueOption(inputOption());
                     break;
                 }
                 case 5:
                     skipline();
                     system.viewAllHouse();
-                    continueOption(inputOption());
                     break;
                 default:
                     sysErrLog("Invalid option!!!")
-                    continueOption(inputOption());
                     break;
             }
+        switch (continueOption(choice)) {
+            case 1:
+                searchHouseMenu(system);
+                break;
+            case 0:
+                break;
+            default:
+                sysErrLog("Invalid option")
+                break;
         }
     }
 
@@ -274,28 +264,33 @@ namespace HomepageComponent{
         sysLog(DIVIDER);
         skipline()
 
-        while (inputOption() != 0) {
             sysLog("0. Exit\n");
             sysLog("1. Rate occupier\n");
             sysLog("2. Rate house\n");
-
-            switch (inputOption()) {
-                case 0:
-                    break;
-                case 1:
-                    skipline();
-                    system.getCurrentMem()->rateOccupier();
-                    continueOption(inputOption());
-                    break;
-                case 2:
-                    system.getCurrentMem()->rateHouse();
-                    continueOption(inputOption());
-                    break;
-                default:
-                    sysErrLog("Invalid option");
-                    continueOption(inputOption());
-                    break;
-            }
+        int choice  = inputOption();
+        switch (choice) {
+            case 0:
+                break;
+            case 1:
+                skipline();
+                system.getCurrentMem()->rateOccupier();
+                break;
+            case 2:
+                system.getCurrentMem()->rateHouse();
+                break;
+            default:
+                sysErrLog("Invalid option");
+                break;
+        }
+        switch (continueOption(choice)) {
+            case 1:
+                ratingMenu(system);
+                break;
+            case 0:
+                break;
+            default:
+                sysErrLog("Invalid option");
+                break;
         }
     }
 
