@@ -14,7 +14,7 @@ namespace HomepageComponent {
     void registerPage();
     void loginPage();
     void newMemberMenu();
-    void displayGuestHomepage();
+    void displayGuestHomepage(Guest guest);
 
     void oldMemberMenu();
     void searchHouseMenu();

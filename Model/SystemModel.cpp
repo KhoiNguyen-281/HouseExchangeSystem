@@ -6,9 +6,10 @@
 #define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
 #define formatErr(x) cout << "Error: Invalid " << x << " format \n";
 #define successMess(x, y, z) cout << x << " " << y << " " << z << "\n";
-#define skipline() cout << "\n\n";
+#define skipline() cout << "\n";
 
 #include "SystemModel.h"
+#include "iostream"
 #include <random>
 #include "fstream"
 #include <sstream>
@@ -156,11 +157,11 @@ Member *System::getCurrentMem() {
     return currentMem;
 }
 
-bool System::isUser() const{
+bool System::isUser(){
     return isLoggedIn;
 }
 
-bool System::isAdmin() const{
+bool System::isAdmin(){
     return isAdminLoggedin;
 }
 
@@ -171,10 +172,10 @@ string System::generateID(int &count) {
     return ID;
 }
 
-Member * System::registerMember(const Member& member) {
+Member * System::registerMember(Member member) {
     Member * newMem = addMemberToSys(member);
     if (newMem == nullptr) {
-        sysLog("Sign up failed, please try again! \n");
+        sysErrLog("Sign up failed, please try again! \n");
         return newMem;
     }
     setCurrentMem(newMem);
@@ -199,7 +200,7 @@ Member *System::login(string username, string password) {
         }
     }
 
-    for (auto & i : memberVect) {
+    for (Member & i : memberVect) {
         if (i.getUserName() == username) {
             if (i.getPassword() == password) {
                 setCurrentMem(&i);
@@ -207,9 +208,10 @@ Member *System::login(string username, string password) {
 
                 sysLogSuccess("\nLogin successfully \n ");
 
-                if (hasRequest()) {
-                    sysLog("You have received new request!!!\n");
-                }
+//                if (hasRequest()) {
+//                    sysLog("You have received new request!!!\n");
+//                }
+
                 return &i;
             } else {
                 sysErrLog("Wrong password, please try again")
@@ -233,7 +235,7 @@ bool System::logout() {
 
 //---------------- Add data to system---------------------//
 Member * System::addMemberToSys(Member member) {
-    for (auto & i : memberVect) {
+    for (Member & i : memberVect) {
         if (i.getUserName() == member.getUserName()) {
             sysErrLog("This username is already existed \n");
             return nullptr;
@@ -421,7 +423,7 @@ bool System::saveHouse() {
 }
 
 bool System::saveRequest() {
-    std::fstream file;
+    std::ofstream file;
     string filePath = getFilePath(REQUESTS);
 
     file.open(filePath, std::ios::out);
@@ -444,7 +446,7 @@ bool System::saveRequest() {
 }
 
 bool System::saveRating() {
-    std::fstream file;
+    std::ofstream file;
     string filePath = getFilePath(RATINGS);
 
     file.open(filePath, std::ios::out);
@@ -453,7 +455,7 @@ bool System::saveRating() {
         return false;
     }
 
-    for (const Rating& rating : ratingVect) {
+    for (Rating& rating : ratingVect) {
         file << rating.getRater()->getId() << ","
              << rating.getHouse()->getId() << ","
              << (rating.getOccupier() != nullptr ? rating.getOccupier()->getId() : "NONE") << ","
@@ -480,7 +482,7 @@ bool System::changePassword(string newpwd, string oldpwd) {
 
 //-------------------Load data from file------------------//
 bool System::loadMember() {
-    std::fstream file;
+    std::ifstream file;
     string filePath = getFilePath(MEMBERS);
 
     file.open(filePath, std::ios::in);
@@ -519,14 +521,13 @@ bool System::loadMember() {
     }
 
     countMem = std::stoi(memberVect.back().getId());
-
     file.close();
     sysLogSuccess("Loaded " + std::to_string(memberVect.size()) + " member(s)");
     return true;
 }
 
 bool System::loadHouse() {
-    std::fstream file;
+    std::ifstream file;
     string filePath = getFilePath(HOUSES);
 
     file.open(filePath, std::ios::in);
@@ -581,7 +582,7 @@ bool System::loadHouse() {
 }
 
 bool System::loadRating() {
-    std::fstream file;
+    std::ifstream file;
     string filePath = getFilePath(RATINGS);
 
     file.open(filePath, std::ios::in);
@@ -650,7 +651,7 @@ bool System::loadRating() {
 }
 
 bool System::loadRequest() {
-    std::fstream file;
+    std::ifstream file;
     string filePath = getFilePath(REQUESTS);
 
     file.open(filePath, std::ios::in);
@@ -1063,7 +1064,7 @@ bool System::systemStart() {
 }
 
 bool System::systemShutdown() {
-    sysLog("Saving data....\n");
+    sysLog("\nSaving data....\n");
 
     if (!saveMember()) {
         sysErrLog("Failed to save members!!!");
@@ -1084,9 +1085,7 @@ bool System::systemShutdown() {
         sysLog("Failed to save requests!!!");
         return false;
     }
-
     sysLogSuccess("Saved data successfully ");
-    skipline();
     sysLog("Shutting down.......");
     skipline();
     return true;
@@ -1159,6 +1158,7 @@ void System::changeStatusOfRequestAuto() {
         }
     }
 }
+
 
 
 

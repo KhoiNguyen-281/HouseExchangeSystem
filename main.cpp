@@ -24,14 +24,15 @@ using namespace std;
 int main() {
 //    std::system("cls");
     System * system = System::getInstance();
-//    bool isLoggedIn = system->isUser();
-//    bool isAdmin = system->isAdmin();
+    bool isLoggedIn = system->isUser();
+    bool isAdmin = system->isAdmin();
     bool isStarted = system->systemStart();
 
-    if (!isStarted) {
-        throw std::runtime_error("System failed to start correctly.");
-        return 1;
-    }
+//    Guest guest;
+//    if (!isStarted) {
+//        throw std::runtime_error("System failed to start correctly.");
+//        return 1;
+//    }
 //    Member * member = Guest::registerNewMember();
 //    system->registerMember(*member);
 //    cout << system->currentDate().dateToString();
@@ -44,7 +45,20 @@ int main() {
 //    Guest::login();
 //    cout << member->getUserName() << "----" << system->getCurrentMem()->getUserName();
 
+    displayAppHomepage();
     displayStartPage();
+
+//    guest.login();
+//    guest.login();
+
+    bool isShutDown = system->systemShutdown();
+
+    delete system;
+
+    if (!isShutDown) {
+        throw std::runtime_error("System failed to shutdown correctly.");
+        return 2;
+    }
 //    searchHouseMenu(*system);
 
 }

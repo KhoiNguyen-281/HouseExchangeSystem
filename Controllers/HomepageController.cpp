@@ -22,38 +22,17 @@ using std::cin;
 using namespace HomepageComponent;
 
 namespace HomepageComponent{
-    System * system = System::getInstance();
-//    bool isUser = system->isUser();
-//    bool isAdmin = system->isAdmin();
 
-
-
-    void loginPage() {
-        Guest guest;
-        sysLog("You are logging in\n");
-        guest.login();
-        if (system->isAdmin()) {
-            adminPage();
-        } else if (system->isUser() && system->hasRequest()) {
-            oldMemberMenu();
-        } else {
-            newMemberMenu();
-        }
-    }
-
-//    void registerPage() {
-//        sysLog("You are registering as new member\n")
-//        Member * newMem = Guest::registerNewMember();
-//        if (newMem == nullptr) {
-//            return;
-//        }
-//    }
+//    Member * member = system->getCurrentMem();
 
     int inputOption() {
-        int option;
+        string option;
         sysLog("Please enter your option: ");
-        cin >> option;
-        return option;
+        inputStr(option)
+        if (!System::isInteger(option)) {
+            return 10;
+        }
+        return stoi(option);
     }
 
     int continueOption(int choice) {
@@ -65,7 +44,7 @@ namespace HomepageComponent{
         return choice;
     }
 
-    void displayStartPage() {
+    void displayAppHomepage() {
         logInfo(APP_HEADER);
         logInfo(APP_NAME);
         logInfo(INSTRUCTOR);
@@ -74,9 +53,14 @@ namespace HomepageComponent{
         logInfo(STUDENT2);
         logInfo(STUDENT3);
         logInfo(STUDENT4);
+    };
 
-        skipline();
-        sysLog("Use the app as 1.Guest 2.Member 3.Admin 0.Shutdown\n");
+    void displayStartPage() {
+        System * system = System::getInstance();
+//        system->setCurrentMem(nullptr);
+//        Guest guest;
+        Guest guest;
+        sysLog("Use the app as 1.Guest  2.Member  3.Admin  0.Shutdown\n");
         int choice = inputOption();
         switch (choice) {
             case 0:
@@ -84,27 +68,23 @@ namespace HomepageComponent{
                 delete system;
                 break;
             case 1:
-                skipline();
-                displayGuestHomepage();
+//                skipline();
+                displayGuestHomepage(guest);
                 break;
-            case 2:
-                skipline();
-                cin.ignore();
-                loginPage();
+            case 2: {
+//                skipline();
+                oldMemberMenu();
                 break;
+            }
             case 3:
-                cin.ignore();
-                loginPage();
-                if (system->isAdmin()) {
-                    adminPage();
-                    break;
-                }
-                sysErrLog("Wrong admin authentication")
+                skipline();
+                adminPage();
                 break;
         }
     }
 
-    void displayGuestHomepage() {
+    void displayGuestHomepage(Guest guest) {
+        System * system = System::getInstance();
         sysLog(DIVIDER);
         sysLog("                       WELCOME TO OUR SYSTEM                      \n");
         sysLog(DIVIDER);
@@ -112,14 +92,13 @@ namespace HomepageComponent{
         sysLog("0. Exit\n");
         sysLog("1. View all houses\n");
         sysLog("2. Register\n");
-        sysLog("3. Login\n";);
         int choice = inputOption();
-
-        string option;
-
         switch (choice) {
             case 0:
-                exit(1);
+                skipline();
+                system->logout();
+                displayStartPage();
+                break;
             case 1: {
                 skipline();
                 system->viewAllHouse();
@@ -127,31 +106,29 @@ namespace HomepageComponent{
             }
             case 2:{
                 skipline();
-                cin.ignore();
                 sysLog("You are registering as new member\n")
-                Member * member = Guest::registerNewMember();
-//                system->setCurrentMem(newMember);
-                sysLog("Please exit and login again to use member features")
-                break;
-            }
-            case 3: {
-                skipline();
-                cin.ignore();
-                loginPage();
+                Guest::registerNewMember();
+                system->getCurrentMem();
+                if (system->isUser()) {
+                    newMemberMenu();
+//                    break;
+                }
+//                sysErrLog("ERROR");
                 break;
             }
             default:
                 skipline();
                 sysErrLog("Invalid option")
-                displayGuestHomepage();
+                displayGuestHomepage(guest);
                 break;
         }
 
         switch (continueOption(choice)) {
             case 1:
-                displayGuestHomepage();
+                displayGuestHomepage(guest);
                 break;
             case 0:
+                delete &guest;
                 displayStartPage();
                 break;
             default:
@@ -162,6 +139,12 @@ namespace HomepageComponent{
     }
 
     void adminPage(){
+        System * system = System::getInstance();
+        Guest::login();
+        if (!system->isAdmin()) {
+            sysErrLog("Wrong admin authentication")
+            return;
+        }
         skipLine()
         sysLog(DIVIDER);
         sysLog("                       WELCOME BACK ADMIN                      \n");
@@ -177,6 +160,8 @@ namespace HomepageComponent{
 
         switch (choice){
             case 0:
+                system->logout();
+                displayStartPage();
                 break;
             case 1:
                 /// view Information
@@ -197,6 +182,7 @@ namespace HomepageComponent{
                 adminPage();
                 break;
             case 0:
+                system->logout();
                 displayStartPage();
                 break;
             default:
@@ -207,9 +193,15 @@ namespace HomepageComponent{
     }
 
     void oldMemberMenu() {
+        System * system = System::getInstance();
+        Member * member = Guest::login();
+//        system->getCurrentMem();
+////        if (member == nullptr) {
+////            return;
+////        }
         skipLine()
         sysLog(DIVIDER);
-        sysLog("                       WELCOME BACK                      \n");
+        sysLog("                       WELCOME BACK OUR MEMBER                     \n");
         sysLog(DIVIDER);
         skipLine()
         sysLog("0. Exit\n");
@@ -223,6 +215,7 @@ namespace HomepageComponent{
         int choice = inputOption();
         switch (choice) {
             case 0:
+                member->logout();
                 displayStartPage();
                 break;
             case 1:
@@ -231,18 +224,19 @@ namespace HomepageComponent{
                 break;
             case 2:
                 skipline();
-                cin.ignore();
-                system->getCurrentMem()->registerHouse();
+                if (member->getHouse() == nullptr) {
+                    member->registerHouse();
+                    break;
+                }
+                sysLog("You have already registered a house, please remove before adding new house\n")
                 break;
             case 3:
                 skipline();
-                cin.ignore();
                 system->removeHouse();
                 break;
             case 4:
                 skipline();
-                cin.ignore();
-                system->getCurrentMem()->bookAccommodation();
+                member->bookAccommodation();
                 break;
             case 5:
                 skipline();
@@ -251,7 +245,7 @@ namespace HomepageComponent{
             case 6: {
                 vector<Request *> requestList;
                 skipline();
-                system->getAndShowRequest(requestList, system->getCurrentMem()->getHouse());
+                system->getAndShowRequest(requestList, member->getHouse());
                 if (!system->hasRequest()) {
                     sysLog("You have not received any request yet");
                     break;
@@ -260,8 +254,7 @@ namespace HomepageComponent{
                     request->showInfo();
                     skipline();
                 }
-                cin.ignore();
-                system->getCurrentMem()->getHouse()->approveRequest(requestList);
+                member->getHouse()->approveRequest(requestList);
                 break;
             }
             case 7:
@@ -279,6 +272,7 @@ namespace HomepageComponent{
                 oldMemberMenu();
                 break;
             case 0:
+                member->logout();
                 displayStartPage();
                 break;
             default:
@@ -290,6 +284,7 @@ namespace HomepageComponent{
     }
 
     void searchHouseMenu() {
+        System * system = System::getInstance();
         sysLog(newline);
         sysLog(DIVIDER);
         sysLog("                       SEARCH HOUSE MENU                      \n");
@@ -314,7 +309,6 @@ namespace HomepageComponent{
                 skipline();
                 system->getAvailableLocation();
                 sysLog("Please enter your demand location: ");
-                cin.ignore();
                 inputStr(location);
                 if (!system->checkLocation(location)) {
                     sysErrLog("Invalid location \n");
@@ -332,7 +326,6 @@ namespace HomepageComponent{
                 break;
             case 2:
                 skipline();
-                cin.ignore();
                 sysLog("Please enter start and end date with format (dd/MM/yyyy)\n");
                 sysLog("Start date: ");
                 inputStr(dateTemp);
@@ -382,7 +375,6 @@ namespace HomepageComponent{
             case 4: {
                 string pointsFrom, pointsTo;
                 skipline();
-                cin.ignore();
                 sysLog("Please enter your demand range of credit points \n");
                 sysLog("Credit points from: ");
                 inputStr(pointsFrom);
@@ -434,6 +426,8 @@ namespace HomepageComponent{
     }
 
     void ratingMenu() {
+        System * system = System::getInstance();
+        Member * member = system->getCurrentMem();
         skipline()
         sysLog(DIVIDER);
         sysLog("                       FEEDBACK MENU                      \n");
@@ -449,10 +443,10 @@ namespace HomepageComponent{
                 break;
             case 1:
                 skipline();
-                system->getCurrentMem()->rateOccupier();
+                member->rateOccupier();
                 break;
             case 2:
-                system->getCurrentMem()->rateHouse();
+                member->rateHouse();
                 break;
             default:
                 sysErrLog("Invalid option");
@@ -463,6 +457,7 @@ namespace HomepageComponent{
                 ratingMenu();
                 break;
             case 0:
+//                oldMemberMenu(guest);
                 break;
             default:
                 sysErrLog("Invalid option");
@@ -470,14 +465,15 @@ namespace HomepageComponent{
         }
     }
 
-
-
     void newMemberMenu() {
+        System * system = System::getInstance();
+        Member * member = system->getCurrentMem();
         skipLine()
         sysLog(DIVIDER);
-        sysLog("                       WELCOME TO OUR SYSTEM                      \n");
+        sysLog("                       WELCOME OUR NEW MEMBER                      \n");
         sysLog(DIVIDER);
         skipLine()
+
         sysLog("0. Exit\n");
         sysLog("1. View Information\n");
         sysLog("2. Register house\n");
@@ -485,9 +481,10 @@ namespace HomepageComponent{
         sysLog("4. Search houses\n");
 
         int choice  = inputOption();
-
         switch (choice) {
             case 0:
+                member->logout();
+                displayStartPage();
                 break;
             case 1: {
                 skipline();
@@ -496,12 +493,12 @@ namespace HomepageComponent{
             }
             case 2: {
                 skipline();
-                system->getCurrentMem()->registerHouse();
+                member->registerHouse();
                 break;
             }
             case 3: {
                 skipline();
-                system->getCurrentMem()->bookAccommodation();
+                member->bookAccommodation();
                 break;
             }
             case 4:
@@ -518,6 +515,8 @@ namespace HomepageComponent{
                 newMemberMenu();
                 break;
             case 0:
+                member->logout();
+                displayStartPage();
                 break;
             default:
                 sysErrLog("Invalid option");

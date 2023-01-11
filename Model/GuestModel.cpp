@@ -34,23 +34,32 @@ Member * Guest::registerNewMember() {
 //    cout << "Enter phone number: ";
     inputStr(phoneNum);
 
+//    string id;
+//    string userName;
+//    string fullName;
+//    string phoneNum;
+//    string password;
+//    int creditP = CREDIT_POINT;
+//    House *house = nullptr;
+//    Request *request = nullptr;
 
     member.setUserName(userName);
     member.setFullName(fullName);
     member.setPhoneNum(phoneNum);
     member.setPassword(password);
+    member.setHouse(nullptr);
+    member.setRequest(nullptr);
 
     return system->registerMember(member);
 }
 
-Member * Guest::login() {
+Member* Guest::login() {
     string username;
     string password;
     sysLog("Please enter your username and password to login \n")
     sysLog("Username: ");
-    getline(cin, username);
+    inputStr(username);
     sysLog("Password: ");
     inputStr(password)
-    Member * member = System::getInstance()->login(username, password);
-    return member;
+    return System::getInstance()->login(username, password);;
 }
