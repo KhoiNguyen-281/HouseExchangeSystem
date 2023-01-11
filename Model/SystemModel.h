@@ -202,7 +202,7 @@ public:
     bool hasRatings();
     float sumRating();
 
-    bool approveRequest();
+    bool approveRequest(vector<Request *>& requestList);
 
 
     // Friend function

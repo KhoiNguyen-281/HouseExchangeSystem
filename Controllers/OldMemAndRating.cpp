@@ -103,10 +103,15 @@ namespace HomepageComponent{
                         request->showInfo();
                         skipline();
                     }
+                    if (continueOption(inputOption()) == 0) {
+                        break;
+                    }
+                    system.getCurrentMem()->getHouse()->approveRequest(requestList);
                     continueOption(inputOption());
                     break;
                 }
                 case 7:
+                    skipline();
                     ratingMenu(system);
                     break;
                 default:
@@ -252,9 +257,11 @@ namespace HomepageComponent{
                 case 5:
                     skipline();
                     system.viewAllHouse();
+                    continueOption(inputOption());
                     break;
                 default:
                     sysErrLog("Invalid option!!!")
+                    continueOption(inputOption());
                     break;
             }
         }
@@ -267,27 +274,30 @@ namespace HomepageComponent{
         sysLog(DIVIDER);
         skipline()
 
-        sysLog("0. Exit\n");
-        sysLog("1. Rate occupier\n");
-        sysLog("2. Rate house\n");
+        while (inputOption() != 0) {
+            sysLog("0. Exit\n");
+            sysLog("1. Rate occupier\n");
+            sysLog("2. Rate house\n");
 
-        switch (inputOption()) {
-            case 0:
-                break;
-            case 1:
-                system.getCurrentMem()->rateOccupier();
-                break;
-            case 2:
-                system.getCurrentMem()->rateHouse();
-                break;
-            default:
-                sysErrLog("Invalid option");
-                break;
+            switch (inputOption()) {
+                case 0:
+                    break;
+                case 1:
+                    skipline();
+                    system.getCurrentMem()->rateOccupier();
+                    continueOption(inputOption());
+                    break;
+                case 2:
+                    system.getCurrentMem()->rateHouse();
+                    continueOption(inputOption());
+                    break;
+                default:
+                    sysErrLog("Invalid option");
+                    continueOption(inputOption());
+                    break;
+            }
         }
     }
 
-    void requestMenu(System system) {
-
-    }
 }
 

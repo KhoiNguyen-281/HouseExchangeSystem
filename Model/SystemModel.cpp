@@ -914,6 +914,11 @@ void System::viewHouseDetail() {
 }
 
 void System::viewAllHouse() {
+    if (houseVect.empty()) {
+        sysLog("There are not any house in the system")
+        return;
+    }
+
     if (!isLoggedIn) {
         for (House & house : houseVect) {
             house.showInfo();
