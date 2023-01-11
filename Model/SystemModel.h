@@ -395,7 +395,7 @@ public:
 
     bool removeHouse();
 
-    bool isHouseSuitable(House house);
+    bool isHouseSuitable(House house, Date start, Date end);
 
 
     //Function to get rating from system
@@ -414,7 +414,6 @@ public:
     void getHouseByCreditInRange(vector<House*> &house, int creditFrom, int creditTo);
 
     void changeStatusOfRequestAuto();
-
 
     bool systemStart();
     bool systemShutdown();
