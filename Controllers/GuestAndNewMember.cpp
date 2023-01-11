@@ -1,5 +1,118 @@
-// #include "HomepageController.h"
-// #include "../Model/SystemModel.h"
+//
+// Created by Macbook Pro Silver on 11/01/2023.
+//
+#include "HomepageController.h"
+#include "../Model/SystemModel.h"
+
+using namespace HomepageComponent;
+
+namespace HomepageComponent
+{
+    void newMemberMenu(Member *member)
+    {
+        System *system = System::getInstance();
+        cout << "\n0. Exit\n"
+                "1. View Information\n"
+                "2. List available houses.\n"
+                "3. Unlist current house\n"
+                "4. Request new house.\n"
+                "5. Search available house.\n";
+
+        string option;
+        cout << "Enter your option: ";
+        getline(cin, option);
+
+        switch (std::stoi(option))
+        {
+        case 1:
+        {
+            member->showInfo();
+            newMemberMenu(member);
+            break;
+        }
+        case 2:
+        {
+            member->registerHouse();
+            newMemberMenu(member);
+            break;
+        }
+        case 3:
+        {
+            system->removeHouse();
+            newMemberMenu(member);
+            break;
+        }
+        case 4:
+        {
+            member->bookAccommodation();
+            newMemberMenu(member);
+            break;
+        }
+        case 5:
+        {
+            system->viewAllHouse();
+            newMemberMenu(member);
+            break;
+        }
+        default:
+        {
+            break;
+        }
+        }
+    }
+    void displayGuestHomepage()
+    {
+        cout << "0. Exit\n"
+                "1. View all houses\n"
+                "2. Register\n"
+                "3. Login\n";
+        string option;
+        System *system = System::getInstance();
+        Guest *guest;
+        cout << "Enter your option: ";
+        getline(cin, option);
+        switch (std::stoi(option))
+        {
+        case 0:
+            exit(1);
+        case 1:
+        {
+            system->viewAllHouse();
+            displayGuestHomepage();
+            break;
+        }
+        case 2:
+        {
+            Member *registeredMember = Guest::registerNewMember();
+
+            if (!registeredMember->getId().empty())
+            {
+                cout << "Welcome to House Exchange System, you became new member of our business.\n";
+                newMemberMenu(registeredMember);
+            }
+            break;
+        }
+        case 3:
+        {
+            Member *member = Guest::login();
+
+            if (member)
+            {
+                newMemberMenu(member);
+            }
+            else
+            {
+                cout << "Sorry, your account is not exist, please sign up to become new member.\n";
+                displayGuestHomepage();
+            }
+        }
+        default:
+            cout << "Invalid option, try again !!!!\n";
+            displayGuestHomepage();
+            break;
+        }
+    }
+}
 
 // #include "../Libs/Config.h"
 // #include <iostream>
