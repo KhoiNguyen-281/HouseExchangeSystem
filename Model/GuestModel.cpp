@@ -15,6 +15,7 @@ Guest::Guest() = default;
 Guest::~Guest() = default;
 
 Member * Guest::registerNewMember() {
+    System * system = System::getInstance();
     Member member;
     string userName;
     string fullName;
@@ -22,16 +23,16 @@ Member * Guest::registerNewMember() {
     string password;
 
     sysLog("Enter username: ");
-    getline(cin, userName);
+    inputStr(userName);
 
     sysLog("Enter password: ")
 //    cout << "Enter password: ";
-    getline(cin, password);
+    inputStr(password);
     sysLog("Enter full name: ");
-    getline(cin, fullName);
+    inputStr(fullName);
     sysLog("Enter phone number: ");
 //    cout << "Enter phone number: ";
-    getline(cin, phoneNum);
+    inputStr(phoneNum);
 
 
     member.setUserName(userName);
@@ -39,33 +40,17 @@ Member * Guest::registerNewMember() {
     member.setPhoneNum(phoneNum);
     member.setPassword(password);
 
-    return System::getInstance()->registerMember(member);
+    return system->registerMember(member);
 }
 
 Member * Guest::login() {
     string username;
     string password;
-    bool notFound = true;
-
     sysLog("Please enter your username and password to login \n")
     sysLog("Username: ");
     getline(cin, username);
     sysLog("Password: ");
     inputStr(password)
     Member * member = System::getInstance()->login(username, password);
-    int count = 1;
-    while (member == nullptr) {
-        if (count == 4) {
-            sysErrLog("Wrong password 4 times, try again later");
-            break;
-        } else {
-            sysErrLog("Password does not match, please try again");
-            sysLog("Password: ");
-            inputStr(password);
-            member = System::getInstance()->login(username, password);
-            count +=1;
-        }
-    }
-
     return member;
 }

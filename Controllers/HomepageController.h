@@ -5,60 +5,26 @@
 #ifndef SED_GROUP_HOMEPAGECONTROLLER_H
 #define SED_GROUP_HOMEPAGECONTROLLER_H
 
-
 #include "../Model/SystemModel.h"
 
 namespace HomepageComponent {
-    int optionInput();
+    int inputOption();
+    int continueOption(int choice);
 
-    void displayStartPage(); //
-
-//    Guest menu
-    void displayGuestHomepage();
-    // 0. Exit
-    //1. viewAllHouse
-    //2. register -> login page
-    //3. login
-
-    // wrong, navigate to signup page
-
-//    Member menu (new)
+    void registerPage();
+    void loginPage();
     void newMemberMenu();
-    //0.  Exit
-    //1.  View Information
-    //2. List available houses. --> call registerNewHouse
-    //	3. Unlist current house -- call removeHouse
-    //	4. Request new house. --> call bookAccommodation
-    //	5. Search available house. --> display available house;
+    void displayGuestHomepage();
 
     void oldMemberMenu();
-    //0.  Exit
-    //1.  View Information
-    //2. List available houses. --> call registerNewHouse
-    //	3. Unlist current house -- call removeHouse
-    //	4. Request new house. --> call bookAccommodation
-    //	5. Search available house. --> display available house;
-    // 6. View request (approve, deny);
-    // 7. Give feedback (occupier, house)
-
+    void searchHouseMenu();
     void ratingMenu();
-    // 0. Exit
-    // 1. Rate occupier
-    // 2. Rate house
 
-
-
-//    string fieldInput(std::string field);
-    void displayRequestOption(Member *member, House* requestHouse);
-    void displayHousesOption(Member* member);
-    void displaySpecificHouseOption(); 
-    void displayLocationOption();
-
-
-    void displayAdminHomepage();
+    void adminPage();
     void displayAppHomepage();
+    void displayStartPage(); //
+
 
 };
 
-
-#endif //SED_GROUP_HOMEPAGECONTROLLER_H
+#endif // SED_GROUP_HOMEPAGECONTROLLER_H

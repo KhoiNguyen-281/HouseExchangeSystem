@@ -344,7 +344,7 @@ public:
     string generateID(int &count);
 
     // Authentication functions
-    Member *registerMember(Member member);
+    Member *registerMember(const Member& member);
     Member *login(string username, string password);
     bool logout();
 

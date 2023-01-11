@@ -18,27 +18,33 @@ using namespace std;
 #include "Model/RequestModel.cpp"
 #include "Controllers/HomepageController.h"
 #include "Controllers/HomepageController.cpp"
-#include "Controllers/OldMemAndRating.cpp"
-
 //using namespace HomepageComponent;
 
 
 int main() {
-
+//    std::system("cls");
     System * system = System::getInstance();
-    bool isLoggedIn = system->isUser();
-    bool isAdmin = system->isAdmin();
+//    bool isLoggedIn = system->isUser();
+//    bool isAdmin = system->isAdmin();
+    bool isStarted = system->systemStart();
 
-    system->systemStart();
-    Guest::login();
-
+    if (!isStarted) {
+        throw std::runtime_error("System failed to start correctly.");
+        return 1;
+    }
+//    Member * member = Guest::registerNewMember();
+//    system->registerMember(*member);
 //    cout << system->currentDate().dateToString();
 
 //    system->getCurrentMem()->getHouse()->approveRequest();
 //    system->getCurrentMem()->bookAccommodation();
 //    system->systemShutdown();
 
-    oldMemberMenu(*system);
+//    Member * member = Guest::registerNewMember();
+//    Guest::login();
+//    cout << member->getUserName() << "----" << system->getCurrentMem()->getUserName();
+
+    displayStartPage();
 //    searchHouseMenu(*system);
 
 }

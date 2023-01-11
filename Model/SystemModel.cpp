@@ -171,7 +171,7 @@ string System::generateID(int &count) {
     return ID;
 }
 
-Member * System::registerMember(Member member) {
+Member * System::registerMember(const Member& member) {
     Member * newMem = addMemberToSys(member);
     if (newMem == nullptr) {
         sysLog("Sign up failed, please try again! \n");
@@ -179,9 +179,8 @@ Member * System::registerMember(Member member) {
     }
     setCurrentMem(newMem);
     setIsLoggedIn(true);
-    string username, password, fullName, phone;
-    sysLog("Sign up successfully! awarded with 500 points.");
-    skipline();
+    sysLogSuccess("Sign up successfully! awarded with 500 points. \n");
+//    skipline();
 
     return newMem;
 }
@@ -207,13 +206,13 @@ Member *System::login(string username, string password) {
                 setIsLoggedIn(true);
 
                 sysLogSuccess("\nLogin successfully \n ");
+
                 if (hasRequest()) {
                     sysLog("You have received new request!!!\n");
                 }
                 return &i;
             } else {
-                int count = 1;
-                sysErrLog("Incorrect password")
+                sysErrLog("Wrong password, please try again")
                 return nullptr;
             }
         }
@@ -236,7 +235,7 @@ bool System::logout() {
 Member * System::addMemberToSys(Member member) {
     for (auto & i : memberVect) {
         if (i.getUserName() == member.getUserName()) {
-            sysErrLog(" \n This username is already existed \n");
+            sysErrLog("This username is already existed \n");
             return nullptr;
         }
     }
