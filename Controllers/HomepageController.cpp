@@ -58,6 +58,15 @@ namespace HomepageComponent{
         return choice;
     }
 
+    void switchMenu(int num) {
+        if (num == 1) {
+            oldMemberMenu();
+        }
+        if (num == 0) {
+            newMemberMenu();
+        }
+    }
+
     void displayAppHomepage() {
         skipline();
         logInfo(APP_HEADER);
@@ -254,7 +263,8 @@ namespace HomepageComponent{
             }
             case 5:
                 skipline();
-                searchHouseMenu();
+                searchHouseMenu(1);
+//                oldMemberMenu();
                 break;
             case 6: {
                 vector<Request *> requestList;
@@ -298,7 +308,7 @@ namespace HomepageComponent{
         displayStartPage();
     }
 
-    void searchHouseMenu() {
+    void searchHouseMenu(int num) {
         System * system = System::getInstance();
         sysLog(newline);
         sysLog(DIVIDER);
@@ -319,6 +329,7 @@ namespace HomepageComponent{
         int choice = inputOption();
         switch (choice) {
             case 0:
+                switchMenu(num);
                 break;
             case 1:
                 skipline();
@@ -431,7 +442,7 @@ namespace HomepageComponent{
         choice = continueOption();
         while (choice != 0) {
             if (choice == 1) {
-                searchHouseMenu();
+                searchHouseMenu(num);
                 break;
             } else {
                 sysErrLog("Invalid option");
@@ -439,7 +450,7 @@ namespace HomepageComponent{
             }
         }
         skipline();
-        oldMemberMenu();
+        switchMenu(num);
     }
 
     void ratingMenu() {
@@ -575,7 +586,7 @@ namespace HomepageComponent{
             }
             case 4:
                 skipline();
-                searchHouseMenu();
+                searchHouseMenu(0);
                 break;
             default:
                 sysErrLog("Invalid option");

@@ -10,14 +10,16 @@
 namespace HomepageComponent {
     int inputOption();
     int continueOption();
+    void switchMenu(int num);
 
     void registerPage();
     void loginPage();
     void newMemberMenu();
     void displayGuestHomepage();
 
+
     void oldMemberMenu();
-    void searchHouseMenu();
+    void searchHouseMenu(int num);
     void ratingMenu();
     void profile();
 

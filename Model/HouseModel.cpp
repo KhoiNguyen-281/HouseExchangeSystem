@@ -189,11 +189,10 @@ bool House::approveRequest(vector<Request*> &requestList){
             sysErrLog("Requester credit balance is not enough");
             return false;
         }
-        system->addCreditPoints(request->getHouse()->getOwner(), totalCreditPoint);
-        system->removeCreditPoints(request->getRequester(), totalCreditPoint);
         request->setStatus(APPROVED);
         request->getHouse()->setOccupier(request->getRequester());
-        sysLogSuccess("\nApproved request successfully, you received " << Colors::LIGHT_YELLOW_CLS << to_string(totalCreditPoint))
+        sysLogSuccess("\nApproved request successfully, you will receive " << Colors::LIGHT_YELLOW_CLS << to_string(totalCreditPoint)
+        << " after the house is checked out")
         sysLog("Your current balance: " << owner->getCreditP() << "\n")
         for (Request * temp : requestList) {
             if (temp->getId() != request->getId() && temp->getStatus() ==PENDING) {
