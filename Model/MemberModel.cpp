@@ -258,57 +258,35 @@ bool Member::changePassword(){
 }
 
 bool Member::updateInfo(){
-    int option;
+    System * system = System::getInstance();
     string input;
-//    string newUname;
-//    string newFname;
-//    string newNum;
-//    int phone;
-//    sysLog("Your information: ");
-//    skipLine();
-//
-//    sysLog("Username: ")
-////    System::getInstance()->getCurrentMem()->getUserName();
-//    skipLine();
-//
-//    sysLog("Fullname: ")
-////    System::getInstance()->getCurrentMem()->getFullName();
-//    skipLine();
-//
-//    sysLog("Phone: ");
-////    System::getInstance()->getCurrentMem()->getPhoneNum();
-//    skipLine();
-
-
-    // Function to show information
-    this->showInfo();
-
+    string option;
     sysLog("Enter your option: ");
     sysLog("1. Change username \n");
     sysLog("2. Change fullname \n");
     sysLog("3. Change phone number \n");
     sysLog("4. Change password \n");
-    cin >> option;
+    inputStr(option);
 
-    switch (option) {
+    switch (stoi(option)) {
         case 1:
             sysLog("Enter new username: ");
             inputStr(input);
-            this->setUserName(input);
+            system->getCurrentMem()->setUserName(input);
             skipLine();
-            sysLog("Change username successfully !")
+            sysLogSuccess("Change username successfully !")
             break;
         case 2:
             sysLog("Enter new fullname: ");
             inputStr(input);
-            this->setFullName(input);
+            system->getCurrentMem()->setFullName(input);
             skipLine();
             sysLog("Change fullname successfully !");
             break;
         case 3:
             sysLog("Enter new phone number: ");
             inputStr(input);
-            this->setPhoneNum(input);
+            system->getCurrentMem()->setPhoneNum(input);
             skipLine();
             sysLog("Change phone number successfully !")
             break;
@@ -319,6 +297,36 @@ bool Member::updateInfo(){
 
 //
     return true;
+}
+bool Member::deleteProfile() {
+    System * system =  System::getInstance();
+    string option;
+    sysLog("Are you sure you want to delete your profile (Y/N) \n");
+    sysLog("Your option: ");
+    inputStr(option);
+    if (option == "N" || option == "n" ) {
+        skipline();
+        return false;
+    }
+
+    if (option == "Y" || option == "y") {
+        string password;
+        sysLog("Enter your password: ");
+        inputStr(password);
+        bool succeed = system->deleteProfile(password);
+        if (succeed) {
+            sysLogSuccess("Successfully delete profile");
+            return succeed;
+        } else {
+            sysErrLog("Failed to delete profile");
+            return succeed;
+        }
+    }
+
+    skipline();
+    sysErrLog("Invalid option");
+    skipline();
+    return false;
 }
 
 //-------------------------------Rating function--------------------------//

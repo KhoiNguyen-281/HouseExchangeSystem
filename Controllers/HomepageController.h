@@ -19,6 +19,7 @@ namespace HomepageComponent {
     void oldMemberMenu();
     void searchHouseMenu();
     void ratingMenu();
+    void profile();
 
     void adminPage();
     void displayAppHomepage();

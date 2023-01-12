@@ -34,6 +34,8 @@ namespace HomepageComponent{
             adminPage();
         } else if (system->isUser()) {
             oldMemberMenu();
+        } else {
+            displayStartPage();
         }
     }
 
@@ -208,11 +210,7 @@ namespace HomepageComponent{
     void oldMemberMenu() {
         System * system = System::getInstance();
         Member * member = system->getCurrentMem();
-        if (!system->isUser()) {
-            skipline();
-            displayStartPage();
-            return;
-        }
+
         skipLine()
         sysLog(DIVIDER);
         sysLog("                       WELCOME BACK OUR MEMBER                     \n");
@@ -225,7 +223,8 @@ namespace HomepageComponent{
         sysLog("4. Book a house\n");
         sysLog("5. Search houses\n");
         sysLog("6. View request\n");
-        sysLog("7. Give feedback\n")
+        sysLog("7. Give feedback\n");
+        sysLog("8. Profile\n")
         int choice = inputOption();
         switch (choice) {
             case 0:
@@ -275,6 +274,10 @@ namespace HomepageComponent{
             case 7:
                 skipline();
                 ratingMenu();
+                break;
+            case 8:
+                skipline();
+                profile();
                 break;
             default:
                 sysErrLog("Invalid option");
@@ -464,6 +467,7 @@ namespace HomepageComponent{
                 break;
             default:
                 sysErrLog("Invalid option");
+                ratingMenu();
                 break;
         }
         choice = continueOption();
@@ -477,6 +481,60 @@ namespace HomepageComponent{
             }
         }
         skipline();
+    }
+
+    void profile() {
+        System * system = System::getInstance();
+        Member * member = system->getCurrentMem();
+        skipline()
+        sysLog(DIVIDER);
+        sysLog("                       MEMBER PROFILE                      \n");
+        sysLog(DIVIDER);
+        skipline()
+
+        member->showInfo();
+
+        sysLog("0. Exit\n");
+        sysLog("1. Update your information\n");
+        sysLog("2. Change password\n");
+        sysLog("3. Delete your profile\n");
+        int choice  = inputOption();
+        switch (choice) {
+            case 0:
+                break;
+            case 1:
+                skipline();
+                member->updateInfo();
+                break;
+            case 2:
+                skipline();
+                member->changePassword();
+                break;
+            case 3:
+                skipline();
+                member->deleteProfile();
+                member->logout();
+                break;
+            default:
+                sysErrLog("Invalid option");
+                profile();
+                break;
+        }
+        if (choice != 3) {
+            choice = continueOption();
+            while (choice != 0) {
+                if (choice == 1) {
+                    profile();
+                    break;
+                } else {
+                    sysErrLog("Invalid option");
+                    choice = inputOption();
+                }
+            }
+            skipline();
+        }
+        displayStartPage();
+        return;
     }
 
     void newMemberMenu() {
@@ -537,7 +595,6 @@ namespace HomepageComponent{
         skipline();
         displayStartPage();
     }
-
 
 }
 

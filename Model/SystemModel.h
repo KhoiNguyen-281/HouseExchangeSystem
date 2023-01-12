@@ -18,6 +18,8 @@ using std::vector;
 
 #define CREDIT_POINT 500;
 
+
+//Create enum for request status
 enum Status {
     PENDING,
     APPROVED,
@@ -25,6 +27,8 @@ enum Status {
     FINISHED
 };
 
+
+//Get current year
 int thisYear() {
     std::time_t t = std::time(nullptr);
     std::tm *const pointerInfo = std::localtime(&t);
@@ -32,12 +36,13 @@ int thisYear() {
 }
 
 
-
+//Prototype classes
 class Guest;
 class Member;
 class House;
 class Request;
 class Rating;
+
 
 class Date {
 private:
@@ -49,8 +54,10 @@ public:
     Date();
 
     ~Date();
+
     Date(const Date &date);
 
+//    Overload method to re-assign date to another date;
     Date &operator = (const Date&otherDate);
 
     //getter
@@ -63,30 +70,28 @@ public:
     void setDay(int date);
     void setYear(int year);
 
-
+//    Method to validate date with format dd/MM/yyyy
     static bool isDateValid(string date);
-
+//    Method to convert string type to Date
     static Date parseDate( string date);
-
+//    Method to get duration between two date
     static int getDuration(Date start, Date end);
-
+//    Method to compare two date
     static int compareDate(Date dateInSys, Date inputDate);
-
+//    Method to convert Date type to string
     string dateToString();
 
-    int checkMonth(int month, int year, int duration);
 };
 
 class Guest {
 public:
     Guest();
     virtual ~Guest();
-
+//    Method to register new member
     static Member* registerNewMember();
-
+//    Method for user to login as member
     static Member* login();
 
-//    void showAllHouse();
 };
 
 class Member : public Guest{
@@ -103,6 +108,8 @@ private:
 public:
     Member(string userName, string fullName, string phoneNum, string passWord);
     Member();
+
+//    Method to show information of member
     void showInfo();
 
     // getter
@@ -126,12 +133,12 @@ public:
     void setHouse(House *house);
     void setRequest(Request *request);
 
-    //Function authentication
+//    Authenticate method, override from system
     Member* registerNewMember();
     Member* login();
-
     bool logout();
 
+//    Method to modified member profile
     bool changePassword();
     bool updateInfo();
     bool deleteProfile();
@@ -346,6 +353,7 @@ public:
     Member * registerMember(Member member);
     Member *login(string username, string password);
     bool logout();
+    bool deleteProfile(string password);
 
     // Function to add objects to vector
     Member *addMemberToSys(Member member);
