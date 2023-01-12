@@ -941,13 +941,24 @@ void System::viewAllHouse() {
         return;
     }
 
-    if (!isLoggedIn) {
+    if (isUser()) {
         for (House & house : houseVect) {
             house.showInfo();
+            sysLogSuccess("Listing start date: " + house.getStartListDate().dateToString());
+            sysLogSuccess("Listing end date: " + house.getEndListDate().dateToString());
+
+
+            if (house.hasRatings()) {
+                float ratingScore = house.sumRating();
+                sysLogSuccess("Rating: " << std::fixed << std::setprecision(2) << ratingScore);
+            }
+
             skipline()
         }
         return;
-    } else if(isAdminLoggedin) {
+    }
+
+    if(isAdmin()) {
         for (House & house : houseVect) {
             house.showInfo();
             sysLogSuccess("Listing start date: " + house.getStartListDate().dateToString());
