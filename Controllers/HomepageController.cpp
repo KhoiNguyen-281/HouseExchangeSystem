@@ -25,6 +25,18 @@ namespace HomepageComponent{
 
 //    Member * member = system->getCurrentMem();
 
+    void loginPage() {
+        System * system = System::getInstance();
+        skipline();
+        sysLog("You are currently in login page\n");
+        Guest::login();
+        if (system->isAdmin()) {
+            adminPage();
+        } else if (system->isUser()) {
+            oldMemberMenu();
+        }
+    }
+
     int inputOption() {
         string option;
         sysLog("Please enter your option: ");
@@ -35,12 +47,12 @@ namespace HomepageComponent{
         return stoi(option);
     }
 
-    int continueOption(int choice) {
+    int continueOption() {
         skipline();
         sysLog("Do you want to continue ? \n")
         sysLog("0. Exit\n");
         sysLog("1. Continue\n");
-        choice = inputOption();
+        int choice  = inputOption();
         return choice;
     }
 
@@ -60,26 +72,23 @@ namespace HomepageComponent{
         System * system = System::getInstance();
 //        system->setCurrentMem(nullptr);
 //        Guest guest;
-        Guest guest;
         sysLog("Use the app as 1.Guest  2.Member  3.Admin  0.Shutdown\n");
         int choice = inputOption();
         switch (choice) {
             case 0:
-                system->systemShutdown();
-                delete system;
                 break;
             case 1:
                 skipline();
-                displayGuestHomepage(guest);
+                displayGuestHomepage();
                 break;
             case 2: {
                 skipline();
-                oldMemberMenu();
+                loginPage();
                 break;
             }
             case 3:
                 skipline();
-                adminPage();
+                loginPage();
                 break;
             default:
                 skipline();
@@ -87,9 +96,11 @@ namespace HomepageComponent{
                 displayStartPage();
                 break;
         }
+        system->systemShutdown();
+        delete system;
     }
 
-    void displayGuestHomepage(Guest guest) {
+    void displayGuestHomepage() {
         System * system = System::getInstance();
         sysLog(DIVIDER);
         sysLog("                       WELCOME TO OUR SYSTEM                      \n");
@@ -114,39 +125,35 @@ namespace HomepageComponent{
                 skipline();
                 sysLog("You are registering as new member\n")
                 Guest::registerNewMember();
-                system->getCurrentMem();
                 if (system->isUser()) {
                     newMemberMenu();
-//                    break;
+                    break;
                 }
-//                sysErrLog("ERROR");
                 break;
             }
             default:
                 skipline();
                 sysErrLog("Invalid option")
-                displayGuestHomepage(guest);
+                displayGuestHomepage();
                 break;
         }
 
-        switch (continueOption(choice)) {
-            case 1:
-                displayGuestHomepage(guest);
+        choice = continueOption();
+        while (choice != 0) {
+            if (choice == 1) {
+                displayGuestHomepage();
                 break;
-            case 0:
-                delete &guest;
-                displayStartPage();
-                break;
-            default:
+            } else {
                 sysErrLog("Invalid option");
-                continueOption(choice);
-                break;
+                choice = inputOption();
+            }
         }
+        skipline();
+        displayStartPage();
     }
 
     void adminPage(){
         System * system = System::getInstance();
-        Guest::login();
         if (!system->isAdmin()) {
             sysErrLog("Wrong admin authentication")
             return;
@@ -183,25 +190,24 @@ namespace HomepageComponent{
                 adminPage();
                 break;
         }
-        switch (continueOption(choice)) {
-            case 1:
+
+        choice = continueOption();
+        while (choice != 0) {
+            if (choice == 1) {
                 adminPage();
                 break;
-            case 0:
-                system->logout();
-                displayStartPage();
-                break;
-            default:
+            } else {
                 sysErrLog("Invalid option");
-                continueOption(choice);
-                break;
+                choice = inputOption();
+            }
         }
+        skipline();
+        displayStartPage();
     }
 
     void oldMemberMenu() {
         System * system = System::getInstance();
-        Member * member = Guest::login();
-//        system->getCurrentMem();
+        Member * member = system->getCurrentMem();
         if (!system->isUser()) {
             skipline();
             displayStartPage();
@@ -225,7 +231,7 @@ namespace HomepageComponent{
             case 0:
                 member->logout();
                 displayStartPage();
-                break;
+                return;
             case 1:
                 skipline();
                 system->viewMember();
@@ -275,21 +281,18 @@ namespace HomepageComponent{
                 oldMemberMenu();
                 break;
         }
-
-        switch (continueOption(choice)) {
-            case 1:
+        choice = continueOption();
+        while (choice != 0) {
+            if (choice == 1) {
                 oldMemberMenu();
                 break;
-            case 0:
-                member->logout();
-                displayStartPage();
-                break;
-            default:
-                sysErrLog("Invalid option")
-                continueOption(choice);
-                break;
+            } else {
+                sysErrLog("Invalid option");
+                choice = inputOption();
+            }
         }
-
+        skipline();
+        displayStartPage();
     }
 
     void searchHouseMenu() {
@@ -422,16 +425,18 @@ namespace HomepageComponent{
                 sysErrLog("Invalid option!!!")
                 break;
         }
-        switch (continueOption(choice)) {
-            case 1:
+        choice = continueOption();
+        while (choice != 0) {
+            if (choice == 1) {
                 searchHouseMenu();
                 break;
-            case 0:
-                break;
-            default:
-                sysErrLog("Invalid option")
-                break;
+            } else {
+                sysErrLog("Invalid option");
+                choice = inputOption();
+            }
         }
+        skipline();
+        oldMemberMenu();
     }
 
     void ratingMenu() {
@@ -461,17 +466,17 @@ namespace HomepageComponent{
                 sysErrLog("Invalid option");
                 break;
         }
-        switch (continueOption(choice)) {
-            case 1:
+        choice = continueOption();
+        while (choice != 0) {
+            if (choice == 1) {
                 ratingMenu();
                 break;
-            case 0:
-//                oldMemberMenu(guest);
-                break;
-            default:
+            } else {
                 sysErrLog("Invalid option");
-                break;
+                choice = inputOption();
+            }
         }
+        skipline();
     }
 
     void newMemberMenu() {
@@ -519,19 +524,18 @@ namespace HomepageComponent{
                 newMemberMenu();
                 break;
         }
-        switch (continueOption(choice)) {
-            case 1:
+        choice = continueOption();
+        while (choice != 0) {
+            if (choice == 1) {
                 newMemberMenu();
                 break;
-            case 0:
-                member->logout();
-                displayStartPage();
-                break;
-            default:
+            } else {
                 sysErrLog("Invalid option");
-                continueOption(choice);
-                break;
+                choice = inputOption();
+            }
         }
+        skipline();
+        displayStartPage();
     }
 
 
