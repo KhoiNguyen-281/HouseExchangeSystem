@@ -14,8 +14,7 @@
 // define log message with color;
 #define sysLogInfo(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n";
 
-Member::Member(string userName, string fullName, string phoneNum, string passWord)
-        : userName(userName), fullName(fullName), phoneNum(phoneNum), password(passWord) {};
+
 Member::Member() {};
 Member::~Member() {
 
@@ -58,7 +57,7 @@ string Member::getFullName() {
     return fullName;
 }
 
-string Member::getPhoneNum() {
+int Member::getPhoneNum() {
     return phoneNum;
 }
 
@@ -87,7 +86,7 @@ void Member::setFullName(string fullName) {
     Member::fullName = fullName;
 }
 
-void Member::setPhoneNum(string phoneNum) {
+void Member::setPhoneNum(int phoneNum) {
     Member::phoneNum = phoneNum;
 }
 
@@ -141,7 +140,6 @@ bool Member::registerHouse() {
     system->getAvailableLocation();
 
     sysLog("Enter your house information to register \n");
-
     sysLog("Location: ");
     inputStr(location);
 
@@ -155,27 +153,38 @@ bool Member::registerHouse() {
     sysLog("House description: ");
     inputStr(description);
 
-    string temp = "";
+
     sysLog("Enter house listing start date and end date \n")
+
+    string temp = "";
     sysLog("Start date: ");
     inputStr(temp);
-    while (!Date::isDateValid(temp)) {
-        sysLog("Invalid date format, please try again! \n")
-        sysLog("Start date: ");
-        inputStr(temp);
+    if (!Date::isDateValid(temp)) {
+        sysErrLog("Invalid date format");
+        return false;
     }
 
     startDate = Date::parseDate(temp);
 
+    if (Date::compareDate(system->currentDate(), startDate) < 0) {
+        sysErrLog("Date must be greater than or equal current date " + system->currentDate().dateToString());
+        return false;
+    }
+
     temp = "";
     sysLog("End date: ");
     inputStr(temp);
-    while (!Date::isDateValid(temp)) {
-        sysLog("End date: ");
-        inputStr(temp);
+    if (!Date::isDateValid(temp)) {
+        sysErrLog("Invalid date format");
+        return false;
     }
 
     endDate = Date::parseDate(temp);
+
+    if (Date::compareDate(startDate, endDate) < 0) {
+        sysErrLog("End date must be greater than the start date " + startDate.dateToString());
+        return false;
+    }
 
     temp = "";
     sysLog("Credit points per day: ");
@@ -187,13 +196,13 @@ bool Member::registerHouse() {
 
     creditPointsPerDay = std::stoi(temp);
 
+    temp = "";
     sysLog("Minimum required score (0.0): ");
-    cin >> minimumRequiredScore;
-    while (!cin) {
-        sysLog("Invalid format, please try again\n");
-        cin.clear();
-        cin.ignore(1000, '\n');
-        cin >> minimumRequiredScore;
+    inputStr(temp);
+    minimumRequiredScore = stof(temp);
+    if (minimumRequiredScore < 0) {
+        sysErrLog("Invalid minimum required score will be set to 0.0");
+        minimumRequiredScore = 0;
     }
 
     House house;
@@ -216,11 +225,10 @@ bool Member::registerHouse() {
 
     if (stored != nullptr) {
         setHouse(stored);
-        sysLog("Registered house successfully! \n\n");
+        sysLogSuccess("Registered house successfully!\n");
     } else {
-        sysLog("Unable to register house \n\n");
+        sysErrLog("Unable to register house\n");
     }
-
     return stored != nullptr;
 }
 
@@ -286,7 +294,12 @@ bool Member::updateInfo(){
         case 3:
             sysLog("Enter new phone number: ");
             inputStr(input);
-            system->getCurrentMem()->setPhoneNum(input);
+            if (system->isInteger(input)) {
+                skipline();
+                sysErrLog("Invalid format, must be number");
+                break;
+            }
+            system->getCurrentMem()->setPhoneNum(stoi(input));
             skipLine();
             sysLog("Change phone number successfully !")
             break;
@@ -336,6 +349,10 @@ Rating * Member::rateHouse() {
     string comment;
     string score;
 
+    if (this->getRequest()->getStatus() != FINISHED) {
+        return nullptr;
+    }
+
     sysLog("How was your experience from -10 to 10 : ");
     inputStr(score);
 //    if (!system->isInteger(score)) {
@@ -366,6 +383,10 @@ Rating * Member::rateOccupier() {
     System * system = System::getInstance();
     string comment;
     string score;
+
+    if (this->getRequest()->getStatus() != FINISHED) {
+        return nullptr;
+    }
 
     sysLog("How would you rate your occupier from -10 to 10 : ");
     inputStr(score);
@@ -414,37 +435,6 @@ float Member::sumRating() {
     return 0;
 }
 
-
-//bool Member::bookAccommodation(House *house, Date startDate, Date endDate) {
-//    System *system = System::getInstance();
-//    // Create a new request
-//    Request request;
-//
-//    // Set request data.
-//    request.setRequester(this);
-//    request.setHouse(house);
-//    request.setStartDate(startDate);
-//    request.setEndDate(endDate);
-//
-//    // cout << "current ID = " << request.getId() << "\n";
-//
-//    //    request.showInfo();
-//    // Add a new request to the system.
-//    Request *newRequest = system->addRequestToSys(request);
-//
-//    //    newRequest->showInfo();
-//
-//    // Check if the request was added successfully.
-//    if (newRequest != nullptr) {
-//        sysLogSuccess("You have successfully request house");
-//        setRequest(newRequest);
-//        return true;
-//    }
-//    else {
-//        sysErrLog("Failed to create request!!!");
-//        return false;
-//    }
-//}
 
 bool Member::bookAccommodation() {
     System * system = System::getInstance();
@@ -507,7 +497,7 @@ bool Member::bookAccommodation() {
 
     House * house =  availableHouse[stoi(choice) - 1];
 
-    bool isEligible = system->isHouseSuitable(*house, startDate, endDate);
+    bool isEligible = system->isHouseSuitable(*house, startDate.dateToString(), endDate.dateToString());
 
     if (!isEligible) {
         sysErrLog("Your credit points balance is not enough, please add more");

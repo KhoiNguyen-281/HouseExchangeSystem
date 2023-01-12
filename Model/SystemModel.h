@@ -99,14 +99,13 @@ private:
     string id;
     string userName;
     string fullName;
-    string phoneNum;
+    int phoneNum;
     string password;
     int creditP = CREDIT_POINT;
     House *house = nullptr;
     Request *request = nullptr;
 
 public:
-    Member(string userName, string fullName, string phoneNum, string passWord);
     Member();
 
 //    Method to show information of member
@@ -116,7 +115,7 @@ public:
     string getId();
     string getUserName();
     string getFullName();
-    string getPhoneNum();
+    int getPhoneNum();
     string getPassword();
     int getCreditP();
     House *getHouse();
@@ -127,7 +126,7 @@ public:
     void setId(string id);
     void setUserName(string userName);
     void setFullName(string fullName);
-    void setPhoneNum(string phoneNum);
+    void setPhoneNum(int phoneNum);
     void setPassword(string password);
     void setCreditP(int creditP);
     void setHouse(House *house);
@@ -403,7 +402,7 @@ public:
 
     bool removeHouse();
 
-    bool isHouseSuitable(House house, Date start, Date end);
+    bool isHouseSuitable(House house, string start, string end);
 
 
     //Function to get rating from system
@@ -415,8 +414,8 @@ public:
     void getAndShowRequest(vector<Request *> & requestList, House * house);
 
     //Function to search house
-    void searchHouse(vector<House *> &availableHouse, string location,Date startDate, Date endDate);
-    void getHouseByDate(vector<House*>& availableHouse, const Date& start, const Date& end);
+//    void searchHouse(vector<House *> &availableHouse, string location,Date startDate, Date endDate);
+    void getHouseByDate(vector<House*>& availableHouse, Date start, Date end);
     void getHouseByLoc(vector<House*>& house, const string& location);
     void getHouseWithCreditPoint(vector<House*> &house);
     void getHouseByCreditInRange(vector<House*> &house, int creditFrom, int creditTo);

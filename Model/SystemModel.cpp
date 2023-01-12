@@ -573,7 +573,7 @@ bool System::loadMember() {
         member.setUserName(tokens[1]);
         member.setPassword(tokens[2]);
         member.setFullName(tokens[3]);
-        member.setPhoneNum(tokens[4]);
+        member.setPhoneNum(stoi(tokens[4]));
         member.setCreditP(std::stoi(tokens[5]));
 
 
@@ -812,61 +812,6 @@ void System::getAvailableHouses(vector<House *> &availableHouses, bool isQualifi
 
 int System::getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints) {
     return Date::getDuration(startDate, endDate) * creditPoints;
-}
-
-
-void System::viewAllHouseBySearchingLocation(bool isQualified, string location, Date startingDate, Date endingDate)
-{
-    if (houseVect.empty())
-    {
-        sysLog("There are no house on our system.\n");
-        return;
-    }
-
-    // Display all houses
-
-    if (isQualified)
-    {
-        vector<House *> fetchAvailableHouses;
-        getAvailableHouses(fetchAvailableHouses,true, location, startingDate, endingDate);
-
-        if (fetchAvailableHouses.empty())
-        {
-            cout << "There are no qualified houses.\n";
-            return;
-        }
-
-        int duration = Date::getDuration(startingDate, endingDate);
-
-        for (int i = 0; i < fetchAvailableHouses.size(); i++)
-        {
-            cout << Colors::LIGHT_CYAN_CLS << "\n\t\tHouse " << Colors::LIGHT_GREEN_CLS << std::to_string(i + 1) << "\n";
-
-            cout << "\nLocation: " << fetchAvailableHouses[i]->getLocation() << "\n";
-            cout << "Description: " <<  fetchAvailableHouses[i]->getDescription() << "\n";
-            cout << "Available from: " <<  fetchAvailableHouses[i]->getStartListDate().dateToString() << "\n";
-            cout << "Available until: " <<  fetchAvailableHouses[i]->getEndListDate().dateToString() << "\n";
-            cout << "Consumption points (per day): " << std::to_string(fetchAvailableHouses[i]->getCreditPointsPerDay()) << "\n";
-//            cout << "Expected consumption points: " << System::getTotalConsumptionPoint(duration, startingDate.getDay(), endingDate.getDay()) << "\n";
-        }
-    }
-    else
-    {
-        for (int i = 0; i < houseVect.size(); i++)
-        {
-            cout << "\n\t\tHouse " << std::to_string(i + 1) << "\n";
-
-            cout << "Location: " << houseVect[i].getLocation() << "\n";
-            cout << "Description: " << houseVect[i].getDescription() << "\n";
-
-            cout << "Listing start: " << houseVect[i].getStartListDate().dateToString() << "\n";
-            cout << "Listing end: " << houseVect[i].getEndListDate().dateToString() << "\n";
-            cout << "Consumption points (per day): " << std::to_string(houseVect[i].getCreditPointsPerDay()) << "\n";
-            cout << "Owner ID: " << houseVect[i].getOwner()->getId() << "\n";
-            cout << "Owner Username: " << houseVect[i].getOwner()->getUserName() << "\n";
-            cout << "Owner Name: " << houseVect[i].getOwner()->getFullName() << "\n";
-        }
-    }
 }
 
 void System::getAvailableLocation() {
@@ -1126,6 +1071,7 @@ void System::getRatingFromSys(vector<Rating *>& ratingVal, House *house) {
 //------------------------start and exit---------------//
 
 bool System::systemStart() {
+    changeStatusOfRequestAuto();
     sysLog("Loading data....\n");
 
     if (!loadMember()) {
@@ -1184,31 +1130,46 @@ bool System::systemShutdown() {
 
 //--------------------------------Request function--------------------------------//
 
-bool System::isHouseSuitable(House house, Date start, Date end) {
-    int creditPoint = currentMem->getCreditP();
-    int totalConsumptionPoints = getTotalConsumptionPoint(start, end, house.getCreditPointsPerDay());
-    float ratingPoint = currentMem->sumRating();
-    if (creditPoint - totalConsumptionPoints < 0) {
+bool System::isHouseSuitable(House house, string start, string end) {
+    int totalConsumptionPoints;
+    if (start == "" || end == "" ) {
+        totalConsumptionPoints = 0;
+    } else {
+        totalConsumptionPoints = getTotalConsumptionPoint(Date::parseDate(start), Date::parseDate(end), house.getCreditPointsPerDay());
+    }
+
+    if (currentMem->getCreditP() - house.getCreditPointsPerDay() <= 0) {
+        return false;
+    }
+    if (currentMem->getCreditP() - totalConsumptionPoints <= 0) {
          return false;
     }
-//    if (house.getMinimumOccupierRating() > ratingPoint) {
-//        return false;
-//    }
+    if (currentMem->hasRatings()) {
+        if (currentMem->sumRating() - house.getMinimumOccupierRating() >= 0) {
+            return false;
+        }
+    }
+
     return true;
 }
-void System::getHouseByDate(vector<House*> &availableHouse, const Date& start, const Date& end) {
+void System::getHouseByDate(vector<House*> &availableHouse,  Date start,  Date end) {
+
     for (auto & i : houseVect) {
         if (Date::compareDate(i.getStartListDate(), start) >= 0
         && Date::compareDate(i.getEndListDate(), end) <= 0) {
+            if (isHouseSuitable(i, start.dateToString() , end.dateToString())) {
             availableHouse.push_back(&i);
+            }
         }
     }
 }
 
 void System::getHouseByLoc(vector<House*>& availableHouse, const string& location){
-    for (auto & i : houseVect) {
+    for (House & i : houseVect) {
         if (i.getLocation() == location) {
-            availableHouse.push_back(&i);
+            if (isHouseSuitable(i, "", "")) {
+                availableHouse.push_back(&i);
+            }
         }
     }
 }
@@ -1230,19 +1191,17 @@ void System::getHouseByCreditInRange(vector<House*> &availableHouse, int creditF
     }
 }
 
-void System::searchHouse(vector<House*>&houseList, string location, Date startDate, Date endDate) {
-
-    this->getAvailableHouses(houseList, true, location, startDate, endDate);
-
-    for (int i = 0; i < houseList.size(); i++) {
-        sysLog("House no." << (i + 1) << "\n");
-        houseList[i]->showInfo();
-    }
-}
 
 int System::changeStatusOfRequestAuto() {
     for (Request & request : requestVect) {
         if (Date::compareDate(currentDate(), request.getEndDate()) >= 0 && request.getStatus() == APPROVED) {
+
+            int totalCreditPoint = getTotalConsumptionPoint(request.getStartDate(),
+                                                            request.getEndDate(),
+                                                            request.getHouse()->getCreditPointsPerDay());
+
+            addCreditPoints(request.getHouse()->getOwner(), totalCreditPoint);
+            removeCreditPoints(request.getRequester(), totalCreditPoint);
             request.setStatus(FINISHED);
             return FINISHED;
         } else if (Date::compareDate(currentDate(), request.getEndDate()) >= 0 && request.getStatus() == PENDING) {

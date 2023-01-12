@@ -19,7 +19,7 @@ Member * Guest::registerNewMember() {
     Member member;
     string userName;
     string fullName;
-    string phoneNum;
+    string phoneNumStr;
     string password;
 
     sysLog("Please enter the required information to create account\n")
@@ -33,7 +33,13 @@ Member * Guest::registerNewMember() {
     inputStr(fullName);
     sysLog("Enter phone number: ");
 //    cout << "Enter phone number: ";
-    inputStr(phoneNum);
+    inputStr(phoneNumStr);
+
+    if (!system->isInteger(phoneNumStr))  {
+        skipline();
+        sysErrLog("Invalid, phone must be number.");
+        return nullptr;
+    }
 
 //    string id;
 //    string userName;
@@ -46,7 +52,7 @@ Member * Guest::registerNewMember() {
 
     member.setUserName(userName);
     member.setFullName(fullName);
-    member.setPhoneNum(phoneNum);
+    member.setPhoneNum(stoi(phoneNumStr));
     member.setPassword(password);
     member.setHouse(nullptr);
     member.setRequest(nullptr);
