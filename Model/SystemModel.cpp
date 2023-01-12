@@ -1007,20 +1007,29 @@ bool System::removeHouse() {
         return false;
     }
 
+    bool found = false;
     if (res == "Y" || res == "y") {
         for (House & house  : houseVect) {
             if (house.getId() == houseTmp->getId()) {
-                currentMem->setHouse(nullptr);
-                houseVect.erase(houseVect.begin() + (std::stoi(house.getId()) - 1));
-                skipline();
-                sysLogSuccess("Remove house successfully!!");
-                return true;
+                found = true;
+                houseTmp = &house;
+                break;
             } else {
-                skipline();
-                sysErrLog("Cannot find your house in the system");
-                return false;
+                continue;
             }
         }
+    }
+
+    if (found) {
+        currentMem->setHouse(nullptr);
+        houseVect.erase(houseVect.begin() + (stoi(houseTmp->getId()) - 1));
+        skipline();
+        sysLogSuccess("Remove house successfully!!");
+        return true;
+    } else {
+        skipline();
+        sysErrLog("Cannot find your house in the system");
+        return false;
     }
 
     sysErrLog("Invalid response");
