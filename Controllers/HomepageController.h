@@ -9,12 +9,12 @@
 
 namespace HomepageComponent {
     int inputOption();
-    int continueOption(int choice);
+    int continueOption();
 
     void registerPage();
     void loginPage();
     void newMemberMenu();
-    void displayGuestHomepage(Guest guest);
+    void displayGuestHomepage();
 
     void oldMemberMenu();
     void searchHouseMenu();
