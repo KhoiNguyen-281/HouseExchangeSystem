@@ -223,6 +223,7 @@ Member *System::login(string username, string password) {
                         i.getRequest()->getHouse()->showInfo();
                     }
                 }
+                sysLogSuccess("Logged in successfully\n")
                 return &i;
             } else {
                 sysErrLog("Wrong password, please try again")
@@ -241,6 +242,46 @@ bool System::logout() {
 
     sysLogSuccess("\nLogout successfully \n ")
     return true;
+}
+
+bool System::deleteProfile(string password) {
+    Member member = *currentMem;
+
+    for (int i = 0; i < memberVect.size(); i++) {
+        if (memberVect[i].getId() == member.getId()) {
+            if (memberVect[i].getPassword() != password) {
+                sysErrLog("Incorrect password");
+                return false;
+            }
+
+            for (int j = 0; j < houseVect.size(); j++) {
+                if (houseVect[j].getId() == member.getHouse()->getId()) {
+                    houseVect.erase(houseVect.begin() + i);
+                }
+            }
+
+            memberVect.erase(memberVect.begin() + i);
+
+            for (int k = 0; k < houseVect.size(); k++ ) {
+                houseVect[k].setId(to_string(k + 1));
+            }
+
+            for (int u = 0; u < memberVect.size(); u ++) {
+                memberVect[u].setId(to_string(u + 1));
+            }
+
+            countMem = stoi(memberVect.back().getId());
+            countHouse = stoi(houseVect.back().getId());
+
+            setCurrentMem(nullptr);
+            setIsLoggedIn(false);
+            setIsAdmin(false);
+
+            return true;
+        }
+    }
+    sysErrLog("Profile not found!!!");
+    return false;
 }
 
 
@@ -1011,6 +1052,7 @@ bool System::removeHouse() {
     }
     string res = "";
     sysLog("Are you sure you want to remove your house from system ? (Y/N) \n");
+    sysLog("Your response: ");
     inputStr(res);
 
     if (res == "N" || res == "n") {
