@@ -15,57 +15,52 @@ Guest::Guest() = default;
 Guest::~Guest() = default;
 
 Member * Guest::registerNewMember() {
+    System * system = System::getInstance();
     Member member;
     string userName;
     string fullName;
     string phoneNum;
     string password;
 
+    sysLog("Please enter the required information to create account\n")
     sysLog("Enter username: ");
-    getline(cin, userName);
+    inputStr(userName);
 
     sysLog("Enter password: ")
 //    cout << "Enter password: ";
-    getline(cin, password);
+    inputStr(password);
     sysLog("Enter full name: ");
-    getline(cin, fullName);
+    inputStr(fullName);
     sysLog("Enter phone number: ");
 //    cout << "Enter phone number: ";
-    getline(cin, phoneNum);
+    inputStr(phoneNum);
 
+//    string id;
+//    string userName;
+//    string fullName;
+//    string phoneNum;
+//    string password;
+//    int creditP = CREDIT_POINT;
+//    House *house = nullptr;
+//    Request *request = nullptr;
 
     member.setUserName(userName);
     member.setFullName(fullName);
     member.setPhoneNum(phoneNum);
     member.setPassword(password);
+    member.setHouse(nullptr);
+    member.setRequest(nullptr);
 
-    return System::getInstance()->registerMember(member);
+    return system->registerMember(member);
 }
 
-Member * Guest::login() {
+Member* Guest::login() {
     string username;
     string password;
-    bool notFound = true;
-
     sysLog("Please enter your username and password to login \n")
     sysLog("Username: ");
-    getline(cin, username);
+    inputStr(username);
     sysLog("Password: ");
     inputStr(password)
-    Member * member = System::getInstance()->login(username, password);
-    int count = 1;
-    while (member == nullptr) {
-        if (count == 4) {
-            sysErrLog("Wrong password 4 times, try again later");
-            break;
-        } else {
-            sysErrLog("Password does not match, please try again");
-            sysLog("Password: ");
-            inputStr(password);
-            member = System::getInstance()->login(username, password);
-            count +=1;
-        }
-    }
-
-    return member;
+    return System::getInstance()->login(username, password);;
 }

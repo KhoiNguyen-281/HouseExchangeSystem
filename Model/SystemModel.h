@@ -106,22 +106,22 @@ public:
     void showInfo();
 
     // getter
-    [[nodiscard]] const string &getId() const;
-    [[nodiscard]] const string &getUserName() const;
-    [[nodiscard]] const string &getFullName() const;
-    [[nodiscard]] const string &getPhoneNum() const;
-    [[nodiscard]] const string &getPassword() const;
-    [[nodiscard]] int getCreditP() const;
-    [[nodiscard]] House *getHouse() const;
-    [[nodiscard]] Request *getRequest() const;
+    string getId();
+    string getUserName();
+    string getFullName();
+    string getPhoneNum();
+    string getPassword();
+    int getCreditP();
+    House *getHouse();
+    Request *getRequest();
     float sumRating();
 
     // Setter
-    void setId(const string &id);
-    void setUserName(const string &userName);
-    void setFullName(const string &fullName);
-    void setPhoneNum(const string &phoneNum);
-    void setPassword(const string &password);
+    void setId(string id);
+    void setUserName(string userName);
+    void setFullName(string fullName);
+    void setPhoneNum(string phoneNum);
+    void setPassword(string password);
     void setCreditP(int creditP);
     void setHouse(House *house);
     void setRequest(Request *request);
@@ -130,10 +130,9 @@ public:
     Member* registerNewMember();
     Member* login();
 
-    static bool logout();
+    bool logout();
 
     bool changePassword();
-
     bool updateInfo();
     bool deleteProfile();
 
@@ -335,8 +334,8 @@ public:
     bool hasRequest();
 
     Member *getCurrentMem();
-    bool isUser() const;
-    bool isAdmin() const;
+    bool isUser();
+    bool isAdmin();
     bool changePassword(string newpwd, string oldpwd);
     bool updateInfo();
 
@@ -344,7 +343,7 @@ public:
     string generateID(int &count);
 
     // Authentication functions
-    Member *registerMember(Member member);
+    Member * registerMember(Member member);
     Member *login(string username, string password);
     bool logout();
 
@@ -380,6 +379,7 @@ public:
     void viewMember();
     void viewHouseDetail();
     void viewAllHouse();
+    void viewRating();
 
     int getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints);
     void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
@@ -389,7 +389,7 @@ public:
 
     // Verify input function
     bool checkLocation(string location);
-    bool isInteger(const string &input);
+    static bool isInteger(const string &input);
     bool verifyPassword(string inputPassword, string memberPass);
 
 
@@ -413,7 +413,7 @@ public:
     void getHouseWithCreditPoint(vector<House*> &house);
     void getHouseByCreditInRange(vector<House*> &house, int creditFrom, int creditTo);
 
-    void changeStatusOfRequestAuto();
+    int changeStatusOfRequestAuto();
 
     bool systemStart();
     bool systemShutdown();

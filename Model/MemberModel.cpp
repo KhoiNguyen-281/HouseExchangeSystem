@@ -38,7 +38,6 @@ void Member::showInfo() {
     sysLogInfo("Phone number: " + this->phoneNum);
     sysLogInfo("Credit points: " + to_string(this->creditP));
 
-
 //    sysLog("ID: " << this->id << "\n");
 //    sysLog("Username: " << this->userName <<"\n");
 //    sysLog("Full name: " << this->fullName <<"\n");
@@ -47,52 +46,52 @@ void Member::showInfo() {
 }
 
 //Getter
-const string &Member::getId() const {
+string Member::getId() {
     return id;
 }
 
-const string &Member::getUserName() const {
+string Member::getUserName() {
     return userName;
 }
 
-const string &Member::getFullName() const {
+string Member::getFullName() {
     return fullName;
 }
 
-const string &Member::getPhoneNum() const {
+string Member::getPhoneNum() {
     return phoneNum;
 }
 
-const string &Member::getPassword() const {
+string Member::getPassword() {
     return password;
 }
 
-int Member::getCreditP() const {
+int Member::getCreditP() {
     return creditP;
 }
 
-House *Member::getHouse() const {
+House *Member::getHouse()  {
     return house;
 }
 
-Request *Member::getRequest() const {
+Request *Member::getRequest()  {
     return request;
 }
 
 //Setter
-void Member::setUserName(const string &userName) {
+void Member::setUserName(string userName) {
     Member::userName = userName;
 }
 
-void Member::setFullName(const string &fullName) {
+void Member::setFullName(string fullName) {
     Member::fullName = fullName;
 }
 
-void Member::setPhoneNum(const string &phoneNum) {
+void Member::setPhoneNum(string phoneNum) {
     Member::phoneNum = phoneNum;
 }
 
-void Member::setPassword(const string &password) {
+void Member::setPassword(string password) {
     Member::password = password;
 }
 
@@ -108,7 +107,7 @@ void Member::setRequest(Request *request) {
     Member::request = request;
 }
 
-void Member::setId(const string &id) {
+void Member::setId(string id) {
     Member::id = id;
 }
 
@@ -328,7 +327,6 @@ Rating * Member::rateHouse() {
     System * system = System::getInstance();
     string comment;
     string score;
-
 
     sysLog("How was your experience from -10 to 10 : ");
     inputStr(score);

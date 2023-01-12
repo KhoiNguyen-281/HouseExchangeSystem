@@ -1,6 +1,4 @@
 #include "HomepageController.h"
-#include "../Model/SystemModel.h"
-#include "../Libs/Config.h"
 #include <iostream>
 #include "string"
 
@@ -8,9 +6,8 @@ using std::string;
 using std::cout;
 using std::cin;
 
-#define logInfo(x) sysLog(x << newLine)
+#define logInfo(x) sysLog(x << "\n")
 
-#define newLine "\n\n";
 #define DIVIDER "----------------------------------------------------------------\n"
 
 #define APP_HEADER "EEET2482/COSC2082 ASSIGNMENT"
@@ -22,464 +19,521 @@ using std::cin;
 #define STUDENT3 ""
 #define STUDENT4 ""
 
-//using namespace HomepageComponent;
-//
-//namespace HomepageComponent{
-//
-//    int choice;
-//
-//
-//    int optionInput() {
-//        string option;
-//        cout << ("Enter the option: ");
-//        getline(cin, option);
-//
-//        return std::stoi(option);
-//    }
-//
-//    void displayStartPage() {
-//        System * system = System::getInstance();
-//        system->systemStart();
-//
-//        logInfo(APP_HEADER);
-//        logInfo(APP_NAME);
-//        logInfo(newline);
-//        logInfo(INSTRUCTOR);
-//        logInfo(GROUP_NAME);
-//        logInfo(STUDENT1);
-//        logInfo(STUDENT2);
-//        logInfo(STUDENT3);
-//        logInfo(STUDENT4);
-//
-//        sysLog("Use the app as 1.Guest 2.Member 3.Admin 0.Shutdown");
-//        sysLog("Enter your choice: ");
-//        cin >> choice;
-//
-//        switch (choice) {
-//            case 0:
-//                system->systemShutdown();
-//                break;
-//            case 1:
-//                //
-//                break;
-//            case 2:
-//
-//                break;
-//        }
-//    }
-//
-//
-//
-//    int houseIDInput(){
-//        string houseID;
-//        cout << ("Enter the option: ");
-//        getline(cin, houseID);
-//
-//        return std::stoi(houseID);
-//    }
-//
-//    string fieldInput(string field){
-//        string result;
-//        cout << "Enter your " << field << ": ";
-//        getline(cin, result);
-//
-//        return result;
-//    }
-//
-//    void displayRequestOption(Member *member, House *requestHouse)
-//    {
-//        // System *system = System::getInstance();
-//        // Request* currentRequest;
-//        // cout << LIGHT_CYAN_CLS << "\n—----------------- Accommodations options —-----------------\n"
-//        //     "\t1.  Request to occupy the house\n"
-//        //     "\t2.  Back\n";
-//        // int option = optionInput();
-//
-//        //                     switch (option)
-//        // {
-//        // case 1:
-//        //     // newRequest->setRequester(member);
-//        //     system->addRequest(currentRequest, houseSize)
-//        //         // system->saveRequest()
-//        //         break;
-//        // default:
-//        //     break;
-//        // }
-//    }
-//
-//    void displaySpecificHouseOption(vector<House *> &availableHouses)
-//    {
-//        // System *system = System::getInstance();
-//        // string houseNumber;
-//        // cout << "Enter the house ID: ";
-//        // getline(cin, houseNumber);
-//        // vector<House *> getSpecificHouseByID = system->getHouseByID(availableHouses, std::stoi(houseNumber));
-//        // getSpecificHouseByID[0]->showInfo();
-//        // displayRequestOption();
-//    }
-//
-//    void displayHousesOption(){
-//        System *system = System::getInstance();
-//        cout << Colors::LIGHT_CYAN_CLS << "\n—----------------- Accommodations options —-----------------\n"
-//                "\t0.  Exit\n"
-//                "\t1.  Display all available houses\n"
-//                "\t2.  Display the affordable houses by searching available locations.\n";
-//        int option = optionInput();
-//        switch (option){
-//            case 0: exit(1);
-//            case 1: {
-//                system->loadMember();
-//                system->loadHouse();
-//
-//                system->viewAllHouse();
-//                break;
-//            }
-//            case 2: {
-//                displayLocationOption();
-//                break;
-//            }
-//        }
-//    }
-//
-//    void displayLocationOption(Member* member){
-//        cout << "\n—----------------- Available Locations —-----------------\n"
-//                "\t0.  Exit\n"
-//                "\t1.  Ha Noi\n"
-//                "\t2.  Da Nang.\n"
-//                "\t3.  Ho Chi Minh\n";
-//        System* system = System::getInstance();
-//
-//        int option = optionInput();
-//
-//        switch(option){
-//            case 0: exit(1);
-//            case 1: {
-//                cout << "Houses in Ha Noi\n";
-//                vector<House* > availableHouses;
-//                Date startingDate = Date::parseDate(fieldInput("starting date"));
-//                Date endingDate = Date::parseDate(fieldInput("ending date"));
-//
-//                system->getAvailableHouses(availableHouses, true, "Ha Noi", startingDate, endingDate);
-//                system->viewAllHouseBySearchingLocation(true, "Ha Noi", startingDate, endingDate);
-//
-//                string houseID;
-//                cout << "Enter the house ID: ";
-//                inputStr(houseID);
-//
-//                House* getSearchingHouseByID;
-//
-//                for(auto & availableHouse : availableHouses){
-//                    if(availableHouse->getId() == houseID){
-//                        getSearchingHouseByID = system->getHouse(houseID);
-//                    }
-//                    else{
-//                        cout << "\nSorry, house not found !!!\n";
-//                        displayLocationOption(member);
-//                    }
-//                }
-//                getSearchingHouseByID->showInfo();
-//
-//                int houseNumber = availableHouses.size();
-//
-//                cout << "Do you want to book this house ? " << "\n";
-//                cout << "1. Yes\n 2. No\n";
-//                int option = optionInput();
-//
-////                system->loadRequest();
-//
-//                switch (option)
-//                {
-//                    case 1: {
-//                        if(member->getCreditP() < getSearchingHouseByID->getCreditPointsPerDay()){
-//                            cout << "Your credit point is not enough to book this house.\n";
-//                            displayHousesOption(member);
-//                            break;
-//                        }
-//                        else{
-////                            member->bookAccommodation(getSearchingHouseByID, startingDate, endingDate);
-//                            system->saveRequest();
-//                            displayHousesOption(member);
-//                        }
-//                    }
-//                    case 2: {
-//                        displayHousesOption(member);
-//                    }
-//
-//                    default:
-//                        break;
-//                }
-//                break;
-//            }
-//            case 2: {
-//                cout << "Houses in Da Nang\n";
-//                vector<House* > availableHouses;
-//                Date startingDate = Date::parseDate(fieldInput("starting date"));
-//                Date endingDate = Date::parseDate(fieldInput("ending date"));
-//
-//
-//                system->getAvailableHouses(availableHouses, true, "Da Nang", startingDate, endingDate);
-//                system->viewAllHouseBySearchingLocation(true, "Da Nang", startingDate, endingDate);
-//
-//                string houseID;
-//                cout << "Enter the house ID: ";
-//                inputStr(houseID);
-//
-//                House* getSearchingHouseByID;
-//
-//                for(auto & availableHouse : availableHouses){
-//                    if(availableHouse->getId() == houseID){
-//                        getSearchingHouseByID = system->getHouse(houseID);
-//                    }
-//                    else{
-//                        cout << "\nSorry, house not found !!!\n";
-//                        displayLocationOption(member);
-//                    }
-//                }
-//                getSearchingHouseByID->showInfo();
-//                int houseNumber = availableHouses.size();
-//
-//                cout << "Do you want to book this house ? " << "\n";
-//                cout << "1. Yes\n 2. No\n";
-//                int option = optionInput();
-//
-////                system->loadRequest();
-//
-//                switch (option)
-//                {
-//                    case 1: {
-//                        if(member->getCreditP() < getSearchingHouseByID->getCreditPointsPerDay()){
-//                            cout << "Your credit point is not enough to book this house.\n";
-//                            displayHousesOption(member);
-//                            break;
-//                        }
-//                        else{
-////                            member->bookAccommodation(getSearchingHouseByID, startingDate, endingDate);
-//                            system->saveRequest();
-//                            displayHousesOption(member);
-//                        }
-//                    }
-//                    case 2: {
-//                        displayHousesOption(member);
-//                    }
-//
-//                    default:
-//                        break;
-//                }
-//                break;
-//            }
-//            case 3: {
-//                vector<House* > availableHouses;
-//                Date startingDate = Date::parseDate(fieldInput("starting date"));
-//                Date endingDate = Date::parseDate(fieldInput("ending date"));
-//
-//                system->getAvailableHouses(availableHouses, true, "Ho Chi Minh", startingDate, endingDate);
-//                system->viewAllHouseBySearchingLocation(true, "Ho Chi Minh", startingDate, endingDate);
-//
-//                string houseID;
-//                cout << "Enter the house ID: ";
-//                inputStr(houseID);
-//
-//                House* getSearchingHouseByID;
-//
-//                for(auto & availableHouse : availableHouses){
-//                    if(availableHouse->getId() == houseID){
-//                        getSearchingHouseByID = system->getHouse(houseID);
-//                    }
-//                    else{
-//                        cout << "\nSorry, house not found !!!\n";
-//                        displayLocationOption(member);
-//                    }
-//                }
-//                getSearchingHouseByID->showInfo();
-//
-//                int houseNumber = availableHouses.size();
-//
-//                cout << "Do you want to book this house ? " << "\n";
-//                cout << "1. Yes\n 2. No\n";
-//                int option = optionInput();
-//
-////                system->loadRequest();
-//
-//                switch (option)
-//                {
-//                    case 1: {
-//                        if(member->getCreditP() < getSearchingHouseByID->getCreditPointsPerDay()){
-//                            cout << "Your credit point is not enough to book this house.\n";
-//                            displayHousesOption(member);
-//                            break;
-//                        }
-//                        else{
-////                            member->bookAccommodation(getSearchingHouseByID, startingDate, endingDate);
-//                            system->saveRequest();
-//                            displayHousesOption(member);
-//                        }
-//                    }
-//                    case 2: {
-//                        displayHousesOption(member);
-//                    }
-//
-//                    default:
-//                        break;
-//                }
-//                break;
-//            }
-//            default: {
-//                cout << "Invalid location";
-//                break;
-//            }
-//        }
-//    }
-//
-//    void displayHousesOption(Member* member){
-//        System *system = System::getInstance();
-//        cout << "\n—----------------- Accommodations options —-----------------\n"
-//                                  "\t0.  Exit\n"
-//                                  "\t1.  Display all available houses\n"
-//                                  "\t2.  Display the affordable houses by searching available locations.\n"
-//                                  "\t3.  Back to the homepage.\n";
-//
-//        int option = optionInput();
-//        switch (option){
-//            case 0: exit(1);
-//            case 1: {
-////                system->loadHouse();
-//                system->viewAllHouse();
-//                displayMemberHomepage(member);
-//                break;
-//            }
-//            case 2: {
-//                displayLocationOption(member);
-//                break;
-//            }
-//            case 3: {
-//                displayMemberHomepage(member);
-//                break;
-//            }
-//        }
-//    }
-//
-//    void displayMemberHomepage(Member* member){
-//        cout << "\n—----------------- Homepage —-----------------\n"
-//                "This is your menu:\n"
-//                "\t0.  Exit\n"
-//                "\t1.  View Information\n"
-//                "\t2.  List available houses.\n"
-//                "\t3.  Unlist current house\n"
-//                "\t4.  Search available house.\n";
-//        int option = optionInput();
-//
-//        switch (option){
-//            case 0:
-//                exit(1);
-//                break;
-//            case 1:{
-//                /// view Information
-//                cout << "View information\n";
-//                member->showInfo();
-//                break;
-//            }
-//            case 2:
-//                /// List available house
-//                displayHousesOption(member);
-//                break;
-//            case 3:
-//                /// Unlist current house
-//                cout << "Unlist current house \n";
-//                break;
-//            case 4:
-//                /// Search available house
-//                cout << "Search available house\n";
-//                break;
-//            default:
-//                cout << "Invalid option, please try again....\n";
-////                displayMemberHomepage();
-//        }
-//    }
-//
-//
-//
-//    void displayAdminHomepage(){
-//        cout << "\n—----------------- Admin Homepage —-----------------\n"
-//                "\t0.  Exit\n"
-//                "\t1.  Add new account\n"
-//                "\t2.  Add new house\n"
-//                "\t3.  View all accounts\n"
-//                "\t4.  View all houses\n";
-//
-//        int option = optionInput();
-//
-//        switch (option){
-//            case 0:
-//                exit(1);
-//                break;
-//            case 1:
-//                /// view Information
-//                cout << "Add new account\n";
-//                break;
-//            case 2:
-//                /// List available house
-//                cout << "Add new house \n";
-//                break;
-//            case 3:
-//                /// Unlist current house
-//                cout << "View all accounts \n";
-//                break;
-//            case 4:
-//                /// Search available house
-//                cout << "View all houses\n";
-//                break;
-//            default:
-//                cout << "Invalid option, please try again....\n";
-//                displayAdminHomepage();
-//        }
-//    }
-//
-//    void displayAppHomepage(){
-//        System* system = System::getInstance();
-//        system->loadMember();
-//        system->loadHouse();
-//        system->loadRequest();
-//        cout << "EEET2482/COSC2082 ASSIGNMENT \n"
-//                "VACATION HOUSE EXCHANGE APPLICATION\n"
-//                "\n"
-//                "Instructors: Mr. Linh Tran & Phong Ngo\n"
-//                "Group: Group Name\n"
-//                "sXXXXXXX, Student Name\n"
-//                "sXXXXXXX, Student Name\n"
-//                "sXXXXXXX, Student Name\n"
-//                "\n"
-//                "Use the app as 1. Guest   2. Member   3. Admin\n";
-//        int option = optionInput();
-//
-//
-//        switch (option){
-//            case 0:
-//                exit(1);
-//            case 1:
-//                displayGuestHomepage();
-//                break;
-//            case 2:{
-//                string userName = fieldInput("userName");
-//                string password = fieldInput("password");
-//
-//                Member* member = system->login(userName, password);
-//
-//                if(member != nullptr){
-//                    displayMemberHomepage(member);
-//                }
-//                else{
-//                    displayGuestHomepage();
-//                }
-//                break;
-//            }
-//            case 3:
-//                displayAdminHomepage();
-//                break;
-//            default:
-//                cout << "Invalid option, please try again....\n";
-////                displayMemberHomepage();
-//        }
-//    }
-//
-//}
-//
+using namespace HomepageComponent;
+
+namespace HomepageComponent{
+
+//    Member * member = system->getCurrentMem();
+
+    int inputOption() {
+        string option;
+        sysLog("Please enter your option: ");
+        inputStr(option)
+        if (!System::isInteger(option)) {
+            return 10;
+        }
+        return stoi(option);
+    }
+
+    int continueOption(int choice) {
+        skipline();
+        sysLog("Do you want to continue ? \n")
+        sysLog("0. Exit\n");
+        sysLog("1. Continue\n");
+        choice = inputOption();
+        return choice;
+    }
+
+    void displayAppHomepage() {
+        skipline();
+        logInfo(APP_HEADER);
+        logInfo(APP_NAME);
+        logInfo(INSTRUCTOR);
+        logInfo(GROUP_NAME);
+        logInfo(STUDENT1);
+        logInfo(STUDENT2);
+        logInfo(STUDENT3);
+        logInfo(STUDENT4);
+    };
+
+    void displayStartPage() {
+        System * system = System::getInstance();
+//        system->setCurrentMem(nullptr);
+//        Guest guest;
+        Guest guest;
+        sysLog("Use the app as 1.Guest  2.Member  3.Admin  0.Shutdown\n");
+        int choice = inputOption();
+        switch (choice) {
+            case 0:
+                system->systemShutdown();
+                delete system;
+                break;
+            case 1:
+                skipline();
+                displayGuestHomepage(guest);
+                break;
+            case 2: {
+                skipline();
+                oldMemberMenu();
+                break;
+            }
+            case 3:
+                skipline();
+                adminPage();
+                break;
+            default:
+                skipline();
+                sysErrLog("Invalid option");
+                displayStartPage();
+                break;
+        }
+    }
+
+    void displayGuestHomepage(Guest guest) {
+        System * system = System::getInstance();
+        sysLog(DIVIDER);
+        sysLog("                       WELCOME TO OUR SYSTEM                      \n");
+        sysLog(DIVIDER);
+        skipLine()
+        sysLog("0. Exit\n");
+        sysLog("1. View all houses\n");
+        sysLog("2. Register\n");
+        int choice = inputOption();
+        switch (choice) {
+            case 0:
+                skipline();
+                system->logout();
+                displayStartPage();
+                break;
+            case 1: {
+                skipline();
+                system->viewAllHouse();
+                break;
+            }
+            case 2:{
+                skipline();
+                sysLog("You are registering as new member\n")
+                Guest::registerNewMember();
+                system->getCurrentMem();
+                if (system->isUser()) {
+                    newMemberMenu();
+//                    break;
+                }
+//                sysErrLog("ERROR");
+                break;
+            }
+            default:
+                skipline();
+                sysErrLog("Invalid option")
+                displayGuestHomepage(guest);
+                break;
+        }
+
+        switch (continueOption(choice)) {
+            case 1:
+                displayGuestHomepage(guest);
+                break;
+            case 0:
+                delete &guest;
+                displayStartPage();
+                break;
+            default:
+                sysErrLog("Invalid option");
+                continueOption(choice);
+                break;
+        }
+    }
+
+    void adminPage(){
+        System * system = System::getInstance();
+        Guest::login();
+        if (!system->isAdmin()) {
+            sysErrLog("Wrong admin authentication")
+            return;
+        }
+        skipLine()
+        sysLog(DIVIDER);
+        sysLog("                       WELCOME BACK ADMIN                      \n");
+        sysLog(DIVIDER);
+        skipLine();
+        sysLog("0. Exit\n");
+        sysLog("1. View all houses\n");
+        sysLog("2. View all member\n");
+
+//        system->setIsAdmin(true);
+//        system->setCurrentMem(nullptr);
+        int choice = inputOption();
+
+        switch (choice){
+            case 0:
+                system->logout();
+                displayStartPage();
+                break;
+            case 1:
+                /// view Information
+                skipline();
+                system->viewAllHouse();
+                break;
+            case 2:
+                skipline();
+                system->viewMember();
+                break;
+            default:
+                sysErrLog("Invalid option")
+                adminPage();
+                break;
+        }
+        switch (continueOption(choice)) {
+            case 1:
+                adminPage();
+                break;
+            case 0:
+                system->logout();
+                displayStartPage();
+                break;
+            default:
+                sysErrLog("Invalid option");
+                continueOption(choice);
+                break;
+        }
+    }
+
+    void oldMemberMenu() {
+        System * system = System::getInstance();
+        Member * member = Guest::login();
+//        system->getCurrentMem();
+        if (!system->isUser()) {
+            skipline();
+            displayStartPage();
+            return;
+        }
+        skipLine()
+        sysLog(DIVIDER);
+        sysLog("                       WELCOME BACK OUR MEMBER                     \n");
+        sysLog(DIVIDER);
+        skipLine()
+        sysLog("0. Exit\n");
+        sysLog("1. View information\n");
+        sysLog("2. Register new house\n");
+        sysLog("3. Remove house\n");
+        sysLog("4. Book a house\n");
+        sysLog("5. Search houses\n");
+        sysLog("6. View request\n");
+        sysLog("7. Give feedback\n")
+        int choice = inputOption();
+        switch (choice) {
+            case 0:
+                member->logout();
+                displayStartPage();
+                break;
+            case 1:
+                skipline();
+                system->viewMember();
+                break;
+            case 2:
+                skipline();
+                if (member->getHouse() == nullptr) {
+                    member->registerHouse();
+                    break;
+                }
+                sysLog("You have already registered a house, please remove before adding new house\n")
+                break;
+            case 3:
+                skipline();
+                system->removeHouse();
+                break;
+            case 4: {
+                skipline();
+                member->bookAccommodation();
+                break;
+            }
+            case 5:
+                skipline();
+                searchHouseMenu();
+                break;
+            case 6: {
+                vector<Request *> requestList;
+                skipline();
+                system->getAndShowRequest(requestList, member->getHouse());
+                if (!system->hasRequest()) {
+                    sysLog("You have not received any request yet");
+                    break;
+                }
+                for (Request * request : requestList) {
+                    request->showInfo();
+                    skipline();
+                }
+                member->getHouse()->approveRequest(requestList);
+                break;
+            }
+            case 7:
+                skipline();
+                ratingMenu();
+                break;
+            default:
+                sysErrLog("Invalid option");
+                oldMemberMenu();
+                break;
+        }
+
+        switch (continueOption(choice)) {
+            case 1:
+                oldMemberMenu();
+                break;
+            case 0:
+                member->logout();
+                displayStartPage();
+                break;
+            default:
+                sysErrLog("Invalid option")
+                continueOption(choice);
+                break;
+        }
+
+    }
+
+    void searchHouseMenu() {
+        System * system = System::getInstance();
+        sysLog(newline);
+        sysLog(DIVIDER);
+        sysLog("                       SEARCH HOUSE MENU                      \n");
+        sysLog(DIVIDER);
+        sysLog(newline);
+
+        sysLog("0. Exit\n");
+        sysLog("1. Search by location\n");
+        sysLog("2. Search by date\n");
+        sysLog("3. Search by your credit points\n");
+        sysLog("4. Search by credit points in range\n");
+        sysLog("5. Search all houses\n");
+
+        vector<House *> houseList;
+        string location, dateTemp;
+        Date startDate, endDate;
+        int choice = inputOption();
+        switch (choice) {
+            case 0:
+                break;
+            case 1:
+                skipline();
+                system->getAvailableLocation();
+                sysLog("Please enter your demand location: ");
+                inputStr(location);
+                if (!system->checkLocation(location)) {
+                    sysErrLog("Invalid location \n");
+                    break;
+                }
+                system->getHouseByLoc(houseList, location);
+                if (houseList.empty()) {
+                    sysLog("There are not any available house with location " + location);
+                    break;
+                }
+                for (House *house: houseList) {
+                    house->showInfo();
+                    skipline();
+                }
+                break;
+            case 2:
+                skipline();
+                sysLog("Please enter start and end date with format (dd/MM/yyyy)\n");
+                sysLog("Start date: ");
+                inputStr(dateTemp);
+                if (!Date::isDateValid(dateTemp)) {
+                    sysErrLog("Invalid date format!!!");
+                    break;
+                }
+
+                startDate = Date::parseDate(dateTemp);
+
+                dateTemp = "";
+                sysLog("End date: ");
+                inputStr(dateTemp);
+                if (!Date::isDateValid(dateTemp)) {
+                    sysErrLog("Invalid date format!!!");
+                    break;
+                }
+
+                endDate = Date::parseDate(dateTemp);
+
+                system->getHouseByDate(houseList, startDate, endDate);
+                if (houseList.empty()) {
+                    sysLog("There are not any available houses from "
+                           + startDate.dateToString() + " to "
+                           + endDate.dateToString() + "\n");
+                    break;
+                }
+
+                for (House *house: houseList) {
+                    house->showInfo();
+                    skipline();
+                }
+                break;
+            case 3:
+                skipline();
+                system->getHouseWithCreditPoint(houseList);
+                if (houseList.empty()) {
+                    sysLog("There are not any available with your credit points\n");
+                    break;
+                }
+
+                for (House * house : houseList) {
+                    house->showInfo();
+                    skipline();
+                }
+                break;
+            case 4: {
+                string pointsFrom, pointsTo;
+                skipline();
+                sysLog("Please enter your demand range of credit points \n");
+                sysLog("Credit points from: ");
+                inputStr(pointsFrom);
+                if (!system->isInteger(pointsFrom)) {
+                    sysErrLog("Invalid format\n");
+                    break;
+                }
+
+                sysLog("Credit points to: ");
+                inputStr(pointsTo);
+                if (!system->isInteger(pointsTo)) {
+                    sysErrLog("Invalid format\n");
+                    break;
+                }
+
+                system->getHouseByCreditInRange(houseList, stoi(pointsFrom), stoi(pointsTo));
+
+                if (houseList.empty()) {
+                    sysLog("There are not any house available from "
+                                   << Colors::LIGHT_YELLOW_CLS << pointsFrom << " to " << pointsTo << Colors::RESET
+                                   << endl);
+                    break;
+                }
+
+                for (House *house: houseList) {
+                    house->showInfo();
+                    skipline();
+                }
+                break;
+            }
+            case 5:
+                skipline();
+                system->viewAllHouse();
+                break;
+            default:
+                sysErrLog("Invalid option!!!")
+                break;
+        }
+        switch (continueOption(choice)) {
+            case 1:
+                searchHouseMenu();
+                break;
+            case 0:
+                break;
+            default:
+                sysErrLog("Invalid option")
+                break;
+        }
+    }
+
+    void ratingMenu() {
+        System * system = System::getInstance();
+        Member * member = system->getCurrentMem();
+        skipline()
+        sysLog(DIVIDER);
+        sysLog("                       FEEDBACK MENU                      \n");
+        sysLog(DIVIDER);
+        skipline()
+
+        sysLog("0. Exit\n");
+        sysLog("1. Rate occupier\n");
+        sysLog("2. Rate house\n");
+        int choice  = inputOption();
+        switch (choice) {
+            case 0:
+                break;
+            case 1:
+                skipline();
+                member->rateOccupier();
+                break;
+            case 2:
+                member->rateHouse();
+                break;
+            default:
+                sysErrLog("Invalid option");
+                break;
+        }
+        switch (continueOption(choice)) {
+            case 1:
+                ratingMenu();
+                break;
+            case 0:
+//                oldMemberMenu(guest);
+                break;
+            default:
+                sysErrLog("Invalid option");
+                break;
+        }
+    }
+
+    void newMemberMenu() {
+        System * system = System::getInstance();
+        Member * member = system->getCurrentMem();
+        skipLine()
+        sysLog(DIVIDER);
+        sysLog("                       WELCOME OUR NEW MEMBER                      \n");
+        sysLog(DIVIDER);
+        skipLine()
+
+        sysLog("0. Exit\n");
+        sysLog("1. View Information\n");
+        sysLog("2. Register house\n");
+        sysLog("3. Book a house\n";);
+        sysLog("4. Search houses\n");
+
+        int choice  = inputOption();
+        switch (choice) {
+            case 0:
+                member->logout();
+                displayStartPage();
+                break;
+            case 1: {
+                skipline();
+                system->viewMember();
+                break;
+            }
+            case 2: {
+                skipline();
+                member->registerHouse();
+                break;
+            }
+            case 3: {
+                skipline();
+                member->bookAccommodation();
+                break;
+            }
+            case 4:
+                skipline();
+                searchHouseMenu();
+                break;
+            default:
+                sysErrLog("Invalid option");
+                newMemberMenu();
+                break;
+        }
+        switch (continueOption(choice)) {
+            case 1:
+                newMemberMenu();
+                break;
+            case 0:
+                member->logout();
+                displayStartPage();
+                break;
+            default:
+                sysErrLog("Invalid option");
+                continueOption(choice);
+                break;
+        }
+    }
+
+
+}
+
