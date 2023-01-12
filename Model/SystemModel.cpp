@@ -142,9 +142,13 @@ void System::setIsAdmin(bool isAdmin) {
 }
 
 bool System::hasRequest() {
-    for (Request & request : requestVect) {
-        if (request.getHouse()->getId() ==  currentMem->getHouse()->getId()) {
-            return true;
+    if (currentMem->getHouse()  != nullptr) {
+        return false;
+    } else {
+        for (Request & request : requestVect) {
+            if (request.getHouse()->getId() ==  currentMem->getHouse()->getId()) {
+                return true;
+            }
         }
     }
     return false;
@@ -205,13 +209,20 @@ Member *System::login(string username, string password) {
             if (i.getPassword() == password) {
                 setCurrentMem(&i);
                 setIsLoggedIn(true);
+                if (i.getHouse() != nullptr) {
+                    for (Request& request : requestVect) {
+                        if (request.getHouse()->getOwner()->getId() == i.getId() && request.getStatus() == APPROVED) {
+                            i.getHouse()->setOccupier(request.getRequester());
+                        }
+                    }
+                }
 
-                sysLogSuccess("\nLogin successfully \n ");
-
-//                if (hasRequest()) {
-//                    sysLog("You have received new request!!!\n");
-//                }
-
+                if (i.getRequest() != nullptr) {
+                    if (i.getRequest()->getStatus() == APPROVED) {
+                        sysLog("You have been approved to occupy house: ");
+                        i.getRequest()->getHouse()->showInfo();
+                    }
+                }
                 return &i;
             } else {
                 sysErrLog("Wrong password, please try again")
@@ -857,11 +868,15 @@ void System::viewMember() {
     }
     if (currentMem != nullptr) {
         currentMem->showInfo();
+        if (currentMem->getHouse() != nullptr) {
+            viewHouseDetail();
+        }
         bool hasRatings = currentMem->hasRatings();
         if (hasRatings) {
             float ratingScore = currentMem->sumRating();
             sysLogSuccess("Rating: " << std::fixed << std::setprecision(2) << to_string(ratingScore));
             skipline();
+
         } else {
             sysLog("You have not been rated yet.");
         }
@@ -1150,13 +1165,17 @@ void System::searchHouse(vector<House*>&houseList, string location, Date startDa
     }
 }
 
-void System::changeStatusOfRequestAuto() {
+int System::changeStatusOfRequestAuto() {
     for (Request & request : requestVect) {
-        if (Date::compareDate(currentDate(), request.getEndDate()) == 0
-            && Date::compareDate(currentDate(), request.getEndDate()) > 0) {
+        if (Date::compareDate(currentDate(), request.getEndDate()) >= 0 && request.getStatus() == APPROVED) {
             request.setStatus(FINISHED);
+            return FINISHED;
+        } else if (Date::compareDate(currentDate(), request.getEndDate()) >= 0 && request.getStatus() == PENDING) {
+            request.setStatus(DENIED);
+            return DENIED;
         }
     }
+    return 0;
 }
 
 

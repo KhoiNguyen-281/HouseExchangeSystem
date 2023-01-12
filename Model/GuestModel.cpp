@@ -22,6 +22,7 @@ Member * Guest::registerNewMember() {
     string phoneNum;
     string password;
 
+    sysLog("Please enter the required information to create account\n")
     sysLog("Enter username: ");
     inputStr(userName);
 

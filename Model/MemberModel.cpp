@@ -328,7 +328,6 @@ Rating * Member::rateHouse() {
     string comment;
     string score;
 
-
     sysLog("How was your experience from -10 to 10 : ");
     inputStr(score);
 //    if (!system->isInteger(score)) {

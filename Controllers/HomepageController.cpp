@@ -45,6 +45,7 @@ namespace HomepageComponent{
     }
 
     void displayAppHomepage() {
+        skipline();
         logInfo(APP_HEADER);
         logInfo(APP_NAME);
         logInfo(INSTRUCTOR);
@@ -68,17 +69,22 @@ namespace HomepageComponent{
                 delete system;
                 break;
             case 1:
-//                skipline();
+                skipline();
                 displayGuestHomepage(guest);
                 break;
             case 2: {
-//                skipline();
+                skipline();
                 oldMemberMenu();
                 break;
             }
             case 3:
                 skipline();
                 adminPage();
+                break;
+            default:
+                skipline();
+                sysErrLog("Invalid option");
+                displayStartPage();
                 break;
         }
     }
@@ -196,9 +202,11 @@ namespace HomepageComponent{
         System * system = System::getInstance();
         Member * member = Guest::login();
 //        system->getCurrentMem();
-////        if (member == nullptr) {
-////            return;
-////        }
+        if (!system->isUser()) {
+            skipline();
+            displayStartPage();
+            return;
+        }
         skipLine()
         sysLog(DIVIDER);
         sysLog("                       WELCOME BACK OUR MEMBER                     \n");
@@ -234,10 +242,11 @@ namespace HomepageComponent{
                 skipline();
                 system->removeHouse();
                 break;
-            case 4:
+            case 4: {
                 skipline();
                 member->bookAccommodation();
                 break;
+            }
             case 5:
                 skipline();
                 searchHouseMenu();

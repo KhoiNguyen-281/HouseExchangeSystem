@@ -379,6 +379,7 @@ public:
     void viewMember();
     void viewHouseDetail();
     void viewAllHouse();
+    void viewRating();
 
     int getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints);
     void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
@@ -412,7 +413,7 @@ public:
     void getHouseWithCreditPoint(vector<House*> &house);
     void getHouseByCreditInRange(vector<House*> &house, int creditFrom, int creditTo);
 
-    void changeStatusOfRequestAuto();
+    int changeStatusOfRequestAuto();
 
     bool systemStart();
     bool systemShutdown();
