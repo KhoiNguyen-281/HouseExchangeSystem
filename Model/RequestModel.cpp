@@ -21,6 +21,7 @@ void Request::showInfo() {
     this->getRequester()->showInfo();
     sysLogInfo("Start date: " + this->getStartDate().dateToString());
     sysLogInfo("End date: " + this->getEndDate().dateToString());
+    this->getHouse()->showInfo();
     switch (status) {
         case 0:
             sysLogInfo("PENDING");

@@ -443,7 +443,7 @@ bool Member::bookAccommodation() {
     vector<House *> availableHouse;
     string startStr, endStr;
     Date startDate, endDate;
-
+    Member * member = system->getCurrentMem();
 
     string temp;
     system->getAvailableLocation();
@@ -485,19 +485,19 @@ bool Member::bookAccommodation() {
         availableHouse[i]->showInfo();
     }
 
-    int choice;
+    string choice;
 
     sysLog("Please enter the house's number you want to book \n");
     sysLog("House no: ");
-    cin >> choice;
-    while (choice < 1 || choice > (availableHouse.size() + 1)) {
+    inputStr(choice);
+    while (stoi(choice) < 1 || stoi(choice) > (availableHouse.size() + 1)) {
         sysErrLog("Invalid house's number, please try again");
         sysLog("House no: ");
-        cin >> choice;
+        inputStr(choice);
     }
 
 
-    House * house =  availableHouse[choice - 1];
+    House * house =  availableHouse[stoi(choice) - 1];
 
     bool isEligible = system->isHouseSuitable(*house, startDate, endDate);
 
@@ -507,10 +507,11 @@ bool Member::bookAccommodation() {
     }
 
     Request request;
-    request.setRequester(this);
+    request.setRequester(member);
     request.setHouse(house);
     request.setStartDate(startDate);
     request.setEndDate(endDate);
+    request.setStatus(PENDING);
 
     Request * newRequest  =  system->addRequestToSys(request);
     if (newRequest == nullptr) {
@@ -520,7 +521,7 @@ bool Member::bookAccommodation() {
 
     sysLogSuccess("Add request successfully")
     sysLogInfo("Your request info: ");
-    this->setRequest(newRequest);
+    member->setRequest(newRequest);
     newRequest->showInfo();
     return true;
 }
