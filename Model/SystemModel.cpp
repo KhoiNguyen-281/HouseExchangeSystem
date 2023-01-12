@@ -300,26 +300,33 @@ Rating * System::addRatingToSys(Rating rating) {
 Request * System::addRequestToSys(Request request) {
     //When the request ID is empty
 
-    for (auto & i : requestVect) {
-        //valid if != 0
+    for (Request & i : requestVect) {
 
         //check if date conflict
-        if (i.getHouse()  == request.getHouse()) {
-            if (request.getStartDate().getDay() < i.getStartDate().getDay()) {
-                if (request.getEndDate().getDay() <= i.getStartDate().getDay()) {
-                    continue;
-                } else {
-                    sysErrLog("This house is not available for that date;")
-                    return nullptr;
+        if (i.getHouse()->getId() == request.getHouse()->getId()) {
+            //check if start date in system is greater
+            if (Date::compareDate(i.getStartDate(), request.getStartDate()) < 0) {
+                if (Date::compareDate(i.getEndDate(), request.getEndDate()) <= 0) {
+                    break;
                 }
-            } else if (request.getStartDate().getDay() > i.getStartDate().getDay()) {
-                if (request.getStartDate().getDay() >= i.getEndDate().getDay()) {
-                    continue;
-                } else {
+                else {
                     sysErrLog("This house is not available for that date;")
                     return nullptr;
                 }
             }
+            //check if start date in system is smaller
+            if (Date::compareDate(i.getStartDate(), request.getStartDate()) > 0) {
+                if (Date::compareDate(i.getEndDate(), request.getEndDate()) >= 0) {
+                    break;
+                } else {
+                    sysErrLog("This house is not available for that date;")
+                    return nullptr;
+                }
+            } else {
+                sysErrLog("This house is not available for that date;")
+                return nullptr;
+            }
+
         } else {
             continue;
         }
@@ -328,7 +335,8 @@ Request * System::addRequestToSys(Request request) {
     if (request.getId().empty()) {
         //When request is already exist but cannot find ID
         if (currentMem->getRequest() != nullptr && currentMem->getRequest()->getStatus() ==  PENDING) {
-            return nullptr;
+            request = *currentMem->getRequest();
+            return &request;
         }
         string ID = generateID(countRequest);
 
