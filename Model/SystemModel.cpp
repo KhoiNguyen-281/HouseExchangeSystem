@@ -1017,6 +1017,11 @@ void System::viewAllHouse() {
         }
         return;
     }
+
+    for (House & house : houseVect) {
+        house.showInfo();
+        skipline();
+    }
 }
 
 void System::getAndShowRequest(vector<Request *> &requestList, House * house) {
