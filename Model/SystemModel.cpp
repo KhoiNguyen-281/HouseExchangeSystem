@@ -206,29 +206,39 @@ Member *System::login(string username, string password) {
 
     for (Member & i : memberVect) {
         if (i.getUserName() == username) {
-            if (i.getPassword() == password) {
-                setCurrentMem(&i);
-                setIsLoggedIn(true);
-                if (i.getHouse() != nullptr) {
-                    for (Request& request : requestVect) {
-                        if (request.getHouse()->getOwner()->getId() == i.getId() && request.getStatus() == APPROVED) {
-                            i.getHouse()->setOccupier(request.getRequester());
-                        }
-                    }
+            bool isVerified = verifyPassword(i.getPassword(), password);
+            int limitTime = 4;
+            while(!isVerified){
+                if (limitTime > 0) {
+                    sysErrLog("Current password is incorrect ! Please re-type: ")
+                    inputStr(password);
+                    isVerified = System::getInstance()->changePassword(i.getPassword(), password);
+                    limitTime -= 1;
                 }
-
-                if (i.getRequest() != nullptr) {
-                    if (i.getRequest()->getStatus() == APPROVED) {
-                        sysLog("You have been approved to occupy house: ");
-                        i.getRequest()->getHouse()->showInfo();
-                    }
+                else {
+                    sysErrLog("You have enter incorrect password 4 times and will be bring back.");
+                    return nullptr;
                 }
-                sysLogSuccess("Logged in successfully\n")
-                return &i;
-            } else {
-                sysErrLog("Wrong password, please try again")
-                return nullptr;
             }
+
+            setCurrentMem(&i);
+            setIsLoggedIn(true);
+            if (i.getHouse() != nullptr) {
+                for (Request& request : requestVect) {
+                    if (request.getHouse()->getOwner()->getId() == i.getId() && request.getStatus() == APPROVED) {
+                        i.getHouse()->setOccupier(request.getRequester());
+                    }
+                }
+            }
+
+            if (i.getRequest() != nullptr) {
+                if (i.getRequest()->getStatus() == APPROVED) {
+                    sysLog("You have been approved to occupy house: ");
+                    i.getRequest()->getHouse()->showInfo();
+                }
+            }
+            sysLogSuccess("Logged in successfully\n")
+            return &i;
         }
     }
     sysErrLog("Username not found!");

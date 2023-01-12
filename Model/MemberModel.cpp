@@ -22,26 +22,12 @@ Member::~Member() {
 
 void Member::showInfo() {
 
-//    string id;
-//    string userName;
-//    string fullName;
-//    string phoneNum;
-//    string password;
-//    int creditP = CREDIT_POINT;
-//    House* house = nullptr;
-//    Request* request = nullptr;
-
     sysLogInfo("ID: " + this->id);
     sysLogInfo("Username: " + this->userName);
     sysLogInfo("Full name: " + this->fullName);
     sysLogInfo("Phone number: " + this->phoneNum);
     sysLogInfo("Credit points: " + to_string(this->creditP));
 
-//    sysLog("ID: " << this->id << "\n");
-//    sysLog("Username: " << this->userName <<"\n");
-//    sysLog("Full name: " << this->fullName <<"\n");
-//    sysLog("Phone number: " << this->phoneNum <<"\n");
-//    sysLog("Credit point: " << this->creditP << std::endl);
 }
 
 //Getter
@@ -110,7 +96,6 @@ void Member::setId(string id) {
     Member::id = id;
 }
 
-
 //Authentication function
 Member * Member::registerNewMember() {
     sysLog("You are already logged in");
@@ -125,7 +110,6 @@ Member * Member::login() {
 bool Member::logout() {
     return System::getInstance()->logout();
 }
-
 
 bool Member::registerHouse() {
     bool isHouseExisted = this->getHouse() != nullptr;
@@ -239,9 +223,7 @@ bool Member::changePassword(){
     
     sysLog("Current password: ");
     inputStr(oldPassword);
-//    getline(cin, oldPassword);
     sysLog("New password: ");
-//    getline(cin, newPassword);
     inputStr(newPassword);
 
     bool succeed  = System::getInstance()->changePassword(newPassword, oldPassword);
@@ -249,19 +231,18 @@ bool Member::changePassword(){
     int limitTime = 4;
     while(!succeed){
         if (limitTime > 0) {
-            sysLog("Current password is incorrect ! Please re-type: ")
-//        getline(cin, oldPassword);
+            sysErrLog("Current password is incorrect ! Please re-type: ")
             inputStr(oldPassword);
             succeed  = System::getInstance()->changePassword(newPassword, oldPassword);
             limitTime -= 1;
         }
         else {
-            sysLog("You have enter incorrect password 4 times and will be bring back.");
+            sysErrLog("You have enter incorrect password 4 times and will be bring back.");
             return false;
         }
     }
 
-    sysLog("Password changed successfully ! \n");
+    sysLogSuccess("Password changed successfully !");
     return succeed;
 }
 
@@ -307,8 +288,6 @@ bool Member::updateInfo(){
             changePassword();
             break;
     }
-
-//
     return true;
 }
 bool Member::deleteProfile() {
@@ -349,17 +328,23 @@ Rating * Member::rateHouse() {
     string comment;
     string score;
 
+    if (this->getRequest() == nullptr) {
+        sysErrLog("Cannot find any house\n");
+        return nullptr;
+    }
+
     if (this->getRequest()->getStatus() != FINISHED) {
+        sysErrLog("Your duration is not end yet")
         return nullptr;
     }
 
     sysLog("How was your experience from -10 to 10 : ");
     inputStr(score);
-//    if (!system->isInteger(score)) {
-//        sysErrLog("Invalid format number")
-//        return nullptr;
-//    }
-//
+    if (!system->isInteger(score)) {
+        sysErrLog("Invalid format number")
+        return nullptr;
+    }
+
 
     if(stod(score) < -10 || stod(score) > 10) {
         sysErrLog("Invalid score, score must be in range from -10 to 10");
@@ -384,16 +369,23 @@ Rating * Member::rateOccupier() {
     string comment;
     string score;
 
+    if (this->getRequest() == nullptr) {
+        sysLog("\nCannot find any occupier\n");
+        return nullptr;
+    }
+
     if (this->getRequest()->getStatus() != FINISHED) {
+        sysErrLog("The request of your house is not finished")
         return nullptr;
     }
 
     sysLog("How would you rate your occupier from -10 to 10 : ");
     inputStr(score);
-//    if (!system->isInteger(score)) {
-//        sysErrLog("Invalid format number");
-//        return nullptr;
-//    }
+    if (!system->isInteger(score)) {
+        sysErrLog("Invalid format number");
+        return nullptr;
+    }
+
     if (stod(score) < -10 || stod(score) > 10) {
         sysLog("Invalid score, score must be in range from -10 to 10");
         return nullptr;
@@ -523,17 +515,3 @@ bool Member::bookAccommodation() {
     newRequest->showInfo();
     return true;
 }
-
-//bool Member::denyRequest(vector<string> &ID) {
-//    if (ID.empty()) {
-//        return false;
-//    }
-//
-//    System * system =  System::getInstance();
-//    Request * request;
-//    for (string temp : ID) {
-//        request = system->getRequest(temp);
-//        request->setStatus(DENIED);
-//    }
-//    return true;
-//}

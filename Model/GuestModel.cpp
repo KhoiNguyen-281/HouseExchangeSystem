@@ -27,12 +27,10 @@ Member * Guest::registerNewMember() {
     inputStr(userName);
 
     sysLog("Enter password: ")
-//    cout << "Enter password: ";
     inputStr(password);
     sysLog("Enter full name: ");
     inputStr(fullName);
     sysLog("Enter phone number: ");
-//    cout << "Enter phone number: ";
     inputStr(phoneNumStr);
 
     if (!system->isInteger(phoneNumStr))  {
@@ -40,15 +38,6 @@ Member * Guest::registerNewMember() {
         sysErrLog("Invalid, phone must be number.");
         return nullptr;
     }
-
-//    string id;
-//    string userName;
-//    string fullName;
-//    string phoneNum;
-//    string password;
-//    int creditP = CREDIT_POINT;
-//    House *house = nullptr;
-//    Request *request = nullptr;
 
     member.setUserName(userName);
     member.setFullName(fullName);
@@ -61,12 +50,15 @@ Member * Guest::registerNewMember() {
 }
 
 Member* Guest::login() {
+    System * system = System::getInstance();
+
     string username;
     string password;
     sysLog("Please enter your username and password to login \n")
     sysLog("Username: ");
     inputStr(username);
     sysLog("Password: ");
-    inputStr(password)
-    return System::getInstance()->login(username, password);;
+    inputStr(password);
+
+    return system->login(username, password);;
 }
