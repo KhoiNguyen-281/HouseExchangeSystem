@@ -15,9 +15,10 @@ using std::cin;
 #define INSTRUCTOR "Instructors: Mr. Linh Tran & Phong Ngo"
 #define GROUP_NAME "Group 4"
 #define STUDENT1 "s3759804, NGUYEN HOANG MINH KHOI"
-#define STUDENT2 ""
-#define STUDENT3 ""
-#define STUDENT4 ""
+#define STUDENT2 "s3740814, DIEN DUC UY MAN"
+#define STUDENT3 "s3916890, NGUYEN PHUC LOI"
+#define STUDENT4 "s3928433, BUI VIET HA"
+
 
 using namespace HomepageComponent;
 
