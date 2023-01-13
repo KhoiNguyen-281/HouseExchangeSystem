@@ -212,7 +212,7 @@ Member *System::login(string username, string password) {
                 if (limitTime > 0) {
                     sysErrLog("Current password is incorrect ! Please re-type: ")
                     inputStr(password);
-                    isVerified = System::getInstance()->changePassword(i.getPassword(), password);
+                    isVerified = verifyPassword(i.getPassword(), password);
                     limitTime -= 1;
                 }
                 else {
@@ -852,7 +852,7 @@ bool System::isInteger(const string& input) {
     return true;
 }
 
-bool verifyPassword(string inputPassword, string memberPassword) {
+bool System::verifyPassword(string inputPassword, string memberPassword) {
     return inputPassword == memberPassword;
 }
 
