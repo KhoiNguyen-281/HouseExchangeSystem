@@ -133,9 +133,9 @@ public:
     void setRequest(Request *request);
 
 //    Authenticate method, override from system
-    Member* registerNewMember();
-    Member* login();
-    bool logout();
+//    Member* registerNewMember();
+//    Member* login();
+    static bool memLogout();
 
 //    Method to modified member profile
     bool changePassword();

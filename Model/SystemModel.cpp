@@ -6,6 +6,7 @@
 #define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
 #define formatErr(x) cout << "Error: Invalid " << x << " format \n";
 #define skipline() cout << "\n";
+#define sysLogInfo(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n";
 
 #include "SystemModel.h"
 #include "iostream"
@@ -16,7 +17,6 @@
 // define log message with color;
 #define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n" ; //log error and new line
 #define sysLogSuccess(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n"; //Log data information with green color
-
 
 
 const string MEMBERS = "members.dat";
@@ -35,6 +35,1100 @@ string getFilePath(const string &file) {
     //Work on VSCode, Window
 //    return "./Data/" + file;
 }
+
+
+Date::Date() {};
+Date::~Date() {}
+
+Date::Date(const Date &otherDate) {
+    day = otherDate.day;
+    month = otherDate.month;
+    year = otherDate.year;
+}
+
+Date &Date::operator=(const Date &otherDate) {
+    day = otherDate.day;
+    month = otherDate.month;
+    year = otherDate.year;
+    return * this;
+}
+
+string Date::dateToString() {
+    std::stringstream  ss;
+    ss  << std::setfill('0') << std::setw(2) << day << '/'
+        << std::setfill('0') << std::setw(2) << month << '/'
+        << year;
+    return ss.str();
+}
+
+int Date::compareDate(Date dateInSys, Date inputDate) {
+    //Check if year is conflict
+    if (dateInSys.getYear() > inputDate.getYear()) {
+        return -1;
+    } else if (dateInSys.getYear() < inputDate.getYear()) {
+        return 1;
+    } else {
+        //Check if month is conflict
+        if (dateInSys.getMonth() > inputDate.getMonth()) {
+            return -1;
+        } else if (dateInSys.getMonth() < inputDate.getMonth()) {
+            return 1;
+        } else {
+            //Check if day is conflict
+            if (dateInSys.getDay() > inputDate.getDay()) {
+                return -1;
+            } else if (dateInSys.getDay() < inputDate.getDay()) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+    }
+}
+
+
+
+//---------------------------Getter and setter------------------//
+int Date::getMonth() const {
+    return month;
+}
+
+int Date::getDay() const {
+    return day;
+}
+
+int Date::getYear() const {
+    return year;
+}
+
+void Date::setMonth(int month) {
+    Date::month = month;
+}
+
+void Date::setDay(int date) {
+    Date::day = date;
+}
+
+void Date::setYear(int year) {
+    Date::year = year;
+}
+
+bool Date::isDateValid(string date) {
+    // Date format dd/MM/yyyy
+    //1. Check if the length of the date is valid
+
+    if(date.length() != 10) {
+        return false;
+    }
+
+    //2. Check if the format of the date is valid
+    if (!isdigit(date[0]) || !isdigit(date[1]) || date[2] != '/' ||
+        !isdigit(date[3]) || !isdigit(date[4]) || date[5] != '/' ||
+        !isdigit(date[6]) || !isdigit(date[7]) || !isdigit(date[8]) ||
+        !isdigit(date[9])) {
+        return false;
+    }
+
+    //Convert input string to Date attribute
+    int day = std::stoi(date.substr(0, 2));
+    int month = std::stoi(date.substr(3, 2));
+    int year = std::stoi(date.substr(6, 4));
+
+    //3. Check if date is valid
+    if (day < 1 || day > 31) {
+        return false;
+    }
+
+    if (month < 1 || month > 12) {
+        return false;
+    }
+
+    if (year < thisYear()) {
+        return false;
+    }
+    // check if month is 2;
+    if (month == 2) {
+        if (year % 4 == 0) {
+            if (day > 29) {
+                return false;
+            }
+        } else {
+            if (day > 28) {
+                return false;
+            }
+        }
+    } else if (month == 4 || month == 6 || month == 9 || month == 11) {
+        if (day > 30) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+Date Date::parseDate(string date) {
+    Date dateTemp;
+    dateTemp.setDay(std::stoi(date.substr(0, 2)));
+    dateTemp.setMonth(std::stoi(date.substr(3, 2)));
+    dateTemp.setYear(std::stoi(date.substr(6, 4)));
+    return dateTemp;
+}
+
+
+int checkMonth(int month, int year, int duration) {
+    if (month == 1 || month == 3 || month == 5 || month == 7 ||
+        month == 8 || month == 10 || month == 12) {
+        duration += 31;
+    } else if (month == 2) {
+        if (year % 4 == 0) {
+            duration += 29;
+        } else {
+            duration += 28;
+        }
+    } else {
+        duration += 30;
+    }
+    return duration;
+}
+
+int Date::getDuration(Date start, Date end) {
+    int durations = 0;
+    int temp = 0;
+
+    int startDay = start.getDay();
+    int startMonth = start.getMonth();
+    int startYear = start.getYear();
+
+    int endDay = end.getDay();
+    int endMonth = end.getMonth();
+
+    if (startMonth == endMonth) {
+        durations = endDay - startDay;
+    } else {
+        for (int i = startMonth; i < endMonth; i++) {
+            durations = ::checkMonth(i, startYear, temp);
+        }
+        durations += endDay;
+    }
+
+    return durations;
+}
+
+
+
+
+
+
+Guest::Guest() {};
+
+Guest::~Guest() {};
+
+Member * Guest::registerNewMember() {
+    System * system = System::getInstance();
+    Member member;
+    string userName;
+    string fullName;
+    string phoneNumStr;
+    string password;
+
+    sysLog("Please enter the required information to create account\n")
+    sysLog("Enter username: ");
+    inputStr(userName);
+
+    sysLog("Enter password: ")
+    inputStr(password);
+    sysLog("Enter full name: ");
+    inputStr(fullName);
+    sysLog("Enter phone number: ");
+    inputStr(phoneNumStr);
+
+    if (!system->isInteger(phoneNumStr))  {
+        skipline();
+        sysErrLog("Invalid, phone must be number.");
+        return nullptr;
+    }
+
+    member.setUserName(userName);
+    member.setFullName(fullName);
+    member.setPhoneNum(stoi(phoneNumStr));
+    member.setPassword(password);
+    member.setHouse(nullptr);
+    member.setRequest(nullptr);
+
+    return system->registerMember(member);
+}
+
+Member* Guest::login() {
+    System * system = System::getInstance();
+
+    string username;
+    string password;
+    sysLog("Please enter your username and password to login \n")
+    sysLog("Username: ");
+    inputStr(username);
+    sysLog("Password: ");
+    inputStr(password);
+
+    return system->login(username, password);;
+}
+
+
+
+
+House::House() {};
+
+House::~House() {};
+
+
+//---------------------------Setter-------------------------------//
+void House::setOwner(Member *owner) {
+    House::owner = owner;
+}
+
+void House::setOccupier(Member *occupier) {
+    House::occupier = occupier;
+}
+
+void House::setId(const string &id) {
+    House::id = id;
+}
+
+void House::setLocation(const string &location) {
+    House::location = location;
+}
+
+void House::setDescription(const string &description) {
+    House::description = description;
+}
+
+void House::setCreditPointsPerDay(int creditPointsPerDay) {
+    House::creditPointsPerDay = creditPointsPerDay;
+}
+
+void House::setMinimumOccupierRating(float minimumOccupierRating) {
+    House::minimumOccupierRating = minimumOccupierRating;
+}
+
+
+//-----------------------------Getter-----------------------//
+Member *House::getOwner() const {
+    return owner;
+}
+
+Member *House::getOccupier() const {
+    return occupier;
+}
+
+const string &House::getId() const {
+    return id;
+}
+
+string House::getLocation() {
+    return location;
+}
+
+const string &House::getDescription() const {
+    return description;
+}
+
+int House::getCreditPointsPerDay() const {
+    return creditPointsPerDay;
+}
+
+float House::getMinimumOccupierRating() const {
+    return minimumOccupierRating;
+}
+
+void House::setStartListDate( Date startListDate) {
+    House::startListDate = startListDate;
+}
+
+void House::setEndListDate( Date endListDate) {
+    House::endListDate = endListDate;
+}
+
+Date House::getStartListDate() {
+    return startListDate;
+}
+
+Date House::getEndListDate() {
+    return endListDate;
+}
+
+
+
+//Show info function
+void House::showInfo() {
+
+//    string id;
+//    string location;
+//    string description = "";
+//
+//    int creditPointsPerDay = 0;
+//    float minimumOccupierRating = 0.0;
+//
+//    Member* owner = nullptr;
+//    Member* occupier = nullptr;
+////
+//    Date startListDate;
+//    Date endListDate;
+
+    sysLogInfo("House ID: " + this->id);
+    sysLogInfo("Location: " + this->location);
+    sysLogInfo("Description: " + this->description);
+    sysLogInfo("Credit points per day: " + to_string(this->creditPointsPerDay));
+    sysLogInfo("Minimum rating required: " << std::fixed << std::setprecision(2) << this->getMinimumOccupierRating());
+
+}
+
+//---------------------------Rating function---------------//
+bool House::hasRatings() {
+    System * system = System::getInstance();
+    vector<Rating*> ratingVal;
+    system->getRatingFromSys(ratingVal, this);
+
+    return ratingVal.size() > 0;
+}
+
+float House::sumRating() {
+    System * system = System::getInstance();
+    if (hasRatings()) {
+        vector<Rating*> ratingVal;
+        system->getRatingFromSys(ratingVal, this);
+        float totalScore = 0.0;
+        for (int i = 0; i < ratingVal.size(); i++) {
+            totalScore += ratingVal[i]->getScore();
+        }
+        return totalScore / ratingVal.size();
+    }
+    return 0;
+}
+
+
+bool House::approveRequest(vector<Request*> &requestList){
+    System * system = System::getInstance();
+    // Check request status
+    Member * owner = system->getCurrentMem();
+
+//    if (request->getStatus() != PENDING)
+//    {
+//        sysErrLog("The request is not in pending");
+//        return false;
+//    }
+
+    string strBuffer;
+    sysLog("Please enter the ID of the request you want to approve: ");
+    inputStr(strBuffer);
+    bool found = false;
+    while (!system->isInteger(strBuffer)) {
+        sysErrLog("Invalid format, please try again");
+        inputStr(strBuffer);
+    }
+
+    Request * request;
+    for (int i = 0; i < requestList.size(); i++) {
+        if (strBuffer == requestList[i]->getId()) {
+            request = requestList[i];
+            found = true;
+            break;
+        } else {
+            found = false;
+        }
+    }
+
+    if (request->getRequester()->getId() == owner->getId()) {
+        sysErrLog("You cannot accept your own request");
+        return false;
+    }
+
+    if (found) {
+        if (request->getStatus() != PENDING) {
+            sysErrLog("You have approved or denied this request");
+            return false;
+        }
+
+        int totalCreditPoint = system->getTotalConsumptionPoint(request->getStartDate(), request->getEndDate(), request->getHouse()->getCreditPointsPerDay());
+        if (request->getRequester()->getCreditP() - totalCreditPoint < 0) {
+            sysErrLog("Requester credit balance is not enough");
+            return false;
+        }
+        request->setStatus(APPROVED);
+        request->getHouse()->setOccupier(request->getRequester());
+        sysLogSuccess("\nApproved request successfully, you will receive " << Colors::LIGHT_YELLOW_CLS << to_string(totalCreditPoint)
+                                                                           << " after the house is checked out")
+        sysLog("Your current balance: " << owner->getCreditP() << "\n")
+        for (int i= 0;i < requestList.size(); i++) {
+            if (requestList[i]->getId() != request->getId() && requestList[i]->getStatus() ==PENDING) {
+                requestList[i]->setStatus(DENIED);
+            }
+        }
+        return true;
+    } else {
+        sysErrLog("Cannot find request with ID " + strBuffer + " in your request list");
+        return false;
+    }
+}
+
+
+
+
+Member::Member() {};
+Member::~Member() {
+
+}
+
+void Member::showInfo() {
+
+    sysLogInfo("ID: " + this->id);
+    sysLogInfo("Username: " + this->userName);
+    sysLogInfo("Full name: " + this->fullName);
+    sysLogInfo("Phone number: " << this->phoneNum);
+    sysLogInfo("Credit points: " + to_string(this->creditP));
+
+}
+
+//Getter
+string Member::getId() {
+    return id;
+}
+
+string Member::getUserName() {
+    return userName;
+}
+
+string Member::getFullName() {
+    return fullName;
+}
+
+int Member::getPhoneNum() {
+    return phoneNum;
+}
+
+string Member::getPassword() {
+    return password;
+}
+
+int Member::getCreditP() {
+    return creditP;
+}
+
+House *Member::getHouse()  {
+    return house;
+}
+
+Request *Member::getRequest()  {
+    return request;
+}
+
+//Setter
+void Member::setUserName(string userName) {
+    Member::userName = userName;
+}
+
+void Member::setFullName(string fullName) {
+    Member::fullName = fullName;
+}
+
+void Member::setPhoneNum(int phoneNum) {
+    Member::phoneNum = phoneNum;
+}
+
+void Member::setPassword(string password) {
+    Member::password = password;
+}
+
+void Member::setCreditP(int creditP) {
+    Member::creditP = creditP;
+}
+
+void Member::setHouse(House *house) {
+    Member::house = house;
+}
+
+void Member::setRequest(Request *request) {
+    Member::request = request;
+}
+
+void Member::setId(string id) {
+    Member::id = id;
+};
+
+//Authentication function
+//Member * Member::registerNewMember() {
+//    sysLog("You are already logged in");
+//    return this;
+//};
+
+//Member * Member::login() {
+//    sysLog("You are already logged in");
+//    return this;
+//}
+
+bool Member::memLogout() {
+    return System::getInstance()->logout();
+}
+
+bool Member::registerHouse() {
+    bool isHouseExisted = this->getHouse() != nullptr;
+
+    string location, description;
+    int creditPointsPerDay;
+    Date endDate;
+    Date startDate;
+    float minimumRequiredScore;
+
+    System *system = System::getInstance();
+    system->getAvailableLocation();
+
+    sysLog("Enter your house information to register \n");
+    sysLog("Location: ");
+    inputStr(location);
+
+    while (!system->checkLocation(location)) {
+        sysLog('\n');
+        sysLog("Location is not available, please try again \n");
+        sysLog("Location: ");
+        inputStr(location);
+    }
+
+    sysLog("House description: ");
+    inputStr(description);
+
+
+    sysLog("Enter house listing start date and end date \n")
+
+    string temp = "";
+    sysLog("Start date: ");
+    inputStr(temp);
+    if (!Date::isDateValid(temp)) {
+        sysErrLog("Invalid date format");
+        return false;
+    }
+
+    startDate = Date::parseDate(temp);
+
+    if (Date::compareDate(system->currentDate(), startDate) < 0) {
+        sysErrLog("Date must be greater than or equal current date " + system->currentDate().dateToString());
+        return false;
+    }
+
+    temp = "";
+    sysLog("End date: ");
+    inputStr(temp);
+    if (!Date::isDateValid(temp)) {
+        sysErrLog("Invalid date format");
+        return false;
+    }
+
+    endDate = Date::parseDate(temp);
+
+    if (Date::compareDate(startDate, endDate) < 0) {
+        sysErrLog("End date must be greater than the start date " + startDate.dateToString());
+        return false;
+    }
+
+    temp = "";
+    sysLog("Credit points per day: ");
+    inputStr(temp);
+    while (!system->isInteger(temp)) {
+        sysLog("Invalid format, please try again \n");
+        inputStr(temp);
+    }
+
+    creditPointsPerDay = std::stoi(temp);
+
+    temp = "";
+    sysLog("Minimum required score (0.0): ");
+    inputStr(temp);
+    minimumRequiredScore = stof(temp);
+    if (minimumRequiredScore < 0) {
+        sysErrLog("Invalid minimum required score will be set to 0.0");
+        minimumRequiredScore = 0;
+    }
+
+    House house;
+
+    house.setOwner(this);
+    house.setLocation(location);
+    house.setDescription(description);
+    house.setStartListDate(startDate);
+    house.setEndListDate(endDate);
+    house.setCreditPointsPerDay(creditPointsPerDay);
+    house.setMinimumOccupierRating(minimumRequiredScore);
+
+    string houseID = isHouseExisted ? this->getHouse()->getId() : "";
+
+    if (isHouseExisted) {
+        house.setId(houseID);
+    }
+
+    House * stored = System::getInstance()->addHouseToSys(house);
+
+    if (stored != nullptr) {
+        setHouse(stored);
+        sysLogSuccess("Registered house successfully!\n");
+    } else {
+        sysErrLog("Unable to register house\n");
+    }
+    return stored != nullptr;
+}
+
+
+bool Member::changePassword(){
+    string newPassword;
+    string oldPassword;
+
+    sysLog("Current password: ");
+    inputStr(oldPassword);
+    sysLog("New password: ");
+    inputStr(newPassword);
+
+    bool succeed  = System::getInstance()->changePassword(newPassword, oldPassword);
+
+    int limitTime = 4;
+    while(!succeed){
+        if (limitTime > 0) {
+            sysErrLog("Current password is incorrect ! Please re-type: ")
+            inputStr(oldPassword);
+            succeed  = System::getInstance()->changePassword(newPassword, oldPassword);
+            limitTime -= 1;
+        }
+        else {
+            sysErrLog("You have enter incorrect password 4 times and will be bring back.");
+            return false;
+        }
+    }
+
+    sysLogSuccess("Password changed successfully !");
+    return succeed;
+}
+
+bool Member::updateInfo(){
+    System * system = System::getInstance();
+    string input;
+    string option;
+    sysLog("Enter your option: ");
+    sysLog("1. Change username \n");
+    sysLog("2. Change fullname \n");
+    sysLog("3. Change phone number \n");
+    sysLog("4. Change password \n");
+    inputStr(option);
+
+    switch (stoi(option)) {
+        case 1:
+            sysLog("Enter new username: ");
+            inputStr(input);
+            system->getCurrentMem()->setUserName(input);
+            skipline();
+            sysLogSuccess("Change username successfully !")
+            break;
+        case 2:
+            sysLog("Enter new fullname: ");
+            inputStr(input);
+            system->getCurrentMem()->setFullName(input);
+            skipline();
+            sysLog("Change fullname successfully !");
+            break;
+        case 3:
+            sysLog("Enter new phone number: ");
+            inputStr(input);
+            if (system->isInteger(input)) {
+                skipline();
+                sysErrLog("Invalid format, must be number");
+                break;
+            }
+            system->getCurrentMem()->setPhoneNum(stoi(input));
+            skipline();
+            sysLog("Change phone number successfully !")
+            break;
+        case 4:
+            changePassword();
+            break;
+    }
+    return true;
+}
+bool Member::deleteProfile() {
+    System * system =  System::getInstance();
+    string option;
+    sysLog("Are you sure you want to delete your profile (Y/N) \n");
+    sysLog("Your option: ");
+    inputStr(option);
+    if (option == "N" || option == "n" ) {
+        skipline();
+        return false;
+    }
+
+    if (option == "Y" || option == "y") {
+        string password;
+        sysLog("Enter your password: ");
+        inputStr(password);
+        bool succeed = system->deleteProfile(password);
+        if (succeed) {
+            sysLogSuccess("Successfully delete profile");
+            return succeed;
+        } else {
+            sysErrLog("Failed to delete profile");
+            return succeed;
+        }
+    }
+
+    skipline();
+    sysErrLog("Invalid option");
+    skipline();
+    return false;
+}
+
+//-------------------------------Rating function--------------------------//
+Rating * Member::rateHouse() {
+
+    System * system = System::getInstance();
+    string comment;
+    string score;
+
+    if (this->getRequest() == nullptr) {
+        sysErrLog("Cannot find any house\n");
+        return nullptr;
+    }
+
+    if (this->getRequest()->getStatus() != FINISHED) {
+        sysErrLog("Your duration is not end yet")
+        return nullptr;
+    }
+
+    sysLog("How was your experience from -10 to 10 : ");
+    inputStr(score);
+    if (!system->isInteger(score)) {
+        sysErrLog("Invalid format number")
+        return nullptr;
+    }
+
+
+    if(stod(score) < -10 || stod(score) > 10) {
+        sysErrLog("Invalid score, score must be in range from -10 to 10");
+        return nullptr;
+    }
+
+    sysLog("You can leave a comment for more details: ");
+    inputStr(comment);
+
+    Rating rating;
+    rating.setRater(this);
+    rating.setHouse(this->getRequest()->getHouse());
+    rating.setScore(stod(score));
+    rating.setComment(comment);
+
+    Rating * newRating  =  &rating;
+
+    system->addRatingToSys(rating);
+    return newRating;
+}
+
+Rating * Member::rateOccupier() {
+    System * system = System::getInstance();
+    string comment;
+    string score;
+
+    if (this->getRequest() == nullptr) {
+        sysLog("\nCannot find any occupier\n");
+        return nullptr;
+    }
+
+    if (this->getRequest()->getStatus() != FINISHED) {
+        sysErrLog("The request of your house is not finished")
+        return nullptr;
+    }
+
+    sysLog("How would you rate your occupier from -10 to 10 : ");
+    inputStr(score);
+    if (!system->isInteger(score)) {
+        sysErrLog("Invalid format number");
+        return nullptr;
+    }
+
+    if (stod(score) < -10 || stod(score) > 10) {
+        sysLog("Invalid score, score must be in range from -10 to 10");
+        return nullptr;
+    }
+
+    sysLog("Leave a comment for more details: ");
+    inputStr(comment);
+
+    Rating  rating;
+    rating.setRater(this);
+    rating.setOccupier(this->getRequest()->getRequester());
+    rating.setScore(stod(score));
+    rating.setComment(comment);
+
+    system->addRatingToSys(rating);
+
+    Rating * newRating = &rating;
+    return newRating;
+}
+
+bool Member::hasRatings() {
+    System * system = System::getInstance();
+    vector<Rating*> ratingVal;
+    system->getRatingFromSys(ratingVal, this);
+
+    return !ratingVal.empty();
+}
+
+
+float Member::sumRating() {
+    System * system = System::getInstance();
+    if (hasRatings()) {
+        vector<Rating*> ratingVal;
+        system->getRatingFromSys(ratingVal, this);
+        float totalScore = 0.0;
+        for (int i = 0; i < ratingVal.size(); i++) {
+            totalScore += ratingVal[i]->getScore();
+        }
+        return totalScore / ratingVal.size();
+    }
+    return 0;
+}
+
+
+bool Member::bookAccommodation() {
+    System * system = System::getInstance();
+    vector<House *> availableHouse;
+    string startStr, endStr;
+    Date startDate, endDate;
+    Member * member = system->getCurrentMem();
+
+    string temp;
+    system->getAvailableLocation();
+
+    sysLog("Please enter your demand city: ");
+    inputStr(temp);
+    if(!system->checkLocation(temp)) {
+        sysErrLog("Your city is not available, please try again!!\n");
+        return false;
+    }
+
+    sysLog("Please enter your start and end date\n")
+    sysLog("Start date: ");
+    inputStr(startStr);
+    if (!Date::isDateValid(startStr)) {
+        sysErrLog("Wrong date format, please try again!!");
+        return false;
+    }
+
+    startDate = Date::parseDate(startStr);
+
+    sysLog("End date: ");
+    inputStr(endStr);
+    if (!Date::isDateValid(endStr)) {
+        sysErrLog("Wrong date format, please try again!!");
+        return false;
+    }
+    endDate = Date::parseDate(endStr);
+
+    system->getAvailableHouses(availableHouse, true, temp, startDate, endDate);
+
+    if (availableHouse.empty()) {
+        sysErrLog("There are not any available houses");
+        return false;
+    }
+
+    for (int i = 0; i < availableHouse.size(); i++) {
+        sysLog("House no." << (i + 1) << "\n");
+        availableHouse[i]->showInfo();
+    }
+
+    string choice;
+
+    sysLog("Please enter the house's number you want to book \n");
+    sysLog("House no: ");
+    inputStr(choice);
+    while (stoi(choice) < 1 || stoi(choice) > (availableHouse.size() + 1)) {
+        sysErrLog("Invalid house's number, please try again");
+        sysLog("House no: ");
+        inputStr(choice);
+    }
+
+
+    House * house =  availableHouse[stoi(choice) - 1];
+
+    bool isEligible = system->isHouseSuitable(*house, startDate.dateToString(), endDate.dateToString());
+
+    if (!isEligible) {
+        sysErrLog("Your credit points balance is not enough, please add more");
+        return false;
+    }
+
+    Request request;
+    request.setRequester(member);
+    request.setHouse(house);
+    request.setStartDate(startDate);
+    request.setEndDate(endDate);
+    request.setStatus(PENDING);
+
+    Request * newRequest  =  system->addRequestToSys(request);
+    if (newRequest == nullptr) {
+        sysErrLog("Failed to add request");
+        return false;
+    }
+
+    sysLogSuccess("Add request successfully")
+    sysLogInfo("Your request info: ");
+    member->setRequest(newRequest);
+    newRequest->showInfo();
+    return true;
+}
+
+
+
+// Constructor
+Rating::Rating(Member *rater, double score, string comment) {
+
+}
+
+Rating::Rating() {};
+Rating::~Rating() {}
+
+
+
+void Rating::setRating(Member * rater, double score, string comment) {
+    this->rater = rater;
+    this->score =  score;
+    this->comment = comment;
+}
+
+void Rating::setRater(Member *rater) {
+    Rating::rater = rater;
+}
+
+void Rating::setScore(double score) {
+    Rating::score = score;
+}
+
+void Rating::setComment(const string &comment) {
+    Rating::comment = comment;
+}
+
+Member *Rating::getRater() const {
+    return rater;
+}
+
+double Rating::getScore() const {
+    return score;
+}
+
+string Rating::getComment() const {
+    return comment;
+}
+
+void Rating::setHouse(House *house) {
+    Rating::house = house;
+}
+
+void Rating::setOccupier(Member *occupier) {
+    Rating::occupier = occupier;
+}
+
+House *Rating::getHouse() const {
+    return house;
+}
+
+Member *Rating::getOccupier() const {
+    return occupier;
+}
+
+
+
+
+Request::Request() {}
+Request::~Request() {
+
+}
+
+void Request::showInfo() {
+//    string id = "";
+//
+//    House *house = nullptr;
+//    Member *requester = nullptr;
+//
+//    Date start_date = Date();
+//    Date end_date = Date();
+//
+//    int status = PENDING;
+
+    sysLogInfo("Request ID: " + this->id);
+    sysLogInfo("Requester: ");
+    this->getRequester()->showInfo();
+    sysLogInfo("Start date: " + this->getStartDate().dateToString());
+    sysLogInfo("End date: " + this->getEndDate().dateToString());
+    this->getHouse()->showInfo();
+    switch (status) {
+        case 0:
+            sysLogInfo("PENDING");
+            break;
+        case 1:
+            sysLogInfo("APPROVED");
+            break;
+        case 2:
+            sysLogInfo("DENIED");
+            break;
+        case 3:
+            sysLogInfo("FINISHED");
+            break;
+
+        default:
+            sysLogInfo("N/A");
+            break;
+    }
+    sysLog("\n");
+}
+
+void Request::setId(const string &id) {
+    Request::id = id;
+}
+
+void Request::setHouse(House *house) {
+    Request::house = house;
+}
+
+void Request::setRequester(Member *requester) {
+    Request::requester = requester;
+}
+
+void Request::setStartDate(const Date &startDate) {
+    start_date = startDate;
+}
+
+void Request::setEndDate(const Date &endDate) {
+    end_date = endDate;
+}
+
+void Request::setStatus(int status) {
+    Request::status = status;
+}
+
+const string &Request::getId() const {
+    return id;
+}
+
+House *Request::getHouse() const {
+    return house;
+}
+
+Member *Request::getRequester() const {
+    return requester;
+}
+
+Date Request::getStartDate() {
+    return start_date;
+}
+
+Date Request::getEndDate() {
+    return end_date;
+}
+
+int Request::getStatus() const {
+    return status;
+}
+
 
 
 

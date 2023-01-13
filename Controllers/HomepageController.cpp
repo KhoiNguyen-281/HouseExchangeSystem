@@ -1,10 +1,14 @@
 #include "HomepageController.h"
+#include "../Model/SystemModel.h"
 #include <iostream>
 #include "string"
+#include "../Libs/Config.h"
 
 using std::string;
 using std::cout;
 using std::cin;
+
+using namespace Colors;
 
 #define logInfo(x) sysLog(x << "\n")
 
@@ -257,7 +261,7 @@ namespace HomepageComponent{
         int choice = inputOption();
         switch (choice) {
             case 0:
-                member->logout();
+                member->memLogout();
                 displayStartPage();
                 return;
             case 1:
@@ -441,7 +445,7 @@ namespace HomepageComponent{
                 if (houseList.empty()) {
                     sysLog("There are not any house available from "
                                    << Colors::LIGHT_YELLOW_CLS << pointsFrom << " to " << pointsTo << Colors::RESET
-                                   << endl);
+                                   << std::endl);
                     break;
                 }
 
@@ -544,7 +548,7 @@ namespace HomepageComponent{
             case 3:
                 skipline();
                 member->deleteProfile();
-                member->logout();
+                member->memLogout();
                 break;
             default:
                 sysErrLog("Invalid option");
@@ -586,7 +590,7 @@ namespace HomepageComponent{
         int choice  = inputOption();
         switch (choice) {
             case 0:
-                member->logout();
+                member->memLogout();
                 displayStartPage();
                 break;
             case 1: {
