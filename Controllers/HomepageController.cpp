@@ -516,6 +516,7 @@ namespace HomepageComponent{
             }
         }
         skipline();
+        oldMemberMenu();
     }
 
     void profile() {

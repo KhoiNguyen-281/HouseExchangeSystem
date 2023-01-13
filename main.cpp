@@ -19,6 +19,8 @@ int main() {
     bool isAdmin = system->isAdmin();
     bool isStarted = system->systemStart();
 
+    cout << system->getRequest("2");
+
     displayAppHomepage();
     displayStartPage();
 

@@ -252,8 +252,8 @@ Member * Guest::registerNewMember() {
     member.setFullName(fullName);
     member.setPhoneNum(stoi(phoneNumStr));
     member.setPassword(password);
-    member.setHouse(nullptr);
-    member.setRequest(nullptr);
+//    member.setHouse(nullptr);
+//    member.setRequest(nullptr);
 
     return system->registerMember(member);
 }
@@ -484,6 +484,12 @@ void Member::showInfo() {
     sysLogInfo("Full name: " + this->fullName);
     sysLogInfo("Phone number: " << this->phoneNum);
     sysLogInfo("Credit points: " + to_string(this->creditP));
+    if (this->getRequest() == nullptr) {
+        sysLogInfo("NONE");
+
+    } else {
+        sysLogInfo(this->getRequest()->getId() + "OOO")
+    }
 
 }
 
@@ -785,10 +791,17 @@ Rating * Member::rateHouse() {
     string comment;
     string score;
 
-    if (this->getRequest() == nullptr) {
-        sysErrLog("Cannot find any house\n");
+    bool hasRequest = system->hasRequest();
+
+
+    Member * member = system->getCurrentMem();
+
+
+    if (!hasRequest) {
+        sysLog("Cannot find request")
         return nullptr;
     }
+
 
     if (this->getRequest()->getStatus() != FINISHED) {
         sysErrLog("Your duration is not end yet")
@@ -828,15 +841,19 @@ Rating * Member::rateOccupier() {
     string comment;
     string score;
 
-    if (this->getRequest() == nullptr) {
+    bool hasRequest = system->hasRequest();
+
+    if (!hasRequest) {
         sysLog("\nCannot find any occupier\n");
         return nullptr;
     }
 
-    if (this->getRequest()->getStatus() != FINISHED) {
-        sysErrLog("The request of your house is not finished")
-        return nullptr;
-    }
+
+
+//    if ( != FINISHED) {
+//        sysErrLog("The request of your house is not finished")
+//        return nullptr;
+//    }
 
     sysLog("How would you rate your occupier from -10 to 10 : ");
     inputStr(score);
@@ -853,15 +870,16 @@ Rating * Member::rateOccupier() {
     sysLog("Leave a comment for more details: ");
     inputStr(comment);
 
-    Rating  rating;
+    Rating rating;
     rating.setRater(this);
-    rating.setOccupier(this->getRequest()->getRequester());
+    rating.setOccupier(this->getHouse()->getOccupier());
+    rating.setHouse(this->getHouse());
     rating.setScore(stod(score));
     rating.setComment(comment);
 
-    system->addRatingToSys(rating);
+    Rating * newRating  =  &rating;
 
-    Rating * newRating = &rating;
+    system->addRatingToSys(rating);
     return newRating;
 }
 
@@ -963,6 +981,8 @@ bool Member::bookAccommodation() {
     request.setStartDate(startDate);
     request.setEndDate(endDate);
     request.setStatus(PENDING);
+
+
 
     Request * newRequest  =  system->addRequestToSys(request);
     if (newRequest == nullptr) {
@@ -1105,7 +1125,7 @@ void Request::setStatus(int status) {
     Request::status = status;
 }
 
-const string &Request::getId() const {
+string Request::getId() {
     return id;
 }
 
@@ -1247,6 +1267,20 @@ bool System::hasRequest() {
     for (Request & request : requestVect) {
         if (request.getHouse()->getId() ==  currentMem->getHouse()->getId()) {
             count += 1;
+        }
+    }
+
+    for (Request & request : requestVect) {
+        if (request.getRequester()->getId() ==  currentMem->getId()) {
+            currentMem->getHouse()->setOccupier(request.getRequester());
+            return true;
+        }
+    }
+
+    for (Request & request : requestVect) {
+        if (request.getHouse()->getId() ==  currentMem->getHouse()->getId()) {
+            currentMem->getHouse()->setOccupier(request.getRequester());
+            return true;
         }
     }
 
@@ -1558,10 +1592,22 @@ bool System::saveMember() {
         return false;
     }
 
+
     for (Member member : memberVect) {
+        string temp;
+        if (member.getRequest() == nullptr) {
+            temp = "NONE";
+
+        } else {
+            temp = member.getRequest()->getId();
+        }
+
+
+
         file << member.getId() << "," << member.getUserName() << ","
             << member.getPassword() << "," << member.getFullName() << ","
-            << member.getPhoneNum() << "," << member.getCreditP() << "\n";
+            << member.getPhoneNum() << "," << member.getCreditP() << ","
+            << temp << "\n";
     }
     file.close();
     sysLogSuccess("Saved " +  std::to_string(memberVect.size()) + " member(s)");
@@ -1680,6 +1726,10 @@ bool System::loadMember() {
             continue;
         }
 
+
+
+
+
         Member member;
 
         member.setId(tokens[0]);
@@ -1688,7 +1738,6 @@ bool System::loadMember() {
         member.setFullName(tokens[3]);
         member.setPhoneNum(stoi(tokens[4]));
         member.setCreditP(std::stoi(tokens[5]));
-
 
         memberVect.push_back(member);
     }
@@ -1901,6 +1950,15 @@ House * System::getHouse(string ID) {
     return nullptr;
 }
 
+Request * System::getRequest(string ID) {
+    for (Request& request : requestVect) {
+        if (request.getId() == ID)
+            return &request;
+    }
+
+    return nullptr;
+}
+
 void System::getAvailableHouses(vector<House *> &availableHouses, bool isQualified, const string& location, Date startingDate,
                                 Date endingDate) {
     for (auto & i : houseVect) {
@@ -1983,6 +2041,10 @@ void System::viewMember() {
         } else {
             sysLog("You have not been rated yet.");
         }
+        if (currentMem->getRequest() != nullptr) {
+            currentMem->getRequest()->showInfo();
+        }
+
         return;
     }
 }

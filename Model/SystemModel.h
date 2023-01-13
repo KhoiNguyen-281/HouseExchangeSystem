@@ -250,7 +250,7 @@ public:
     void setStatus(int status);
 
     // Getters
-    const string &getId() const;
+    string getId();
 
     House *getHouse() const;
 
