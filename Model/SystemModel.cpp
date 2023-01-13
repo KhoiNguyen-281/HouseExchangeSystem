@@ -142,16 +142,19 @@ void System::setIsAdmin(bool isAdmin) {
 }
 
 bool System::hasRequest() {
-    if (currentMem->getHouse()  != nullptr) {
+    if (currentMem->getHouse()  == nullptr) {
         return false;
-    } else {
-        for (Request & request : requestVect) {
-            if (request.getHouse()->getId() ==  currentMem->getHouse()->getId()) {
-                return true;
-            }
+    }
+
+    int count = 0;
+    for (Request & request : requestVect) {
+        if (request.getHouse()->getId() ==  currentMem->getHouse()->getId()) {
+            count += 1;
         }
     }
-    return false;
+
+    sysLog("You have received " << count << " request(s) \n");
+    return true;
 }
 
 // ------------------------ * Current user * ------------------------//
@@ -237,6 +240,9 @@ Member *System::login(string username, string password) {
                     i.getRequest()->getHouse()->showInfo();
                 }
             }
+
+            hasRequest();
+
             sysLogSuccess("Logged in successfully\n")
             return &i;
         }
@@ -592,7 +598,6 @@ bool System::loadMember() {
 
     countMem = std::stoi(memberVect.back().getId());
     file.close();
-    sysLogSuccess("Loaded " + std::to_string(memberVect.size()) + " member(s)");
     return true;
 }
 
@@ -647,7 +652,6 @@ bool System::loadHouse() {
     countHouse = std::stoi(houseVect.back().getId());
 
     file.close();
-    sysLogSuccess("Loaded " + std::to_string(houseVect.size()) + " house(s)");
     return true;
 }
 
@@ -715,7 +719,6 @@ bool System::loadRating() {
     }
 
     file.close();
-    sysLogSuccess("Loaded " + std::to_string(ratingVect.size()) + " rating(s)");
 
     return true;
 }
@@ -777,7 +780,6 @@ bool System::loadRequest() {
 
     file.close();
     countRequest = stoi(requestVect.back().getId());
-    sysLogSuccess("Loaded " + std::to_string(ratingVect.size()) + " request(s)");
 
     return true;
 }
@@ -1105,7 +1107,7 @@ bool System::systemStart() {
         return false;
     }
 
-    sysLogSuccess("Data loaded successfully");
+    sysLogSuccess("Data loaded successfully, system started without any interruption");
     return true;
 }
 
