@@ -13,6 +13,8 @@
 #include <random>
 #include "fstream"
 #include <sstream>
+#include "../Libs/Config.h"
+
 
 // define log message with color;
 #define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n" ; //log error and new line
@@ -114,6 +116,7 @@ void Date::setYear(int year) {
 }
 
 bool Date::isDateValid(string date) {
+    System * system = System::getInstance();
     // Date format dd/MM/yyyy
     //1. Check if the length of the date is valid
 
@@ -143,7 +146,7 @@ bool Date::isDateValid(string date) {
         return false;
     }
 
-    if (year < thisYear()) {
+    if (year < system->currentDate().getYear()) {
         return false;
     }
     // check if month is 2;
@@ -166,7 +169,7 @@ bool Date::isDateValid(string date) {
     return true;
 }
 
-Date Date::parseDate(string date) {
+Date Date::parseDate(const string& date) {
     Date dateTemp;
     dateTemp.setDay(std::stoi(date.substr(0, 2)));
     dateTemp.setMonth(std::stoi(date.substr(3, 2)));
@@ -1156,7 +1159,7 @@ Date System::currentDate() {
     std::time_t t = std::time(nullptr);
     std::tm *const pointerInfo =  std::localtime(&t);
     int month = pointerInfo->tm_mon + 1;
-    int year = thisYear();
+    int year = 1900 + pointerInfo->tm_year;
     int day = pointerInfo->tm_mday;
     Date currentDate;
     currentDate.setDay(day);
@@ -1991,9 +1994,9 @@ void System::getAvailableLocation() {
     sysLog("\n");
 }
 
-bool System::checkLocation(string location) {
-    for (int i = 0;  i < availableLocation.size(); i++) {
-        if (availableLocation[i] ==  location) {
+bool System::checkLocation(const string& location) {
+    for (string loc : availableLocation) {
+        if (loc ==  location) {
             return true;
         }
     }

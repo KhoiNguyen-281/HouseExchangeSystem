@@ -4,6 +4,7 @@
 
 #ifndef SED_GROUP_CONFIG_H
 #define SED_GROUP_CONFIG_H
+#include <string>
 
 namespace Colors {
 

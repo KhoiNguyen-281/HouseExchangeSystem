@@ -28,13 +28,6 @@ enum Status {
 };
 
 
-//Get current year
-int thisYear() {
-    std::time_t t = std::time(nullptr);
-    std::tm *const pointerInfo = std::localtime(&t);
-    return 1900 + pointerInfo->tm_year;
-}
-
 
 //Prototype classes
 class Guest;
@@ -42,13 +35,14 @@ class Member;
 class House;
 class Request;
 class Rating;
+class System;
 
 
 class Date {
 private:
     int month;
     int day;
-    int year = thisYear();
+    int year;
 
 public:
     Date();
@@ -73,7 +67,7 @@ public:
 //    Method to validate date with format dd/MM/yyyy
     static bool isDateValid(string date);
 //    Method to convert string type to Date
-    static Date parseDate( string date);
+    static Date parseDate( const string& date);
 //    Method to get duration between two date
     static int getDuration(Date start, Date end);
 //    Method to compare two date
@@ -309,11 +303,12 @@ private:
     static System *instancePointer;
     System();
 
-    const std::string hanoi = "Ha Noi";
-    const std::string saigon = "Sai Gon";
-    const std::string hue = "Hue";
-
-    vector<string> availableLocation{hanoi, hue, saigon};
+//    const std::string hanoi = "Ha Noi";
+//    const std::string saigon = "Sai Gon";
+//    const std::string hue = "Hue";
+//
+//    vector<string> availableLocation {hanoi, hue, saigon};
+    vector<string> availableLocation = {"Ha Noi", "Hue", "Sai Gon"};
 
     // Admin login info
     string adminUsername = "admin";
@@ -396,7 +391,7 @@ public:
      // vector<House* > getHouseByID(vector<House *> &house, int id);
 
     // Verify input function
-    bool checkLocation(string location);
+    bool checkLocation(const string &location);
     static bool isInteger(const string &input);
     bool verifyPassword(string inputPassword, string memberPass);
 

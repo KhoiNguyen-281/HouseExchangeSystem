@@ -1,14 +1,13 @@
 #include "HomepageController.h"
-#include "../Model/SystemModel.h"
 #include <iostream>
 #include "string"
+#include "../Model/SystemModel.h"
 #include "../Libs/Config.h"
 
 using std::string;
 using std::cout;
 using std::cin;
 
-using namespace Colors;
 
 #define logInfo(x) sysLog(x << "\n")
 
@@ -39,12 +38,10 @@ using namespace Colors;
 #define STUDENT4 Colors::LIGHT_MAGENTA_CLS <<"s3928433, BUI VIET HA"<< Colors::RESET
 
 
+using namespace Colors;
 using namespace HomepageComponent;
 
-namespace HomepageComponent{
-
-//    Member * member = system->getCurrentMem();
-
+namespace HomepageComponent {
     void loginPage() {
         System * system = System::getInstance();
         skipline();
@@ -395,6 +392,11 @@ namespace HomepageComponent{
                 }
 
                 endDate = Date::parseDate(dateTemp);
+
+                if (Date::compareDate(startDate, endDate) < 0) {
+                    sysErrLog("End date must be greater than the start date");
+                    break;
+                }
 
                 system->getHouseByDate(houseList, startDate, endDate);
                 if (houseList.empty()) {

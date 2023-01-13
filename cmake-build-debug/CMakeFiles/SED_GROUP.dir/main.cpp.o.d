@@ -432,5 +432,4 @@ CMakeFiles/SED_GROUP.dir/main.cpp.o: \
   /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Model/../Libs/Config.h \
   /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Controllers/HomepageController.cpp \
   /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Controllers/HomepageController.h \
-  /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Controllers/../Model/SystemModel.h \
-  /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Controllers/../Libs/Config.h
+  /Users/nguyenhoangminhkhoi/Desktop/AP/SED_GROUP/Controllers/../Model/SystemModel.h

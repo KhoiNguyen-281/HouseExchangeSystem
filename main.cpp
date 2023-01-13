@@ -1,25 +1,23 @@
 #include <iostream>
 
-#include "string"
 using std::string;
 using std::cout;
 using std::cin;
-using namespace std;
+
 // using std::vector;
 #include <vector>
 
-#include "Model/SystemModel.cpp"
-#include "Controllers/HomepageController.cpp"
+//#include "Libs/Config.cpp"
+#include "Controllers/HomepageController.h"
 
 
+using namespace HomepageComponent;
 int main() {
 
     System * system = System::getInstance();
     bool isLoggedIn = system->isUser();
     bool isAdmin = system->isAdmin();
     bool isStarted = system->systemStart();
-
-    cout << system->getRequest("2");
 
     displayAppHomepage();
     displayStartPage();
@@ -36,3 +34,5 @@ int main() {
 //    searchHouseMenu(*system);
 
 }
+
+
