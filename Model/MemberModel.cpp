@@ -16,7 +16,7 @@
 #define inputStr(x) getline(cin, x);
 #define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
 #define formatErr(x) cout << "Error: Invalid " << x << " format \n";
-#define skipLine() cout << "\n";
+#define skipline() cout << "\n";
 
 #include "iostream"
 #include <random>
@@ -36,7 +36,7 @@ void Member::showInfo() {
     sysLogInfo("ID: " + this->id);
     sysLogInfo("Username: " + this->userName);
     sysLogInfo("Full name: " + this->fullName);
-    sysLogInfo("Phone number: " + this->phoneNum);
+    sysLogInfo("Phone number: " << this->phoneNum);
     sysLogInfo("Credit points: " + to_string(this->creditP));
 
 }
@@ -273,14 +273,14 @@ bool Member::updateInfo(){
             sysLog("Enter new username: ");
             inputStr(input);
             system->getCurrentMem()->setUserName(input);
-            skipLine();
+            skipline();
             sysLogSuccess("Change username successfully !")
             break;
         case 2:
             sysLog("Enter new fullname: ");
             inputStr(input);
             system->getCurrentMem()->setFullName(input);
-            skipLine();
+            skipline();
             sysLog("Change fullname successfully !");
             break;
         case 3:
@@ -292,7 +292,7 @@ bool Member::updateInfo(){
                 break;
             }
             system->getCurrentMem()->setPhoneNum(stoi(input));
-            skipLine();
+            skipline();
             sysLog("Change phone number successfully !")
             break;
         case 4:

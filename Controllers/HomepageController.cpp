@@ -136,7 +136,7 @@ namespace HomepageComponent{
         sysLog(DIVIDER);
         sysLog("                       WELCOME TO OUR SYSTEM                      \n");
         sysLog(DIVIDER);
-        skipLine()
+        skipline();
         sysLog("0. Exit\n");
         sysLog("1. View all houses\n");
         sysLog("2. Register\n");
@@ -189,11 +189,11 @@ namespace HomepageComponent{
             sysErrLog("Wrong admin authentication")
             return;
         }
-        skipLine()
+        skipline();
         sysLog(DIVIDER);
         sysLog("                       WELCOME BACK ADMIN                      \n");
         sysLog(DIVIDER);
-        skipLine();
+        skipline();
         sysLog("0. Exit\n");
         sysLog("1. View all houses\n");
         sysLog("2. View all member\n");
@@ -240,11 +240,11 @@ namespace HomepageComponent{
         System * system = System::getInstance();
         Member * member = system->getCurrentMem();
 
-        skipLine()
+        skipline();
         sysLog(DIVIDER);
         sysLog("                       WELCOME BACK OUR MEMBER                     \n");
         sysLog(DIVIDER);
-        skipLine()
+        skipline();
         sysLog("0. Exit\n");
         sysLog("1. View information\n");
         sysLog("2. Register new house\n");
@@ -571,11 +571,11 @@ namespace HomepageComponent{
     void newMemberMenu() {
         System * system = System::getInstance();
         Member * member = system->getCurrentMem();
-        skipLine()
+        skipline();
         sysLog(DIVIDER);
         sysLog("                       WELCOME OUR NEW MEMBER                      \n");
         sysLog(DIVIDER);
-        skipLine()
+        skipline();
 
         sysLog("0. Exit\n");
         sysLog("1. View Information\n");

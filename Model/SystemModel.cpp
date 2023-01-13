@@ -28,7 +28,11 @@ const string RATINGS = "ratings.dat";
 #include "../Libs/Config.h"
 //Helper functions
 string getFilePath(const string &file) {
+
+    //Work on Mac, CLion
     return "../Data/" + file;
+
+    //Work on VSCode, Window
 //    return "./Data/" + file;
 }
 
