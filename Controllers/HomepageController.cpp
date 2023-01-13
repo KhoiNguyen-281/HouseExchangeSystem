@@ -8,6 +8,21 @@ using std::cin;
 
 #define logInfo(x) sysLog(x << "\n")
 
+#define sysLog(x) cout << x;
+#define inputStr(x) getline(cin, x);
+#define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
+#define formatErr(x) cout << "Error: Invalid " << x << " format \n";
+#define skipline() cout << "\n";
+#include <random>
+
+
+// define log message with color;
+#define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n" ; //log error and new line
+#define sysLogSuccess(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n"; //Log data information with green color
+
+
+
+
 #define DIVIDER "----------------------------------------------------------------\n"
 
 #define APP_HEADER Colors::LIGHT_GREEN_CLS << "EEET2482/COSC2082 ASSIGNMENT" << Colors::RESET
@@ -279,8 +294,8 @@ namespace HomepageComponent{
                     sysLog("You have not received any request yet");
                     break;
                 }
-                for (Request * request : requestList) {
-                    request->showInfo();
+                for (int i = 0; i < requestList.size(); i++) {
+                    requestList[i]->showInfo();
                     skipline();
                 }
                 member->getHouse()->approveRequest(requestList);
@@ -315,11 +330,11 @@ namespace HomepageComponent{
 
     void searchHouseMenu(int num) {
         System * system = System::getInstance();
-        sysLog(newline);
+        skipline();
         sysLog(DIVIDER);
         sysLog("                       SEARCH HOUSE MENU                      \n");
         sysLog(DIVIDER);
-        sysLog(newline);
+        skipline();
 
         sysLog("0. Exit\n");
         sysLog("1. Search by location\n");
@@ -350,8 +365,8 @@ namespace HomepageComponent{
                     sysLog("There are not any available house with location " + location);
                     break;
                 }
-                for (House *house: houseList) {
-                    house->showInfo();
+                for (int i = 0; i < houseList.size(); i++) {
+                    houseList[i]->showInfo();
                     skipline();
                 }
                 break;
@@ -385,8 +400,8 @@ namespace HomepageComponent{
                     break;
                 }
 
-                for (House *house: houseList) {
-                    house->showInfo();
+                for (int i = 0; i < houseList.size(); i++) {
+                    houseList[i]->showInfo();
                     skipline();
                 }
                 break;
@@ -398,8 +413,8 @@ namespace HomepageComponent{
                     break;
                 }
 
-                for (House * house : houseList) {
-                    house->showInfo();
+                for (int i = 0; i < houseList.size(); i++) {
+                    houseList[i]->showInfo();
                     skipline();
                 }
                 break;
@@ -430,8 +445,8 @@ namespace HomepageComponent{
                     break;
                 }
 
-                for (House *house: houseList) {
-                    house->showInfo();
+                for (int i = 0; i < houseList.size(); i++) {
+                    houseList[i]->showInfo();
                     skipline();
                 }
                 break;

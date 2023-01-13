@@ -175,7 +175,6 @@ private:
     Date endListDate;
 
 public:
-    House(Member *owner, string id, string location, string description, int consumptionPts);
 
     House();
     virtual ~House();
@@ -212,7 +211,7 @@ public:
 
     // Friend function
     // Set new occupier to the house after successfully request
-    friend House* addNewOccupierToHouse(House* house, Member * occupier);
+//    friend House* addNewOccupierToHouse(House* house, Member * occupier);
 };
 
 class Request
@@ -306,12 +305,15 @@ private:
     int countMem = 0;
     int countHouse = 0;
     int countRequest = 0;
-    int countRating = 0;
 
     static System *instancePointer;
     System();
 
-    vector<string> availableLocation = {"Ha Noi", "Hue", "Sai Gon"};
+    const std::string hanoi = "Ha Noi";
+    const std::string saigon = "Sai Gon";
+    const std::string hue = "Hue";
+
+    vector<string> availableLocation{hanoi, hue, saigon};
 
     // Admin login info
     string adminUsername = "admin";
@@ -389,7 +391,6 @@ public:
     void viewRating();
 
     int getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoints);
-    void viewAllHouseBySearchingLocation(bool eligibleOnly, string location, Date startingDate, Date endingDate);
     void getAvailableHouses(vector<House *> &list_of_houses, bool isQualified, const string& location, Date start_date, Date end_date);
     void getAvailableLocation();
      // vector<House* > getHouseByID(vector<House *> &house, int id);

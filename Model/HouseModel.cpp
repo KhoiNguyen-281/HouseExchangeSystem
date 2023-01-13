@@ -5,12 +5,26 @@
 #include "../Libs/Config.h"
 
 //#define sysLog(x) cout << x;
-
-//#define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n"; //log error and new line
 #define sysLogInfo(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n";
 
-House::House(Member *owner, string id, string location, string description, int consumptionPts)
-        : owner(owner), id(id), location(location), description(description), creditPointsPerDay(consumptionPts) {}
+
+#define sysLog(x) cout << x;
+#define inputStr(x) getline(cin, x);
+#define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
+#define formatErr(x) cout << "Error: Invalid " << x << " format \n";
+#define skipline() cout << "\n";
+
+#include "SystemModel.h"
+#include "iostream"
+#include <random>
+#include "fstream"
+#include <sstream>
+
+// define log message with color;
+#define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n" ; //log error and new line
+#define sysLogSuccess(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n"; //Log data information with green color
+
+
 
 House::House() {};
 
@@ -133,8 +147,8 @@ float House::sumRating() {
         vector<Rating*> ratingVal;
         system->getRatingFromSys(ratingVal, this);
         float totalScore = 0.0;
-        for (Rating * rating : ratingVal) {
-            totalScore += rating->getScore();
+        for (int i = 0; i < ratingVal.size(); i++) {
+            totalScore += ratingVal[i]->getScore();
         }
         return totalScore / ratingVal.size();
     }
@@ -163,9 +177,9 @@ bool House::approveRequest(vector<Request*> &requestList){
     }
 
     Request * request;
-    for (Request * requestTemp : requestList) {
-        if (strBuffer == requestTemp->getId()) {
-            request = requestTemp;
+    for (int i = 0; i < requestList.size(); i++) {
+        if (strBuffer == requestList[i]->getId()) {
+            request = requestList[i];
             found = true;
             break;
         } else {
@@ -194,9 +208,9 @@ bool House::approveRequest(vector<Request*> &requestList){
         sysLogSuccess("\nApproved request successfully, you will receive " << Colors::LIGHT_YELLOW_CLS << to_string(totalCreditPoint)
         << " after the house is checked out")
         sysLog("Your current balance: " << owner->getCreditP() << "\n")
-        for (Request * temp : requestList) {
-            if (temp->getId() != request->getId() && temp->getStatus() ==PENDING) {
-                temp->setStatus(DENIED);
+        for (int i= 0;i < requestList.size(); i++) {
+            if (requestList[i]->getId() != request->getId() && requestList[i]->getStatus() ==PENDING) {
+                requestList[i]->setStatus(DENIED);
             }
         }
         return true;

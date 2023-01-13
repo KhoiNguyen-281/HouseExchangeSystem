@@ -7,12 +7,23 @@
 
 
 #define inputStr(x) getline(cin, x);
-#define newline "\n"
-#define skipLine() sysLog(newline);
-;
 
 // define log message with color;
 #define sysLogInfo(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n";
+
+
+#define sysLog(x) cout << x;
+#define inputStr(x) getline(cin, x);
+#define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
+#define formatErr(x) cout << "Error: Invalid " << x << " format \n";
+#define skipLine() cout << "\n";
+
+#include "iostream"
+#include <random>
+
+// define log message with color;
+#define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n" ; //log error and new line
+#define sysLogSuccess(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n"; //Log data information with green color
 
 
 Member::Member() {};
@@ -360,8 +371,10 @@ Rating * Member::rateHouse() {
     rating.setScore(stod(score));
     rating.setComment(comment);
 
+    Rating * newRating  =  &rating;
+
     system->addRatingToSys(rating);
-    return &rating;
+    return newRating;
 }
 
 Rating * Member::rateOccupier() {
@@ -401,7 +414,9 @@ Rating * Member::rateOccupier() {
     rating.setComment(comment);
 
     system->addRatingToSys(rating);
-    return &rating;
+
+    Rating * newRating = &rating;
+    return newRating;
 }
 
 bool Member::hasRatings() {
@@ -419,8 +434,8 @@ float Member::sumRating() {
         vector<Rating*> ratingVal;
         system->getRatingFromSys(ratingVal, this);
         float totalScore = 0.0;
-        for (Rating * rating : ratingVal) {
-            totalScore += rating->getScore();
+        for (int i = 0; i < ratingVal.size(); i++) {
+            totalScore += ratingVal[i]->getScore();
         }
         return totalScore / ratingVal.size();
     }
