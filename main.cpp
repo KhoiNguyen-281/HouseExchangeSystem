@@ -8,7 +8,6 @@ using namespace std;
 // using std::vector;
 #include <vector>
 
-#include "Model/SystemModel.h"
 #include "Model/SystemModel.cpp"
 #include "Model/GuestModel.cpp"
 #include "Model/HouseModel.cpp"
@@ -16,7 +15,6 @@ using namespace std;
 #include "Model/RatingModel.cpp"
 
 #include "Model/RequestModel.cpp"
-#include "Controllers/HomepageController.h"
 #include "Controllers/HomepageController.cpp"
 //using namespace HomepageComponent;
 

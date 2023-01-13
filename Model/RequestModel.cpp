@@ -1,5 +1,21 @@
 #include "SystemModel.h"
 
+
+#define sysLog(x) cout << x;
+#define inputStr(x) getline(cin, x);
+#define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
+#define formatErr(x) cout << "Error: Invalid " << x << " format \n";
+#define skipline() cout << "\n";
+
+#include "iostream"
+#include <random>
+
+// define log message with color;
+#define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n" ; //log error and new line
+#define sysLogSuccess(x) cout << Colors::BOLD_GREEN_CLS << x << Colors::RESET << "\n"; //Log data information with green color
+
+
+
 Request::Request() {}
 Request::~Request() {
 

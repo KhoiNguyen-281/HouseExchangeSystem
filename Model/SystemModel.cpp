@@ -5,7 +5,6 @@
 #define inputStr(x) getline(cin, x);
 #define fileErrLog(x) cout << "Error!!! file " << x << " not found.";
 #define formatErr(x) cout << "Error: Invalid " << x << " format \n";
-#define successMess(x, y, z) cout << x << " " << y << " " << z << "\n";
 #define skipline() cout << "\n";
 
 #include "SystemModel.h"
@@ -13,7 +12,6 @@
 #include <random>
 #include "fstream"
 #include <sstream>
-#include <cmath>
 
 // define log message with color;
 #define sysErrLog(x) cout << Colors::BOLD_RED_CLS << x << Colors::RESET << "\n" ; //log error and new line
@@ -31,6 +29,7 @@ const string RATINGS = "ratings.dat";
 //Helper functions
 string getFilePath(const string &file) {
     return "../Data/" + file;
+//    return "./Data/" + file;
 }
 
 
@@ -796,9 +795,9 @@ Member * System::getMember(string ID) {
 }
 
 House * System::getHouse(string ID) {
-    for (House &house : houseVect) {
-        if (house.getId() == ID) {
-            return &house;
+    for (int i = 0; i < houseVect.size(); i++) {
+        if (houseVect[i].getId() == ID) {
+            return &houseVect[i];
         }
     }
     return nullptr;
@@ -829,16 +828,16 @@ int System::getTotalConsumptionPoint(Date startDate, Date endDate, int creditPoi
 void System::getAvailableLocation() {
     sysLog("Available locations: ");
     int count = 1;
-    for (string loc : availableLocation) {
-        sysLog(" -"+ to_string(count) +"- " + loc);
+    for (int i = 0;  i < availableLocation.size(); i++) {
+        sysLog(" -"+ to_string(count) +"- " + availableLocation[i]);
         count += 1;
     }
     sysLog("\n");
 }
 
 bool System::checkLocation(string location) {
-    for (string loc : availableLocation) {
-        if (loc ==  location) {
+    for (int i = 0;  i < availableLocation.size(); i++) {
+        if (availableLocation[i] ==  location) {
             return true;
         }
     }
@@ -928,7 +927,7 @@ void System::viewHouseDetail() {
 
     if (house->getOccupier() != nullptr) {
         sysLogSuccess("Occupier name: " + house->getOccupier()->getFullName());
-        sysLogSuccess("Occupier phone: " + house->getOccupier()->getPhoneNum());
+        sysLogSuccess("Occupier phone: " << house->getOccupier()->getPhoneNum());
     }
 
 }
@@ -940,14 +939,14 @@ void System::viewAllHouse() {
     }
 
     if (isUser()) {
-        for (House & house : houseVect) {
-            house.showInfo();
-            sysLogSuccess("Listing start date: " + house.getStartListDate().dateToString());
-            sysLogSuccess("Listing end date: " + house.getEndListDate().dateToString());
+        for (int i = 0; i < houseVect.size(); i++) {
+            houseVect[i].showInfo();
+            sysLogSuccess("Listing start date: " + houseVect[i].getStartListDate().dateToString());
+            sysLogSuccess("Listing end date: " + houseVect[i].getEndListDate().dateToString());
 
 
-            if (house.hasRatings()) {
-                float ratingScore = house.sumRating();
+            if (houseVect[i].hasRatings()) {
+                float ratingScore = houseVect[i].sumRating();
                 sysLogSuccess("Rating: " << std::fixed << std::setprecision(2) << ratingScore);
             }
 
@@ -957,17 +956,17 @@ void System::viewAllHouse() {
     }
 
     if(isAdmin()) {
-        for (House & house : houseVect) {
-            house.showInfo();
-            sysLogSuccess("Listing start date: " + house.getStartListDate().dateToString());
-            sysLogSuccess("Listing end date: " + house.getEndListDate().dateToString());
+        for (int i = 0; i < houseVect.size(); i++) {
+            houseVect[i].showInfo();
+            sysLogSuccess("Listing start date: " + houseVect[i].getStartListDate().dateToString());
+            sysLogSuccess("Listing end date: " + houseVect[i].getEndListDate().dateToString());
 
-            if (house.getOccupier() != nullptr) {
-                sysLogSuccess("Occupier name: " + house.getOccupier()->getFullName());
-                sysLogSuccess("Occupier phone: " + house.getOccupier()->getPhoneNum());
+            if (houseVect[i].getOccupier() != nullptr) {
+                sysLogSuccess("Occupier name: " + houseVect[i].getOccupier()->getFullName());
+                sysLogSuccess("Occupier phone: " << houseVect[i].getOccupier()->getPhoneNum());
             }
-            if (house.hasRatings()) {
-                float ratingScore = house.sumRating();
+            if (houseVect[i].hasRatings()) {
+                float ratingScore = houseVect[i].sumRating();
                 sysLogSuccess("Rating: " << std::fixed << std::setprecision(2) << ratingScore);
             }
             skipline();
@@ -1024,10 +1023,10 @@ bool System::removeHouse() {
 
     bool found = false;
     if (res == "Y" || res == "y") {
-        for (House & house  : houseVect) {
-            if (house.getId() == houseTmp->getId()) {
+        for (int i = 0 ;i < houseVect.size(); i++) {
+            if (houseVect[i].getId() == houseTmp->getId()) {
                 found = true;
-                houseTmp = &house;
+                houseTmp = &houseVect[i];
                 break;
             } else {
                 continue;
@@ -1055,17 +1054,17 @@ bool System::removeHouse() {
 
 //------------------------Get rating function----------------//
 void System::getRatingFromSys(vector<Rating*>& ratingVal, Member * requester) {
-    for (Rating & rating : ratingVect) {
-        if (rating.getOccupier() != nullptr && rating.getOccupier()->getId() == requester->getId()) {
-            ratingVal.push_back(&rating);
+    for (int i = 0; i < ratingVect.size(); i++) {
+        if (ratingVect[i].getOccupier() != nullptr && ratingVect[i].getOccupier()->getId() == requester->getId()) {
+            ratingVal.push_back(&ratingVect[i]);
         }
     }
 }
 
 void System::getRatingFromSys(vector<Rating *>& ratingVal, House *house) {
-    for (Rating & rating : ratingVect) {
-        if (rating.getOccupier() == nullptr && rating.getHouse()->getId() == house->getId()) {
-            ratingVal.push_back(&rating);
+    for (int i = 0; i < ratingVect.size(); i++) {
+        if (ratingVect[i].getOccupier() == nullptr && ratingVect[i].getHouse()->getId() == house->getId()) {
+            ratingVal.push_back(&ratingVect[i]);
         }
     }
 }
@@ -1166,21 +1165,21 @@ bool System::isHouseSuitable(House house, string start, string end) {
 }
 void System::getHouseByDate(vector<House*> &availableHouse,  Date start,  Date end) {
 
-    for (auto & i : houseVect) {
-        if (Date::compareDate(i.getStartListDate(), start) >= 0
-        && Date::compareDate(i.getEndListDate(), end) <= 0) {
-            if (isHouseSuitable(i, start.dateToString() , end.dateToString())) {
-            availableHouse.push_back(&i);
+    for (int i = 0; i < houseVect.size(); i++) {
+        if (Date::compareDate(houseVect[i].getStartListDate(), start) >= 0
+        && Date::compareDate(houseVect[i].getEndListDate(), end) <= 0) {
+            if (isHouseSuitable(houseVect[i], start.dateToString() , end.dateToString())) {
+            availableHouse.push_back(&houseVect[i]);
             }
         }
     }
 }
 
 void System::getHouseByLoc(vector<House*>& availableHouse, const string& location){
-    for (House & i : houseVect) {
-        if (i.getLocation() == location) {
-            if (isHouseSuitable(i, "", "")) {
-                availableHouse.push_back(&i);
+    for (int i = 0; i < houseVect.size(); i++) {
+        if (houseVect[i].getLocation() == location) {
+            if (isHouseSuitable(houseVect[i], "", "")) {
+                availableHouse.push_back(&houseVect[i]);
             }
         }
     }
@@ -1188,36 +1187,36 @@ void System::getHouseByLoc(vector<House*>& availableHouse, const string& locatio
 
 void System::getHouseWithCreditPoint(vector<House *> &availableHouse) {
     int temp = currentMem->getCreditP();
-    for (House & house : houseVect) {
-        if (temp - house.getCreditPointsPerDay() >= 0) {
-            availableHouse.push_back(&house);
+    for (int i = 0; i <  houseVect.size(); i++) {
+        if (temp - houseVect[i].getCreditPointsPerDay() >= 0) {
+            availableHouse.push_back(&houseVect[i]);
         }
     }
 }
 
 void System::getHouseByCreditInRange(vector<House*> &availableHouse, int creditFrom, int creditTo) {
-    for (House & house : houseVect) {
-        if (house.getCreditPointsPerDay() >= creditFrom && house.getCreditPointsPerDay() <= creditTo) {
-            availableHouse.push_back(&house);
+    for (int i = 0; i < houseVect.size(); i++) {
+        if (houseVect[i].getCreditPointsPerDay() >= creditFrom && houseVect[i].getCreditPointsPerDay() <= creditTo) {
+            availableHouse.push_back(&houseVect[i]);
         }
     }
 }
 
 
 int System::changeStatusOfRequestAuto() {
-    for (Request & request : requestVect) {
-        if (Date::compareDate(currentDate(), request.getEndDate()) >= 0 && request.getStatus() == APPROVED) {
+    for (int i = 0; i < requestVect.size(); i++) {
+        if (Date::compareDate(currentDate(), requestVect[i].getEndDate()) >= 0 && requestVect[i].getStatus() == APPROVED) {
 
-            int totalCreditPoint = getTotalConsumptionPoint(request.getStartDate(),
-                                                            request.getEndDate(),
-                                                            request.getHouse()->getCreditPointsPerDay());
+            int totalCreditPoint = getTotalConsumptionPoint(requestVect[i].getStartDate(),
+                                                            requestVect[i].getEndDate(),
+                                                            requestVect[i].getHouse()->getCreditPointsPerDay());
 
-            addCreditPoints(request.getHouse()->getOwner(), totalCreditPoint);
-            removeCreditPoints(request.getRequester(), totalCreditPoint);
-            request.setStatus(FINISHED);
+            addCreditPoints(requestVect[i].getHouse()->getOwner(), totalCreditPoint);
+            removeCreditPoints(requestVect[i].getRequester(), totalCreditPoint);
+            requestVect[i].setStatus(FINISHED);
             return FINISHED;
-        } else if (Date::compareDate(currentDate(), request.getEndDate()) >= 0 && request.getStatus() == PENDING) {
-            request.setStatus(DENIED);
+        } else if (Date::compareDate(currentDate(), requestVect[i].getEndDate()) >= 0 && requestVect[i].getStatus() == PENDING) {
+            requestVect[i].setStatus(DENIED);
             return DENIED;
         }
     }
