@@ -10,14 +10,14 @@ using std::cin;
 
 #define DIVIDER "----------------------------------------------------------------\n"
 
-#define APP_HEADER "EEET2482/COSC2082 ASSIGNMENT"
+#define APP_HEADER Colors::LIGHT_GREEN_CLS << "EEET2482/COSC2082 ASSIGNMENT" << Colors::RESET
 #define APP_NAME "VACATION HOUSE EXCHANGE APPLICATION"
-#define INSTRUCTOR "Instructors: Mr. Linh Tran & Phong Ngo"
-#define GROUP_NAME "Group 4"
-#define STUDENT1 "s3759804, NGUYEN HOANG MINH KHOI"
-#define STUDENT2 "s3740814, DIEN DUC UY MAN"
-#define STUDENT3 "s3916890, NGUYEN PHUC LOI"
-#define STUDENT4 "s3928433, BUI VIET HA"
+#define INSTRUCTOR Colors::LIGHT_BLUE_CLS << "Instructors: Mr. Linh Tran & Phong Ngo" << Colors::RESET
+#define GROUP_NAME "                           GROUP 4"
+#define STUDENT1 Colors::LIGHT_MAGENTA_CLS << "s3759804, NGUYEN HOANG MINH KHOI" << Colors::RESET
+#define STUDENT2 Colors::LIGHT_MAGENTA_CLS <<"s3740814, DIEN DUC UY MAN"<< Colors::RESET
+#define STUDENT3 Colors::LIGHT_MAGENTA_CLS <<"s3916890, NGUYEN PHUC LOI"<< Colors::RESET
+#define STUDENT4 Colors::LIGHT_MAGENTA_CLS <<"s3928433, BUI VIET HA"<< Colors::RESET
 
 
 using namespace HomepageComponent;
@@ -84,7 +84,11 @@ namespace HomepageComponent{
         System * system = System::getInstance();
 //        system->setCurrentMem(nullptr);
 //        Guest guest;
-        sysLog("Use the app as 1.Guest  2.Member  3.Admin  0.Shutdown\n");
+        sysLog("Use the app as "
+                <<Colors::BOLD_BLUE_CLS <<"1.Guest " <<Colors::RESET
+                <<Colors::BOLD_YELLOW_CLS <<"2.Member " <<Colors::RESET
+                <<Colors::BOLD_GREEN_CLS << "3.Admin " <<Colors::RESET
+                <<Colors::BOLD_RED_CLS <<  "0.Shutdown " << Colors::RESET +"\n");
         int choice = inputOption();
         switch (choice) {
             case 0:
