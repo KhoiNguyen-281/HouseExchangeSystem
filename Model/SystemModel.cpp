@@ -32,10 +32,10 @@ const string RATINGS = "ratings.dat";
 string getFilePath(const string &file) {
 
     //Work on Mac, CLion
-    return "../Data/" + file;
+//    return "../Data/" + file;
 
     //Work on VSCode, Window
-//    return "./Data/" + file;
+    return "./Data/" + file;
 }
 
 

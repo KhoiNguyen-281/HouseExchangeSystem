@@ -24,13 +24,14 @@ int main() {
 
 
     bool isShutDown = system->systemShutdown();
-
-    delete system;
-
     if (!isShutDown) {
         throw std::runtime_error("System failed to shutdown correctly.");
         return 2;
     }
+
+    delete system;
+
+
 //    searchHouseMenu(*system);
 
 }

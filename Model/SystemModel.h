@@ -303,12 +303,13 @@ private:
     static System *instancePointer;
     System();
 
-//    const std::string hanoi = "Ha Noi";
-//    const std::string saigon = "Sai Gon";
-//    const std::string hue = "Hue";
-//
+    const std::string hanoi = "Ha Noi";
+    const std::string saigon = "Sai Gon";
+    const std::string hue = "Hue";
+
 //    vector<string> availableLocation {hanoi, hue, saigon};
-    vector<string> availableLocation = {"Ha Noi", "Hue", "Sai Gon"};
+    vector<std::string> availableLocation = {hanoi, hue, saigon};
+
 
     // Admin login info
     string adminUsername = "admin";
