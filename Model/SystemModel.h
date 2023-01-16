@@ -7,6 +7,8 @@
 #include <iostream>
 #include "string"
 #include <ctime>
+#include <vector>
+#include <iomanip>
 
 
 using std::cin;
@@ -14,7 +16,6 @@ using std::cout;
 using std::string;
 using std::to_string;
 using std::vector;
-#include <vector>
 
 #define CREDIT_POINT 500;
 
@@ -303,12 +304,11 @@ private:
     static System *instancePointer;
     System();
 
-    const std::string hanoi = "Ha Noi";
-    const std::string saigon = "Sai Gon";
-    const std::string hue = "Hue";
+    // const std::string hanoi = "Ha Noi";
+    // const std::string saigon = "Sai Gon";
+    // const std::string hue = "Hue";
 
-//    vector<string> availableLocation {hanoi, hue, saigon};
-    vector<std::string> availableLocation = {hanoi, hue, saigon};
+    vector<string> availableLocation {"Ha Noi", "Hue", "Sai Gon"};
 
 
     // Admin login info

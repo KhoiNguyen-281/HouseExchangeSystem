@@ -13,7 +13,7 @@
 #include <random>
 #include "fstream"
 #include <sstream>
-#include "../Libs/Config.h"
+#include <vector>
 
 
 // define log message with color;
@@ -1597,20 +1597,11 @@ bool System::saveMember() {
 
 
     for (Member member : memberVect) {
-        string temp;
-        if (member.getRequest() == nullptr) {
-            temp = "NONE";
-
-        } else {
-            temp = member.getRequest()->getId();
-        }
-
-
 
         file << member.getId() << "," << member.getUserName() << ","
             << member.getPassword() << "," << member.getFullName() << ","
             << member.getPhoneNum() << "," << member.getCreditP() << ","
-            << temp << "\n";
+            << "\n";
     }
     file.close();
     sysLogSuccess("Saved " +  std::to_string(memberVect.size()) + " member(s)");
