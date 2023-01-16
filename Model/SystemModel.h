@@ -308,7 +308,7 @@ private:
     // const std::string saigon = "Sai Gon";
     // const std::string hue = "Hue";
 
-    vector<string> availableLocation {"Ha Noi", "Hue", "Sai Gon"};
+    vector<std::string> availableLocation = {"Ha Noi", "Hue", "Sai Gon"};
 
 
     // Admin login info
